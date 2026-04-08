@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Benchmark PS Blog</title>
+  <link>https://benchmarkps.com/blog/</link>
+  <description>Practical insights on physiotherapy outcomes, MSK measurement, and evidence-based practice.</description>
+  <language>en-gb</language>
+  <atom:link href="https://benchmarkps.com/blog/feed.xml" rel="self" type="application/rss+xml"/>
+  
+  <item>
+    <title><![CDATA[The Business Case for Outcome Measurement in Physiotherapy Clinics]]></title>
+    <link>https://benchmarkps.com/blog/posts/business-case-outcome-measurement-physiotherapy/</link>
+    <guid isPermaLink="true">https://benchmarkps.com/blog/posts/business-case-outcome-measurement-physiotherapy/</guid>
+    <description><![CDATA[Outcome measurement is not an administrative burden — it is a direct lever on clinic profitability, patient retention, and staff performance. Here is the evidence.]]></description>
+    <pubDate>2025-04-08</pubDate>
+  </item>
+  <item>
+    <title><![CDATA[How to Implement Objective Physiotherapy Assessment Without Expensive Equipment]]></title>
+    <link>https://benchmarkps.com/blog/posts/objective-physiotherapy-assessment-without-expensive-equipment/</link>
+    <guid isPermaLink="true">https://benchmarkps.com/blog/posts/objective-physiotherapy-assessment-without-expensive-equipment/</guid>
+    <description><![CDATA[Over 90% of physiotherapists rely on subjective strength testing. Here is how to build a consistent, evidence-based objective assessment protocol using low-cost tools.]]></description>
+    <pubDate>2025-04-08</pubDate>
+  </item>
+  <item>
+    <title><![CDATA[MSK Outcome Benchmarks: What Good Conservative Care Actually Looks Like]]></title>
+    <link>https://benchmarkps.com/blog/posts/msk-outcome-benchmarks-good-conservative-care/</link>
+    <guid isPermaLink="true">https://benchmarkps.com/blog/posts/msk-outcome-benchmarks-good-conservative-care/</guid>
+    <description><![CDATA[What does a good physiotherapy outcome actually look like in the evidence? This article maps published benchmarks across the most common MSK conditions.]]></description>
+    <pubDate>2025-04-08</pubDate>
+  </item>
+  <item>
+    <title><![CDATA[Evidence-Based Progression in Physiotherapy: A Framework for Time-Pressured Clinicians]]></title>
+    <link>https://benchmarkps.com/blog/posts/evidence-based-progression-physiotherapy-framework/</link>
+    <guid isPermaLink="true">https://benchmarkps.com/blog/posts/evidence-based-progression-physiotherapy-framework/</guid>
+    <description><![CDATA[Progression decisions in physiotherapy are often made on feel. Here is a structured, evidence-based framework for deciding when and how to progress patients.]]></description>
+    <pubDate>2025-04-08</pubDate>
+  </item>
+  <item>
+    <title><![CDATA[Why 43% of Physiotherapy Care Is Non-Recommended — and What Clinics Can Do About It]]></title>
+    <link>https://benchmarkps.com/blog/posts/why-43-percent-physiotherapy-care-non-recommended/</link>
+    <guid isPermaLink="true">https://benchmarkps.com/blog/posts/why-43-percent-physiotherapy-care-non-recommended/</guid>
+    <description><![CDATA[Systematic reviews show that nearly half of physiotherapy care delivered does not follow evidence-based guidelines. This article explains why and what practices can do about it.]]></description>
+    <pubDate>2025-04-08</pubDate>
+  </item>
+  <item>
+    <title><![CDATA[Staffing Mix and Physiotherapy Margins: How Standardised Care Reduces Senior Clinician Dependency]]></title>
+    <link>https://benchmarkps.com/blog/posts/staffing-mix-physiotherapy-margins/</link>
+    <guid isPermaLink="true">https://benchmarkps.com/blog/posts/staffing-mix-physiotherapy-margins/</guid>
+    <description><![CDATA[Labour accounts for 60–70% of outpatient physiotherapy costs. Here is how standardising clinical assessment and progression decisions changes the economics of staffing.]]></description>
+    <pubDate>2025-04-08</pubDate>
+  </item>
+  <item>
+    <title><![CDATA[ACL Return-to-Sport Testing: Which Criteria Actually Predict Re-Injury Risk]]></title>
+    <link>https://benchmarkps.com/blog/posts/acl-return-to-sport-criteria-evidence/</link>
+    <guid isPermaLink="true">https://benchmarkps.com/blog/posts/acl-return-to-sport-criteria-evidence/</guid>
+    <description><![CDATA[Time-based ACL return-to-sport protocols produce re-injury rates of 15–25%. Here is what the evidence says about criteria-based testing and how to implement it.]]></description>
+    <pubDate>2025-04-08</pubDate>
+  </item>
+  <item>
+    <title><![CDATA[The State of Technology in Physiotherapy: What Works, What Doesn't, and What's Coming]]></title>
+    <link>https://benchmarkps.com/blog/posts/state-of-physiotherapy-technology/</link>
+    <guid isPermaLink="true">https://benchmarkps.com/blog/posts/state-of-physiotherapy-technology/</guid>
+    <description><![CDATA[Force plates, isokinetic dynamometers, and wearables have all promised to transform physiotherapy. Here is an honest assessment of what the evidence supports.]]></description>
+    <pubDate>2025-04-08</pubDate>
+  </item>
+  <item>
+    <title><![CDATA[The Economic Case for Better MSK Conservative Care]]></title>
+    <link>https://benchmarkps.com/blog/posts/economic-case-better-msk-conservative-care/</link>
+    <guid isPermaLink="true">https://benchmarkps.com/blog/posts/economic-case-better-msk-conservative-care/</guid>
+    <description><![CDATA[MSK conditions cost the UK economy over £5bn annually. Improving physiotherapy effectiveness is one of the most cost-effective interventions available. Here is the evidence.]]></description>
+    <pubDate>2025-04-08</pubDate>
+  </item>
+  <item>
+    <title><![CDATA[Knee Osteoarthritis and Conservative Care: Setting Realistic Expectations With Objective Data]]></title>
+    <link>https://benchmarkps.com/blog/posts/knee-osteoarthritis-conservative-care-evidence/</link>
+    <guid isPermaLink="true">https://benchmarkps.com/blog/posts/knee-osteoarthritis-conservative-care-evidence/</guid>
+    <description><![CDATA[Knee OA is the most common musculoskeletal condition in adults over 50. Here is what the evidence says about conservative care outcomes and how to communicate them accurately.]]></description>
+    <pubDate>2025-04-08</pubDate>
+  </item>
+</channel>
+</rss>
