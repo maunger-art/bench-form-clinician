@@ -1,0 +1,1 @@
+ALTER TABLE public.early_access_submissions ADD COLUMN sync_status text NOT NULL DEFAULT 'pending';

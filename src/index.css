@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Benchmark PS Brand */
+    --navy: 213 66% 16%;
+    --navy-soft: 211 53% 23%;
+    --blue: 207 75% 40%;
+    --blue-mid: 199 68% 51%;
+    --blue-pale: 202 78% 91%;
+    --blue-light: 206 64% 83%;
+    --teal: 172 82% 30%;
+    --teal-pale: 164 56% 93%;
+    --warm: 213 33% 97%;
+    --warm-mid: 212 26% 90%;
+    --sand: 210 24% 84%;
+    --mid: 211 27% 39%;
+    --light: 209 22% 59%;
+    --amber: 35 88% 43%;
+    --amber-pale: 39 92% 94%;
+    --green: 152 69% 32%;
+    --green-pale: 151 52% 93%;
+
+    /* Shadcn mappings */
+    --background: 213 33% 97%;
+    --foreground: 213 66% 16%;
+    --card: 0 0% 100%;
+    --card-foreground: 213 66% 16%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 66% 16%;
+    --primary: 207 75% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 202 78% 91%;
+    --secondary-foreground: 213 66% 16%;
+    --muted: 213 33% 97%;
+    --muted-foreground: 211 27% 39%;
+    --accent: 172 82% 30%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 24% 84%;
+    --input: 210 24% 84%;
+    --ring: 207 75% 40%;
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-editorial {
+    font-family: 'Lora', serif;
+  }
+  .text-gradient-brand {
+    background: linear-gradient(135deg, hsl(var(--navy)) 0%, hsl(var(--blue)) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: hsl(var(--warm)); }
+::-webkit-scrollbar-thumb { background: hsl(var(--blue)); border-radius: 2px; }
+
+/* Counter animation */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes drawLine {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes barGrow {
+  from { width: 0; }
+}
+
+.animate-bar-grow {
+  animation: barGrow 1.2s ease forwards;
+}
