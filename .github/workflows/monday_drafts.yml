@@ -16,6 +16,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
           fetch-depth: 0
 
       - uses: actions/setup-python@v5
@@ -44,6 +45,5 @@ jobs:
           git config user.email "bot@benchmarkps.org"
           git add queue.json drafts/ output/preview/
           git commit -m "Weekly drafts: $(date +%Y-%m-%d)" || echo "Nothing to commit"
-          git fetch origin main
-          git rebase origin/main
+          git pull origin main --no-rebase -X ours
           git push origin main
