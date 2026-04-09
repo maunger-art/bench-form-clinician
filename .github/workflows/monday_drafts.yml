@@ -36,7 +36,10 @@ jobs:
       - name: Generate preview page
         run: python generate_preview_page.py
 
-      - name: Push via GitHub API
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python push_drafts.py
+      - name: Push
+        run: |
+          git config user.name "Benchmark PS Bot"
+          git config user.email "bot@benchmarkps.org"
+          git add -A
+          git commit -m "Weekly drafts: $(date +%Y-%m-%d)" || echo "Nothing to commit"
+          git push origin HEAD:main --force
