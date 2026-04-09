@@ -10,14 +10,11 @@ permissions:
 
 jobs:
   generate-drafts:
-    name: Generate Weekly Drafts and Preview Page
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          ref: main
-          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -39,11 +36,7 @@ jobs:
       - name: Generate preview page
         run: python generate_preview_page.py
 
-      - name: Commit and push
-        run: |
-          git config user.name "Benchmark PS Bot"
-          git config user.email "bot@benchmarkps.org"
-          git add queue.json drafts/ output/preview/
-          git commit -m "Weekly drafts: $(date +%Y-%m-%d)" || echo "Nothing to commit"
-          git pull origin main --no-rebase -X ours
-          git push origin main
+      - name: Push files via GitHub API
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python push_drafts.py
