@@ -1,0 +1,10 @@
+# Disabled - site is served from Render via benchmarkps.org/blog
+# GitHub Pages deployment removed to avoid conflict
+name: Disabled
+on:
+  workflow_dispatch:
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deployment handled by Render"
