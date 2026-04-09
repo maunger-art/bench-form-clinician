@@ -56,6 +56,45 @@ export type Database = {
         }
         Relationships: []
       }
+      posts: {
+        Row: {
+          cluster: string | null
+          created_at: string | null
+          date: string
+          faq: Json | null
+          html_content: string | null
+          id: string
+          meta_description: string | null
+          slug: string
+          tags: string[] | null
+          title: string
+        }
+        Insert: {
+          cluster?: string | null
+          created_at?: string | null
+          date: string
+          faq?: Json | null
+          html_content?: string | null
+          id?: string
+          meta_description?: string | null
+          slug: string
+          tags?: string[] | null
+          title: string
+        }
+        Update: {
+          cluster?: string | null
+          created_at?: string | null
+          date?: string
+          faq?: Json | null
+          html_content?: string | null
+          id?: string
+          meta_description?: string | null
+          slug?: string
+          tags?: string[] | null
+          title?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
