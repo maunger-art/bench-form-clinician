@@ -14,6 +14,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 import anthropic
+from fetch_references import fetch_references_for_topic, format_references_for_prompt
 
 BASE_DIR = Path(__file__).parent
 QUEUE_PATH = BASE_DIR / "queue.json"
@@ -42,18 +43,22 @@ VOICE AND STYLE
 - No excessive bold text — only use bold for genuinely critical terms
 - Use UK English spelling throughout
 
-REFERENCES — MANDATORY
-Every article must include a numbered reference list at the end of html_content.
-- Minimum 5 references, ideally 8–12
-- Use real, published sources: peer-reviewed journals, Cochrane reviews, NICE guidelines,
-  NHS publications, BMJ, BJSM, JOSPT, Physical Therapy, Lancet, NEJM
-- Format: Author(s). Title. Journal. Year;Volume(Issue):Pages.
-- Superscript reference numbers inline in the text (e.g. <sup>1</sup>) linked to the list
-- Wrap the list in <ol class="references"> at the end of html_content
-- Only cite sources that genuinely exist — do not fabricate citations
-- If you are uncertain whether a specific paper exists, cite the journal and topic area
-  with a note, or cite a systematic review that covers the area
-- The reference list is essential for clinical credibility — do not omit it
+REFERENCES — MANDATORY AND VERIFIED
+You will be provided with a list of VERIFIED references fetched directly from PubMed.
+These are real, published papers with confirmed PMIDs and URLs.
+
+CRITICAL RULES:
+- Cite ONLY from the provided verified reference list — NEVER fabricate or invent citations
+- Do not add any references not in the provided list, even if you think you know them
+- Each reference in the list includes a PMID and a direct PubMed URL — use them exactly
+- Minimum 5 references from the provided list must be cited
+- Use superscript numbers inline: <sup>1</sup>, <sup>2</sup> etc
+- Wrap the reference list in <ol class="references"> at the end of html_content
+- Each <li> must include the citation text AND a clickable PMID link:
+  <li>Author et al. Title. Journal. Year;Vol:Pages. <a href="https://pubmed.ncbi.nlm.nih.gov/PMID/" target="_blank">PubMed</a></li>
+- Only cite a reference if it is genuinely relevant to the specific claim being made
+- If the provided references do not support a specific claim, do not make that claim
+- The reference list is essential for clinical credibility — it must be present
 
 STRUCTURE
 - One H1 (the article title)
@@ -110,7 +115,7 @@ def save_json(path, data):
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
-def generate_article(topic: str, existing_posts: list) -> dict:
+def generate_article(topic: str, existing_posts: list, references: list) -> dict:
     client = anthropic.Anthropic()
 
     existing_titles = [p["title"] for p in existing_posts]
@@ -120,10 +125,17 @@ def generate_article(topic: str, existing_posts: list) -> dict:
         if existing_titles else ""
     )
 
+    ref_block = format_references_for_prompt(references) if references else (
+        "No pre-fetched references available. Use your best knowledge but be conservative "
+        "— only cite sources you are highly confident exist. Prefer systematic reviews and "
+        "NICE guidelines over individual studies."
+    )
+
     user_message = (
         f"Write a full blog article on the following topic for the Benchmark PS blog:\n\n"
         f"TOPIC: {topic}"
         f"{existing_context}\n\n"
+        f"{ref_block}\n\n"
         f"Return only the JSON object as described. No other text."
     )
 
@@ -166,7 +178,14 @@ def main():
         print(f"[{i+1}/{len(topics_to_draft)}] {topic[:70]}")
 
         try:
-            article = generate_article(topic, manifest)
+            # Fetch real PubMed references first
+            references = fetch_references_for_topic(topic, target_count=15)
+
+            article = generate_article(topic, manifest, references)
+
+            # Store verified reference PMIDs for audit trail
+            if references:
+                article["verified_pmids"] = [r["pmid"] for r in references]
 
             # Ensure no slug collision
             slug = article.get("slug", "")
