@@ -23,7 +23,9 @@ RESEND_API_KEY = os.environ["RESEND_API_KEY"]
 FROM_EMAIL = "info@benchmarkps.org"
 FROM_NAME = "Benchmark PS Blog"
 TO_EMAILS = ["mike@benchmarkps.org", "gus@benchmarkps.org"]
-REPLY_TO = "blog-feedback@benchmarkps.org"
+REPLY_TO = "info@benchmarkps.org"
+FEEDBACK_TOKEN = os.environ.get("FEEDBACK_TOKEN", "BPSfeedback2026")
+APPROVAL_BASE_URL = "https://maunger-art.github.io/bench-form-clinician/approve"
 
 SITE_URL = "https://benchmarkps.org/blog"
 
@@ -80,17 +82,24 @@ def build_email_html(topics: list[str], summaries: list[dict], dates: list[str])
     for i, (topic, scheduled_date) in enumerate(zip(topics, dates)):
         summary = summaries[i]["summary"] if i < len(summaries) else ""
         row_bg = "#ffffff" if i % 2 == 0 else "#f8fafc"
+        import urllib.parse
+        t_encoded = urllib.parse.quote(topic)
+        approve_url = f"{APPROVAL_BASE_URL}?token={FEEDBACK_TOKEN}&n={i+1}&t={t_encoded}&a=approve"
+        skip_url = f"{APPROVAL_BASE_URL}?token={FEEDBACK_TOKEN}&n={i+1}&t={t_encoded}&a=skip"
+        edit_url = f"{APPROVAL_BASE_URL}?token={FEEDBACK_TOKEN}&n={i+1}&t={t_encoded}&a=edit"
         rows += f"""
         <tr style="background: {row_bg};">
-          <td style="padding: 16px 20px; border-bottom: 1px solid #e8edf2; width: 120px;">
+          <td style="padding: 16px 20px; border-bottom: 1px solid #e8edf2; width: 100px; vertical-align: top;">
             <span style="font-size: 12px; color: #64748b; font-weight: 500;">{scheduled_date}</span>
           </td>
           <td style="padding: 16px 20px; border-bottom: 1px solid #e8edf2;">
-            <div style="font-size: 14px; font-weight: 600; color: #1e3a5f; margin-bottom: 4px;">{topic}</div>
-            <div style="font-size: 13px; color: #64748b; line-height: 1.5;">{summary}</div>
-          </td>
-          <td style="padding: 16px 20px; border-bottom: 1px solid #e8edf2; width: 80px; text-align: center;">
-            <span style="font-size: 11px; color: #22c55e; font-weight: 600; background: #f0fdf4; padding: 3px 8px; border-radius: 4px;">#{i+1}</span>
+            <div style="font-size: 14px; font-weight: 600; color: #1e3a5f; margin-bottom: 4px;">#{i+1} &mdash; {topic}</div>
+            <div style="font-size: 13px; color: #64748b; line-height: 1.5; margin-bottom: 12px;">{summary}</div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <a href="{approve_url}" style="display:inline-block; padding: 5px 14px; background: #f0fdf4; color: #16a34a; border-radius: 6px; font-size: 12px; font-weight: 700; text-decoration: none; border: 1px solid #bbf7d0;">✓ Approve</a>
+              <a href="{skip_url}" style="display:inline-block; padding: 5px 14px; background: #fef2f2; color: #dc2626; border-radius: 6px; font-size: 12px; font-weight: 700; text-decoration: none; border: 1px solid #fecaca;">✗ Skip</a>
+              <a href="{edit_url}" style="display:inline-block; padding: 5px 14px; background: #f0f9ff; color: #0369a1; border-radius: 6px; font-size: 12px; font-weight: 700; text-decoration: none; border: 1px solid #bae6fd;">✎ Edit</a>
+            </div>
           </td>
         </tr>"""
 
