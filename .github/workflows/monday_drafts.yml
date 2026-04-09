@@ -36,7 +36,7 @@ jobs:
       - name: Generate preview page
         run: python generate_preview_page.py
 
-      - name: Push files via GitHub API
+      - name: Push via GitHub API
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python push_drafts.py
