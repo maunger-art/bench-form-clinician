@@ -25,6 +25,10 @@ LOGO_URL = "/assets/benchmark-icon-nav-BhAe3FNc.png"
 
 CTA_TEXT = "See how Benchmark PS works in practice"
 CTA_URL = "https://benchmarkps.org/demo"
+BANNER_TEXT = "Now in early access — free to get started."
+BANNER_SUBTEXT = "Join physiotherapy clinics already measuring outcomes with Benchmark PS."
+BANNER_CTA = "Create Account"
+BANNER_URL = "https://platform.benchmarkps.org/login?signup=true"
 
 # ─────────────────────────────────────────────
 # PATHS
@@ -70,7 +74,11 @@ def build_nav(active_href=""):
     <a href="https://platform.benchmarkps.org/login" class="nav-link">Login</a>
     <a href="https://platform.benchmarkps.org/login?signup=true" class="nav-cta">Create Account</a>
   </div>
-</nav>"""
+</nav>
+<div class="trial-banner">
+  Try Benchmark PS free for 28 days — no obligations, no card required.
+  <a href="{BANNER_URL}">Create Account</a>
+</div>"""
 
 
 def build_footer():
@@ -96,6 +104,15 @@ def build_footer():
     <div class="footer-copy">2025 Benchmark PS. All rights reserved.</div>
   </div>
 </footer>"""
+
+
+def build_banner():
+    return f"""
+<div class="early-access-banner" id="earlyAccessBanner">
+  <span><strong>{BANNER_TEXT}</strong> {BANNER_SUBTEXT}</span>
+  <a href="{BANNER_URL}" class="banner-cta">{BANNER_CTA} &rarr;</a>
+  <button class="banner-close" onclick="document.getElementById('earlyAccessBanner').style.display='none'" aria-label="Close">&times;</button>
+</div>"""
 
 
 def build_css():
@@ -154,6 +171,17 @@ def build_css():
   .nav-cta { background: hsl(199, 68%, 51%); color: white; padding: 0.45rem 1.25rem; border-radius: 6px; font-weight: 600; font-size: 13px; text-decoration: none; }
   .nav-cta:hover { opacity: 0.85; text-decoration: none; }
 
+  .trial-banner {
+    background: hsl(199, 68%, 51%);
+    color: white;
+    text-align: center;
+    padding: 0.6rem 1rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .trial-banner a { color: white; text-decoration: underline; font-weight: 700; }
+
   .article-wrap { max-width: var(--max-width); margin: 3rem auto; padding: 0 1.5rem; }
   .article-meta { font-size: 0.82rem; color: var(--mid); margin-bottom: 1.25rem; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
   .tag { background: var(--blue-pale); color: var(--navy); padding: 0.2rem 0.65rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
@@ -206,12 +234,56 @@ def build_css():
   .footer-links a:hover { color: white; }
   .footer-copy { font-size: 0.75rem; color: rgba(255,255,255,0.3); padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); width: 100%; text-align: center; }
 
+  /* ── Early access banner ── */
+  .early-access-banner {
+    background: hsl(199, 68%, 51%);
+    color: white;
+    padding: 0.65rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    flex-wrap: wrap;
+    text-align: center;
+    position: relative;
+  }
+  .early-access-banner strong { font-weight: 700; }
+  .early-access-banner a.banner-cta {
+    background: white;
+    color: hsl(199, 68%, 51%);
+    padding: 0.3rem 1rem;
+    border-radius: 5px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+  .early-access-banner a.banner-cta:hover { opacity: 0.85; text-decoration: none; }
+  .banner-close {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 0.25rem;
+  }
+  .banner-close:hover { color: white; }
+
   @media (max-width: 640px) {
     .site-nav { padding: 0 1.25rem; }
     .nav-links { display: none; }
     h1 { font-size: 1.7rem; }
     .blog-hero h1 { font-size: 1.9rem; }
     .post-grid { grid-template-columns: 1fr; }
+    .early-access-banner { font-size: 0.78rem; padding: 0.5rem 2.5rem 0.5rem 1rem; }
   }
 </style>"""
 
@@ -322,6 +394,7 @@ def build_post_page(post, all_posts):
   {build_css()}
 </head>
 <body>
+  {build_banner()}
   {build_nav(SITE_URL)}
   <main class="article-wrap">
     <div class="article-meta">
@@ -334,7 +407,10 @@ def build_post_page(post, all_posts):
     {faq_html}
     <div class="cta-box">
       <p><strong>{CTA_TEXT}</strong></p>
-      <a href="{CTA_URL}">Book a Demo</a>
+      <a href="{CTA_URL}">Join the Mailing List</a>
+      <p style="margin-top:0.75rem;font-size:0.78rem;color:rgba(255,255,255,0.5)">
+        Or <a href="{BANNER_URL}" style="color:rgba(255,255,255,0.75);text-decoration:underline">create your free account</a>
+      </p>
     </div>
   </main>
   {build_footer()}
@@ -368,6 +444,7 @@ def build_index(all_posts):
   {build_css()}
 </head>
 <body>
+  {build_banner()}
   {build_nav(SITE_URL)}
   <div class="blog-hero">
     <h1>Benchmark PS Blog</h1>
