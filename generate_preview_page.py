@@ -177,15 +177,17 @@ def build_preview_page(drafts: list[dict]) -> str:
 
         toc_items += f'<div class="toc-item"><span class="toc-num">#{i+1}</span><a href="#draft-{i+1}">{title[:75]}</a><span class="toc-date">{scheduled_date}</span></div>'
 
+        draft_file = draft.get("_file", "unknown.json")
+        draft_slug = draft.get("slug", f"draft-{i+1}")
         draft_sections += f"""
-<div class="draft-article" id="draft-{i+1}">
+<div class="draft-article" id="draft-{i+1}" data-draft-file="{draft_file}" data-draft-slug="{draft_slug}">
   <div class="draft-header">
     <div class="draft-meta-top">
       <span class="draft-number">Draft #{i+1}</span>
       <span class="draft-date">Scheduled: {scheduled_date}</span>
       {status_badge}
     </div>
-    <h2 class="draft-title">{title}</h2>
+    <h2 class="draft-title" id="draft-title-{i+1}">{title}</h2>
     <div class="draft-meta">
       {f'<span class="cluster-badge">{cluster}</span>' if cluster else ''}
       {tags_html}
@@ -196,12 +198,24 @@ def build_preview_page(drafts: list[dict]) -> str:
       <a href="{skip_url}" class="btn btn-skip">&#10007; Skip</a>
       <a href="{edit_url}" class="btn btn-edit">&#9998; Edit title</a>
       <a href="{delay_url}" class="btn btn-delay">&#9201; Delay</a>
+      <button class="btn btn-edit-content" onclick="toggleContentEditor({i+1}, this)">&#9998; Edit content</button>
     </div>
   </div>
   <div class="draft-content">
-    <div class="article-body">
+    <div class="article-body" id="article-body-{i+1}">
       {html_content}
       {faq_html}
+    </div>
+    <div class="content-editor" id="content-editor-{i+1}" style="display:none;">
+      <div class="editor-toolbar">
+        <span class="editor-label">Editing article content — sections highlighted below</span>
+        <div class="editor-toolbar-actions">
+          <button class="btn btn-save" onclick="saveContent({i+1})">&#10003; Save changes</button>
+          <button class="btn btn-cancel-edit" onclick="cancelEdit({i+1})">Cancel</button>
+        </div>
+      </div>
+      <div class="sections-editor" id="sections-editor-{i+1}"></div>
+      <div class="save-status" id="save-status-{i+1}"></div>
     </div>
     {ref_checklist}
   </div>
@@ -324,6 +338,31 @@ def build_preview_page(drafts: list[dict]) -> str:
     .site-footer a {{ color:rgba(255,255,255,0.5); text-decoration:none; }}
     .site-footer a:hover {{ color:white; }}
     /* Checked state */
+    /* Content editor */
+    .btn-edit-content {{ background:hsl(211,27%,93%); color:var(--mid); border:1px solid var(--warm-mid); }}
+    .btn-edit-content:hover {{ background:var(--blue-pale); color:var(--navy); }}
+    .btn-save {{ background:var(--green); color:white; border:none; padding:0.55rem 1.25rem; border-radius:7px; font-size:0.82rem; font-weight:700; cursor:pointer; }}
+    .btn-save:hover {{ opacity:0.85; }}
+    .btn-cancel-edit {{ background:white; color:var(--mid); border:1px solid var(--warm-mid); padding:0.55rem 1.25rem; border-radius:7px; font-size:0.82rem; font-weight:700; cursor:pointer; }}
+    .content-editor {{ padding:1.5rem 2rem; background:hsl(213,33%,98%); border-top:2px solid var(--blue-pale); }}
+    .editor-toolbar {{ display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; flex-wrap:wrap; gap:0.75rem; }}
+    .editor-label {{ font-size:0.82rem; font-weight:600; color:var(--mid); }}
+    .editor-toolbar-actions {{ display:flex; gap:0.5rem; }}
+    .sections-editor {{ display:flex; flex-direction:column; gap:1rem; }}
+    .section-block {{ background:white; border:1px solid var(--warm-mid); border-radius:8px; overflow:hidden; }}
+    .section-block-header {{ display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1rem; background:var(--warm); border-bottom:1px solid var(--warm-mid); }}
+    .section-block-title {{ font-size:0.82rem; font-weight:700; color:var(--navy); }}
+    .section-edit-btn {{ font-size:0.75rem; font-weight:600; color:var(--blue); background:none; border:none; cursor:pointer; padding:0.2rem 0.5rem; }}
+    .section-edit-btn:hover {{ text-decoration:underline; }}
+    .section-preview {{ padding:1rem; font-size:0.88rem; line-height:1.65; color:hsl(213,30%,25%); max-height:200px; overflow-y:auto; }}
+    .section-preview h2 {{ font-size:1rem; font-weight:700; color:var(--navy); margin-bottom:0.4rem; }}
+    .section-preview h3 {{ font-size:0.9rem; font-weight:600; color:var(--navy-soft); margin:0.75rem 0 0.3rem; }}
+    .section-preview p {{ margin-bottom:0.6rem; }}
+    .section-textarea {{ width:100%; min-height:180px; padding:1rem; border:none; border-top:2px solid var(--blue-mid); font-family:monospace; font-size:0.8rem; line-height:1.6; color:var(--navy); background:hsl(207,75%,98%); resize:vertical; outline:none; }}
+    .save-status {{ margin-top:0.75rem; font-size:0.82rem; font-weight:600; padding:0.5rem 0.75rem; border-radius:6px; display:none; }}
+    .save-status.success {{ display:block; background:hsl(152,52%,93%); color:var(--green); }}
+    .save-status.error {{ display:block; background:hsl(0,72%,95%); color:var(--red); }}
+    .save-status.saving {{ display:block; background:var(--blue-pale); color:var(--blue); }}
     @media (max-width:640px) {{
       .site-nav {{ padding:0 1.25rem; }}
       .draft-header, .draft-content, .draft-footer-actions {{ padding:1.25rem; }}
@@ -331,13 +370,15 @@ def build_preview_page(drafts: list[dict]) -> str:
     }}
   </style>
 <script>
+const GITHUB_OWNER = 'maunger-art';
+const GITHUB_REPO = 'bench-form-clinician';
+const FEEDBACK_TOKEN = 'BPSfeedback2026';
+
+// ── Reference verification ──────────────────────────────
 function updateRefProgress(checkbox) {{
   var item = checkbox.closest('.ref-check-item');
-  if (checkbox.checked) {{
-    item.classList.add('verified');
-  }} else {{
-    item.classList.remove('verified');
-  }}
+  if (checkbox.checked) {{ item.classList.add('verified'); }}
+  else {{ item.classList.remove('verified'); }}
   var checklist = checkbox.closest('.ref-checklist');
   var total = checklist.querySelectorAll('.ref-checkbox').length;
   var checked = checklist.querySelectorAll('.ref-checkbox:checked').length;
@@ -349,6 +390,147 @@ function updateRefProgress(checkbox) {{
       progressEl.style.color = 'hsl(152,69%,25%)';
       progressEl.style.borderColor = 'hsl(152,52%,78%)';
     }}
+  }}
+}}
+
+// ── Section editor ──────────────────────────────────────
+function parseSections(html) {{
+  // Split html_content by H2 headings into sections
+  var sections = [];
+  var parts = html.split(/(?=<h2[^>]*>)/i);
+  parts.forEach(function(part, idx) {{
+    if (!part.trim()) return;
+    var titleMatch = part.match(/<h2[^>]*>(.*?)<\/h2>/i);
+    var title = titleMatch ? titleMatch[1].replace(/<[^>]+>/g,'') : (idx === 0 ? 'Introduction' : 'Section ' + idx);
+    sections.push({{ title: title, html: part }});
+  }});
+  return sections;
+}}
+
+function toggleContentEditor(draftNum, btn) {{
+  var editor = document.getElementById('content-editor-' + draftNum);
+  var body = document.getElementById('article-body-' + draftNum);
+  if (editor.style.display === 'none') {{
+    // Build sections editor
+    var sectionsEl = document.getElementById('sections-editor-' + draftNum);
+    var html = body.innerHTML;
+    var sections = parseSections(html);
+    sectionsEl.innerHTML = '';
+    sections.forEach(function(sec, i) {{
+      var block = document.createElement('div');
+      block.className = 'section-block';
+      block.dataset.index = i;
+      block.innerHTML =
+        '<div class="section-block-header">' +
+          '<span class="section-block-title">' + sec.title + '</span>' +
+          '<button class="section-edit-btn" onclick="toggleSectionEdit(this)">&#9998; Edit this section</button>' +
+        '</div>' +
+        '<div class="section-preview">' + sec.html + '</div>' +
+        '<textarea class="section-textarea" style="display:none" spellcheck="true">' + sec.html.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</textarea>';
+      sectionsEl.appendChild(block);
+    }});
+    editor.style.display = 'block';
+    btn.textContent = '&#10007; Close editor';
+    body.style.opacity = '0.4';
+  }} else {{
+    editor.style.display = 'none';
+    btn.innerHTML = '&#9998; Edit content';
+    body.style.opacity = '1';
+  }}
+}}
+
+function toggleSectionEdit(btn) {{
+  var block = btn.closest('.section-block');
+  var preview = block.querySelector('.section-preview');
+  var textarea = block.querySelector('.section-textarea');
+  if (textarea.style.display === 'none') {{
+    // Decode HTML entities for editing
+    var raw = textarea.value.replace(/&lt;/g,'<').replace(/&gt;/g,'>');
+    textarea.value = raw;
+    textarea.style.display = 'block';
+    preview.style.display = 'none';
+    btn.textContent = '&#10007; Close';
+    textarea.focus();
+  }} else {{
+    // Update preview with edited content
+    var newHtml = textarea.value;
+    preview.innerHTML = newHtml;
+    textarea.value = newHtml.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    textarea.style.display = 'none';
+    preview.style.display = 'block';
+    btn.innerHTML = '&#9998; Edit this section';
+  }}
+}}
+
+function getReconstructedHtml(draftNum) {{
+  var sectionsEl = document.getElementById('sections-editor-' + draftNum);
+  var blocks = sectionsEl.querySelectorAll('.section-block');
+  var html = '';
+  blocks.forEach(function(block) {{
+    var textarea = block.querySelector('.section-textarea');
+    var preview = block.querySelector('.section-preview');
+    // Use textarea value if currently being edited, otherwise use preview
+    if (textarea.style.display !== 'none') {{
+      html += textarea.value;
+    }} else {{
+      html += preview.innerHTML;
+    }}
+  }});
+  return html;
+}}
+
+async function saveContent(draftNum) {{
+  var article = document.getElementById('draft-' + draftNum);
+  var draftFile = article.dataset.draftFile;
+  var statusEl = document.getElementById('save-status-' + draftNum);
+
+  statusEl.className = 'save-status saving';
+  statusEl.textContent = 'Saving...';
+
+  try {{
+    // Get current draft from GitHub
+    var getRes = await fetch(
+      'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/drafts/' + draftFile,
+      {{ headers: {{ 'Accept': 'application/vnd.github.v3+json' }} }}
+    );
+    if (!getRes.ok) throw new Error('Could not read draft file');
+    var fileData = await getRes.json();
+    var draft = JSON.parse(atob(fileData.content.replace(/\n/g, '')));
+
+    // Update html_content with edited sections
+    draft.html_content = getReconstructedHtml(draftNum);
+
+    // Push back to GitHub
+    var putRes = await fetch(
+      'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/drafts/' + draftFile,
+      {{
+        method: 'PUT',
+        headers: {{ 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' }},
+        body: JSON.stringify({{
+          message: 'Edit draft: ' + (draft.title || draftFile),
+          content: btoa(unescape(encodeURIComponent(JSON.stringify(draft, null, 2)))),
+          sha: fileData.sha,
+          branch: 'main'
+        }})
+      }}
+    );
+
+    if (!putRes.ok) {{
+      var err = await putRes.json();
+      throw new Error(err.message || 'Save failed');
+    }}
+
+    // Update live preview
+    var body = document.getElementById('article-body-' + draftNum);
+    body.innerHTML = draft.html_content;
+    body.style.opacity = '1';
+
+    statusEl.className = 'save-status success';
+    statusEl.textContent = '&#10003; Saved successfully. Changes will appear when preview page next regenerates.';
+
+  }} catch(err) {{
+    statusEl.className = 'save-status error';
+    statusEl.textContent = 'Error: ' + err.message;
   }}
 }}
 </script>
