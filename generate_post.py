@@ -15,6 +15,7 @@ import anthropic
 BASE_DIR = Path(__file__).parent
 MANIFEST_PATH = BASE_DIR / "posts_manifest.json"
 QUEUE_PATH = BASE_DIR / "queue.json"
+DRAFTS_DIR = BASE_DIR / "drafts"
 
 SYSTEM_PROMPT = """You are a specialist content writer for Benchmark PS, a performance 
 measurement and clinical decision-support platform for physiotherapy practices.
@@ -128,17 +129,58 @@ def generate_post(topic: str, existing_posts: list) -> dict:
     return json.loads(raw)
 
 
+def get_oldest_draft():
+    """Return the oldest pending draft if one exists."""
+    if not DRAFTS_DIR.exists():
+        return None, None
+    drafts = []
+    for f in DRAFTS_DIR.glob("*.json"):
+        try:
+            d = load_json(f)
+            if d.get("status") not in ("skipped",):
+                drafts.append((f, d))
+        except Exception:
+            pass
+    if not drafts:
+        return None, None
+    drafts.sort(key=lambda x: x[1].get("queue_position", 99))
+    return drafts[0]
+
+
 def main():
     queue = load_json(QUEUE_PATH)
-    if not queue:
-        print("queue.json is empty — nothing to generate.")
-        sys.exit(0)
-
-    topic = queue[0]
-    print(f"Generating article: {topic}")
-
     manifest = load_json(MANIFEST_PATH)
-    post = generate_post(topic, manifest)
+
+    # Try to publish from drafts first
+    draft_file, draft = get_oldest_draft()
+    if draft:
+        print(f"Publishing from draft: {draft.get('title', 'Unknown')}")
+        post = draft
+        post["date"] = date.today().isoformat()
+        post.pop("draft", None)
+        post.pop("queue_position", None)
+        post.pop("original_topic", None)
+        post.pop("status", None)
+        post.pop("_file", None)
+
+        # Remove from queue if topic matches
+        original_topic = draft.get("original_topic", "")
+        if original_topic in queue:
+            queue.remove(original_topic)
+            save_json(QUEUE_PATH, queue)
+
+        # Delete draft file
+        draft_file.unlink()
+        print(f"  Draft published and removed: {draft_file.name}")
+    else:
+        # Fall back to generating on the fly
+        if not queue:
+            print("queue.json is empty — nothing to generate.")
+            sys.exit(0)
+
+        topic = queue[0]
+        print(f"Generating article: {topic}")
+        post = generate_post(topic, manifest)
 
     # Inject today's date if not provided
     if "date" not in post:

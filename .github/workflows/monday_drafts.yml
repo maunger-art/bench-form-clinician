@@ -1,0 +1,47 @@
+name: Monday Draft Generation
+
+on:
+  schedule:
+    # Every Monday at 07:00 UTC
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-drafts:
+    name: Generate Weekly Drafts and Preview Page
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Refill queue if needed
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scrape_topics.py
+
+      - name: Generate 7 draft articles
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python generate_drafts.py
+
+      - name: Generate preview page
+        run: python generate_preview_page.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "Benchmark PS Bot"
+          git config user.email "bot@benchmarkps.org"
+          git add queue.json drafts/ output/preview/
+          git commit -m "Weekly drafts: $(date +%Y-%m-%d)" || echo "Nothing to commit"
+          git push
