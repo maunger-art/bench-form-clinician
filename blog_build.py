@@ -111,7 +111,6 @@ def build_banner():
 <div class="early-access-banner" id="earlyAccessBanner">
   <span><strong>{BANNER_TEXT}</strong> {BANNER_SUBTEXT}</span>
   <a href="{BANNER_URL}" class="banner-cta">{BANNER_CTA} &rarr;</a>
-  <button class="banner-close" onclick="document.getElementById('earlyAccessBanner').style.display='none'" aria-label="Close">&times;</button>
 </div>"""
 
 
