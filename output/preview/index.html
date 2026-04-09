@@ -15,330 +15,445 @@
       --warm-mid: hsl(212,26%,90%); --mid: hsl(211,27%,39%);
       --green: hsl(152,69%,32%); --red: hsl(0,72%,45%); --amber: hsl(35,88%,43%);
     }
-    * { box-sizing:border-box; margin:0; padding:0; }
-    body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--warm); color:var(--navy); }
-    .site-nav { background:var(--navy); display:flex; align-items:center; justify-content:space-between; padding:0 3rem; height:66px; position:sticky; top:0; z-index:100; }
-    .nav-brand { display:flex; align-items:center; gap:12px; text-decoration:none; }
-    .nav-brand img { height:44px; width:auto; }
-    .nav-wordmark-main { font-size:18px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:white; line-height:1; }
-    .nav-wordmark-sub { font-size:8px; font-weight:600; letter-spacing:0.22em; text-transform:uppercase; color:var(--blue-mid); margin-top:4px; line-height:1; }
-    .nav-right { display:flex; align-items:center; gap:1.5rem; }
-    .nav-back { color:rgba(255,255,255,0.6); font-size:13px; text-decoration:none; }
-    .nav-back:hover { color:white; }
-    .draft-count { background:var(--blue-mid); color:white; font-size:11px; font-weight:700; padding:0.25rem 0.6rem; border-radius:10px; }
-    .page-header { background:var(--navy); padding:2.5rem 2rem; text-align:center; border-top:1px solid rgba(255,255,255,0.08); }
-    .page-header h1 { font-family:'Lora',serif; color:white; font-size:1.85rem; margin-bottom:0.4rem; }
-    .page-header p { color:rgba(255,255,255,0.65); font-size:0.9rem; }
-    .page-header .generated { color:rgba(255,255,255,0.35); font-size:0.75rem; margin-top:0.4rem; }
-    .drafts-container { max-width:860px; margin:0 auto 4rem; padding:1.5rem 1.5rem 0; display:flex; flex-direction:column; gap:1.5rem; }
-    .instructions { padding:1rem 1.5rem; background:white; border-radius:8px; border-left:4px solid var(--blue-mid); font-size:0.85rem; color:var(--mid); line-height:1.6; }
-    .instructions strong { color:var(--navy); }
-    .toc { padding:1rem 1.5rem; background:white; border-radius:8px; border:1px solid var(--warm-mid); }
-    .toc h3 { font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--mid); margin-bottom:0.75rem; }
-    .toc-list { display:flex; flex-direction:column; gap:0.4rem; }
-    .toc-item { display:flex; align-items:center; gap:0.75rem; font-size:0.85rem; flex-wrap:wrap; }
-    .toc-item a { color:var(--blue); text-decoration:none; flex:1; }
-    .toc-item a:hover { text-decoration:underline; }
-    .toc-num { font-size:0.72rem; font-weight:700; color:var(--mid); width:22px; flex-shrink:0; }
-    .toc-date { font-size:0.72rem; color:var(--mid); white-space:nowrap; }
-    .draft-article { background:white; border:1px solid var(--warm-mid); border-radius:14px; overflow:hidden; }
-    .draft-header { padding:1.75rem 2rem; border-bottom:1px solid var(--warm-mid); }
-    .draft-meta-top { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem; flex-wrap:wrap; }
-    .draft-number { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--blue-mid); background:var(--blue-pale); padding:0.2rem 0.6rem; border-radius:4px; }
-    .draft-date { font-size:0.78rem; color:var(--mid); font-weight:500; }
-    .status-badge { font-size:0.72rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:4px; }
-    .status-approved { background:hsl(152,52%,93%); color:var(--green); }
-    .status-skipped { background:hsl(0,72%,95%); color:var(--red); }
-    .draft-title { font-family:'Lora',serif; font-size:1.4rem; font-weight:600; color:var(--navy); line-height:1.3; margin-bottom:0.75rem; }
-    .draft-meta { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.75rem; align-items:center; }
-    .cluster-badge { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--teal); }
-    .tag { background:var(--blue-pale); color:var(--navy); padding:0.15rem 0.55rem; border-radius:4px; font-size:0.72rem; font-weight:500; }
-    .draft-description { font-size:0.9rem; color:var(--mid); line-height:1.6; margin-bottom:1.25rem; font-style:italic; }
-    .draft-actions { display:flex; gap:0.6rem; flex-wrap:wrap; }
-    .draft-content { padding:2rem; border-bottom:1px solid var(--warm-mid); }
-    .article-body { max-width:680px; }
-    .article-body h2 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.2rem; font-weight:700; color:var(--navy); margin:2.25rem 0 0.6rem; padding-bottom:0.4rem; border-bottom:2px solid var(--blue-pale); }
-    .article-body h3 { font-size:1rem; font-weight:600; color:var(--navy-soft); margin:1.5rem 0 0.4rem; }
-    .article-body p { font-size:0.95rem; line-height:1.75; color:hsl(213,30%,25%); margin-bottom:1.1rem; }
-    .article-body ul, .article-body ol { margin:0 0 1.1rem 1.5rem; }
-    .article-body li { font-size:0.95rem; line-height:1.7; color:hsl(213,30%,25%); margin-bottom:0.4rem; }
-    .article-body strong { color:var(--navy); font-weight:600; }
-    .article-body blockquote { border-left:3px solid var(--blue-mid); margin:1.5rem 0; padding:0.6rem 1.25rem; background:var(--warm); border-radius:0 6px 6px 0; color:var(--mid); font-style:italic; font-size:0.9rem; }
-    .article-body ol.references { font-size:0.8rem; color:var(--mid); line-height:1.6; margin-top:0.5rem; }
-    .faq-section { margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--warm-mid); }
-    .faq-section h3 { font-size:1rem; font-weight:700; color:var(--navy); margin-bottom:1rem; }
-    .faq-item { border-bottom:1px solid var(--warm-mid); padding:0.9rem 0; }
-    .faq-item h4 { font-size:0.88rem; font-weight:600; color:var(--navy); margin-bottom:0.35rem; }
-    .faq-item p { font-size:0.85rem; color:var(--mid); margin-bottom:0; line-height:1.6; }
-    .draft-footer-actions { padding:1.25rem 2rem; background:var(--warm); display:flex; gap:0.6rem; flex-wrap:wrap; }
-    /* Reference checklist */
-    .ref-checklist { margin:2rem 0 0; padding:1.5rem; background:hsl(39,92%,97%); border:1px solid hsl(39,92%,85%); border-radius:10px; }
-    .ref-checklist-header { display:flex; align-items:baseline; gap:1rem; flex-wrap:wrap; margin-bottom:1rem; }
-    .ref-checklist-title { font-size:0.85rem; font-weight:700; color:hsl(35,88%,30%); }
-    .ref-checklist-subtitle { font-size:0.78rem; color:var(--mid); flex:1; }
-    .ref-progress { font-size:0.75rem; font-weight:700; color:hsl(35,88%,35%); background:white; padding:0.2rem 0.6rem; border-radius:4px; border:1px solid hsl(39,92%,78%); }
-    .ref-checklist-items { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1rem; }
-    .ref-check-item { display:flex; align-items:flex-start; gap:0.75rem; padding:0.6rem 0.75rem; background:white; border-radius:6px; border:1px solid hsl(39,92%,85%); }
-    .ref-check-label { display:flex; align-items:flex-start; gap:0.6rem; flex:1; cursor:pointer; }
-    .ref-checkbox { margin-top:2px; flex-shrink:0; width:14px; height:14px; accent-color:var(--green); }
-    .ref-num { font-size:0.72rem; font-weight:700; color:var(--mid); min-width:18px; flex-shrink:0; margin-top:1px; }
-    .ref-text { font-size:0.78rem; color:var(--navy); line-height:1.5; }
-    .ref-check-item.verified { background:hsl(152,52%,97%); border-color:hsl(152,52%,80%); }
-    .ref-check-item.verified .ref-text { color:var(--mid); }
-    .pubmed-link { flex-shrink:0; font-size:0.72rem; font-weight:700; color:var(--blue); text-decoration:none; white-space:nowrap; padding:0.2rem 0.5rem; background:var(--blue-pale); border-radius:4px; margin-top:1px; }
-    .pubmed-link:hover { background:var(--blue-light); text-decoration:none; }
-    .ref-checklist-note { font-size:0.75rem; color:var(--mid); line-height:1.5; font-style:italic; }
-    .btn { display:inline-block; padding:0.55rem 1.25rem; border-radius:7px; font-size:0.82rem; font-weight:700; text-decoration:none; transition:opacity 0.15s; white-space:nowrap; }
-    .btn:hover { opacity:0.8; text-decoration:none; }
-    .btn-approve { background:hsl(152,52%,93%); color:var(--green); border:1px solid hsl(152,52%,78%); }
-    .btn-skip { background:hsl(0,72%,95%); color:var(--red); border:1px solid hsl(0,72%,83%); }
-    .btn-edit { background:var(--blue-pale); color:var(--blue); border:1px solid var(--blue-light); }
-    .btn-delay { background:hsl(39,92%,94%); color:var(--amber); border:1px solid hsl(39,92%,78%); }
-    .empty-state { text-align:center; padding:4rem 2rem; color:var(--mid); background:white; border-radius:14px; border:1px solid var(--warm-mid); }
-    .empty-state h2 { color:var(--navy); margin-bottom:0.75rem; }
-    .empty-state p { font-size:0.9rem; max-width:400px; margin:0 auto; line-height:1.6; }
-    .site-footer { background:var(--navy); padding:2rem; text-align:center; color:rgba(255,255,255,0.35); font-size:0.78rem; margin-top:2rem; }
-    .site-footer a { color:rgba(255,255,255,0.5); text-decoration:none; }
-    .site-footer a:hover { color:white; }
-    /* Checked state */
-    /* Content editor */
-    .btn-edit-content { background:hsl(211,27%,93%); color:var(--mid); border:1px solid var(--warm-mid); }
-    .btn-edit-content:hover { background:var(--blue-pale); color:var(--navy); }
-    .btn-save { background:var(--green); color:white; border:none; padding:0.55rem 1.25rem; border-radius:7px; font-size:0.82rem; font-weight:700; cursor:pointer; }
-    .btn-save:hover { opacity:0.85; }
-    .btn-cancel-edit { background:white; color:var(--mid); border:1px solid var(--warm-mid); padding:0.55rem 1.25rem; border-radius:7px; font-size:0.82rem; font-weight:700; cursor:pointer; }
-    .content-editor { padding:1.5rem 2rem; background:hsl(213,33%,98%); border-top:2px solid var(--blue-pale); }
-    .editor-toolbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; flex-wrap:wrap; gap:0.75rem; }
-    .editor-label { font-size:0.82rem; font-weight:600; color:var(--mid); }
-    .editor-toolbar-actions { display:flex; gap:0.5rem; }
-    .sections-editor { display:flex; flex-direction:column; gap:1rem; }
-    .section-block { background:white; border:1px solid var(--warm-mid); border-radius:8px; overflow:hidden; }
-    .section-block-header { display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1rem; background:var(--warm); border-bottom:1px solid var(--warm-mid); }
-    .section-block-title { font-size:0.82rem; font-weight:700; color:var(--navy); }
-    .section-edit-btn { font-size:0.75rem; font-weight:600; color:var(--blue); background:none; border:none; cursor:pointer; padding:0.2rem 0.5rem; }
-    .section-edit-btn:hover { text-decoration:underline; }
-    .section-preview { padding:1rem; font-size:0.88rem; line-height:1.65; color:hsl(213,30%,25%); max-height:200px; overflow-y:auto; }
-    .section-preview h2 { font-size:1rem; font-weight:700; color:var(--navy); margin-bottom:0.4rem; }
-    .section-preview h3 { font-size:0.9rem; font-weight:600; color:var(--navy-soft); margin:0.75rem 0 0.3rem; }
-    .section-preview p { margin-bottom:0.6rem; }
-    .section-textarea { width:100%; min-height:180px; padding:1rem; border:none; border-top:2px solid var(--blue-mid); font-family:monospace; font-size:0.8rem; line-height:1.6; color:var(--navy); background:hsl(207,75%,98%); resize:vertical; outline:none; }
-    .save-status { margin-top:0.75rem; font-size:0.82rem; font-weight:600; padding:0.5rem 0.75rem; border-radius:6px; display:none; }
-    .save-status.success { display:block; background:hsl(152,52%,93%); color:var(--green); }
-    .save-status.error { display:block; background:hsl(0,72%,95%); color:var(--red); }
-    .save-status.saving { display:block; background:var(--blue-pale); color:var(--blue); }
-    @media (max-width:640px) {
-      .site-nav { padding:0 1.25rem; }
-      .draft-header, .draft-content, .draft-footer-actions { padding:1.25rem; }
-      .draft-title { font-size:1.2rem; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--warm); color: var(--navy); }
+    .site-nav { background: var(--navy); display: flex; align-items: center; justify-content: space-between; padding: 0 3rem; height: 66px; position: sticky; top: 0; z-index: 100; }
+    .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-brand img { height: 44px; width: auto; }
+    .nav-wordmark-main { font-size: 18px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: white; line-height: 1; }
+    .nav-wordmark-sub { font-size: 8px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--blue-mid); margin-top: 4px; line-height: 1; }
+    .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+    .nav-link { color: rgba(255,255,255,0.6); font-size: 13px; text-decoration: none; }
+    .nav-link:hover { color: white; }
+    .nav-badge { background: var(--blue-mid); color: white; font-size: 11px; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 10px; display: none; }
+    .page-header { background: var(--navy); padding: 2.5rem 2rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.08); }
+    .page-header h1 { font-family: 'Lora', serif; color: white; font-size: 1.85rem; margin-bottom: 0.4rem; }
+    .page-header p { color: rgba(255,255,255,0.65); font-size: 0.9rem; }
+    .page-header .sub { color: rgba(255,255,255,0.35); font-size: 0.75rem; margin-top: 0.4rem; }
+    .loading-screen { max-width: 600px; margin: 4rem auto; text-align: center; padding: 2rem; }
+    .loading-spinner { width: 36px; height: 36px; border: 3px solid var(--warm-mid); border-top-color: var(--blue-mid); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 0.9rem; color: var(--mid); }
+    .drafts-container { max-width: 860px; margin: 0 auto 4rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+    .instructions { padding: 1rem 1.5rem; background: white; border-radius: 8px; border-left: 4px solid var(--blue-mid); font-size: 0.85rem; color: var(--mid); line-height: 1.6; }
+    .instructions strong { color: var(--navy); }
+    .toc { padding: 1rem 1.5rem; background: white; border-radius: 8px; border: 1px solid var(--warm-mid); }
+    .toc h3 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--mid); margin-bottom: 0.75rem; }
+    .toc-list { display: flex; flex-direction: column; gap: 0.4rem; }
+    .toc-item { display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; flex-wrap: wrap; }
+    .toc-item a { color: var(--blue); text-decoration: none; flex: 1; }
+    .toc-item a:hover { text-decoration: underline; }
+    .toc-num { font-size: 0.72rem; font-weight: 700; color: var(--mid); width: 22px; flex-shrink: 0; }
+    .toc-date { font-size: 0.72rem; color: var(--mid); white-space: nowrap; }
+    .draft-article { background: white; border: 1px solid var(--warm-mid); border-radius: 14px; overflow: hidden; }
+    .draft-header { padding: 1.75rem 2rem; border-bottom: 1px solid var(--warm-mid); }
+    .draft-meta-top { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+    .draft-number { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--blue-mid); background: var(--blue-pale); padding: 0.2rem 0.6rem; border-radius: 4px; }
+    .draft-date { font-size: 0.78rem; color: var(--mid); font-weight: 500; }
+    .draft-title { font-family: 'Lora', serif; font-size: 1.4rem; font-weight: 600; color: var(--navy); line-height: 1.3; margin-bottom: 0.75rem; }
+    .draft-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem; align-items: center; }
+    .cluster-badge { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--teal); }
+    .tag { background: var(--blue-pale); color: var(--navy); padding: 0.15rem 0.55rem; border-radius: 4px; font-size: 0.72rem; font-weight: 500; }
+    .draft-description { font-size: 0.9rem; color: var(--mid); line-height: 1.6; margin-bottom: 1.25rem; font-style: italic; }
+    .draft-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .draft-content { padding: 2rem; border-bottom: 1px solid var(--warm-mid); }
+    .article-body { max-width: 680px; }
+    .article-body h2 { font-family: 'Plus Jakarta Sans',sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--navy); margin: 2.25rem 0 0.6rem; padding-bottom: 0.4rem; border-bottom: 2px solid var(--blue-pale); }
+    .article-body h3 { font-size: 1rem; font-weight: 600; color: var(--navy-soft); margin: 1.5rem 0 0.4rem; }
+    .article-body p { font-size: 0.95rem; line-height: 1.75; color: hsl(213,30%,25%); margin-bottom: 1.1rem; }
+    .article-body ul, .article-body ol { margin: 0 0 1.1rem 1.5rem; }
+    .article-body li { font-size: 0.95rem; line-height: 1.7; color: hsl(213,30%,25%); margin-bottom: 0.4rem; }
+    .article-body strong { color: var(--navy); font-weight: 600; }
+    .article-body blockquote { border-left: 3px solid var(--blue-mid); margin: 1.5rem 0; padding: 0.6rem 1.25rem; background: var(--warm); border-radius: 0 6px 6px 0; color: var(--mid); font-style: italic; font-size: 0.9rem; }
+    .article-body ol.references { font-size: 0.8rem; color: var(--mid); line-height: 1.6; margin-top: 0.5rem; }
+    .faq-section { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--warm-mid); }
+    .faq-section h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 1rem; }
+    .faq-item { border-bottom: 1px solid var(--warm-mid); padding: 0.9rem 0; }
+    .faq-item h4 { font-size: 0.88rem; font-weight: 600; color: var(--navy); margin-bottom: 0.35rem; }
+    .faq-item p { font-size: 0.85rem; color: var(--mid); margin-bottom: 0; line-height: 1.6; }
+    .section-editor-panel { display: none; padding: 1.5rem 2rem; background: hsl(213,33%,98%); border-top: 2px solid var(--blue-pale); }
+    .section-editor-panel.open { display: block; }
+    .editor-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+    .editor-toolbar-label { font-size: 0.82rem; font-weight: 600; color: var(--mid); }
+    .editor-toolbar-actions { display: flex; gap: 0.5rem; }
+    .sections-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .section-block { border: 1px solid var(--warm-mid); border-radius: 8px; overflow: hidden; background: white; }
+    .section-block.editing { border-color: var(--blue-mid); box-shadow: 0 0 0 3px hsl(199,68%,90%); }
+    .section-block-header { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 1rem; background: var(--warm); border-bottom: 1px solid var(--warm-mid); }
+    .section-block-title { font-size: 0.82rem; font-weight: 700; color: var(--navy); }
+    .section-edit-btn { font-size: 0.75rem; font-weight: 700; color: var(--blue); background: none; border: none; cursor: pointer; padding: 0.2rem 0.5rem; }
+    .section-edit-btn:hover { text-decoration: underline; }
+    .section-preview { padding: 0.75rem 1rem; font-size: 0.85rem; line-height: 1.65; color: hsl(213,30%,25%); }
+    .section-preview h2, .section-preview h3 { font-size: 0.9rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+    .section-preview p { margin-bottom: 0.4rem; }
+    .section-textarea { width: 100%; min-height: 160px; padding: 0.75rem 1rem; border: none; border-top: 2px solid var(--blue-mid); font-family: 'Courier New', monospace; font-size: 0.78rem; line-height: 1.6; color: var(--navy); background: hsl(207,75%,98%); resize: vertical; outline: none; display: none; }
+    .section-textarea.visible { display: block; }
+    .save-status { font-size: 0.82rem; font-weight: 600; padding: 0.5rem 0.75rem; border-radius: 6px; margin-top: 0.75rem; display: none; }
+    .save-status.saving { display: block; background: var(--blue-pale); color: var(--blue); }
+    .save-status.success { display: block; background: hsl(152,52%,93%); color: var(--green); }
+    .save-status.error { display: block; background: hsl(0,72%,95%); color: var(--red); }
+    .ref-checklist { margin: 1.5rem 0 0; padding: 1.25rem; background: hsl(39,92%,97%); border: 1px solid hsl(39,92%,85%); border-radius: 10px; }
+    .ref-checklist-header { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+    .ref-checklist-title { font-size: 0.82rem; font-weight: 700; color: hsl(35,88%,30%); }
+    .ref-checklist-subtitle { font-size: 0.75rem; color: var(--mid); flex: 1; }
+    .ref-progress { font-size: 0.72rem; font-weight: 700; color: hsl(35,88%,35%); background: white; padding: 0.2rem 0.5rem; border-radius: 4px; border: 1px solid hsl(39,92%,78%); }
+    .ref-items { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .ref-item { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.5rem 0.75rem; background: white; border-radius: 6px; border: 1px solid hsl(39,92%,85%); }
+    .ref-item.verified { background: hsl(152,52%,97%); border-color: hsl(152,52%,80%); }
+    .ref-checkbox { margin-top: 2px; flex-shrink: 0; accent-color: var(--green); }
+    .ref-num { font-size: 0.7rem; font-weight: 700; color: var(--mid); min-width: 16px; flex-shrink: 0; }
+    .ref-text { font-size: 0.75rem; color: var(--navy); line-height: 1.5; flex: 1; }
+    .ref-item.verified .ref-text { color: var(--mid); }
+    .pubmed-link { flex-shrink: 0; font-size: 0.7rem; font-weight: 700; color: var(--blue); text-decoration: none; white-space: nowrap; padding: 0.15rem 0.4rem; background: var(--blue-pale); border-radius: 4px; }
+    .pubmed-link:hover { background: var(--blue-light); }
+    .ref-note { font-size: 0.72rem; color: var(--mid); font-style: italic; }
+    .draft-footer-actions { padding: 1.25rem 2rem; background: var(--warm); display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.55rem 1.25rem; border-radius: 7px; font-family: inherit; font-size: 0.82rem; font-weight: 700; cursor: pointer; border: none; text-decoration: none; transition: opacity 0.15s; white-space: nowrap; }
+    .btn:hover { opacity: 0.8; text-decoration: none; }
+    .btn-approve { background: hsl(152,52%,93%); color: var(--green); border: 1px solid hsl(152,52%,78%); }
+    .btn-skip { background: hsl(0,72%,95%); color: var(--red); border: 1px solid hsl(0,72%,83%); }
+    .btn-edit { background: var(--blue-pale); color: var(--blue); border: 1px solid var(--blue-light); }
+    .btn-delay { background: hsl(39,92%,94%); color: var(--amber); border: 1px solid hsl(39,92%,78%); }
+    .btn-edit-content { background: hsl(211,27%,93%); color: var(--mid); border: 1px solid var(--warm-mid); }
+    .btn-edit-content.active { background: var(--blue-pale); color: var(--navy); border-color: var(--blue-mid); }
+    .btn-save { background: var(--navy); color: white; }
+    .btn-cancel-edit { background: white; color: var(--mid); border: 1px solid var(--warm-mid); }
+    .empty-state { text-align: center; padding: 4rem 2rem; color: var(--mid); background: white; border-radius: 14px; border: 1px solid var(--warm-mid); }
+    .empty-state h2 { color: var(--navy); margin-bottom: 0.75rem; }
+    .empty-state p { font-size: 0.9rem; max-width: 400px; margin: 0 auto; line-height: 1.6; }
+    .site-footer { background: var(--navy); padding: 2rem; text-align: center; color: rgba(255,255,255,0.35); font-size: 0.78rem; margin-top: 2rem; }
+    .site-footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+    .site-footer a:hover { color: white; }
+    @media (max-width: 640px) {
+      .site-nav { padding: 0 1.25rem; }
+      .draft-header, .draft-content, .draft-footer-actions, .section-editor-panel { padding: 1.25rem; }
+      .draft-title { font-size: 1.2rem; }
     }
   </style>
-<script>
-const GITHUB_OWNER = 'maunger-art';
-const GITHUB_REPO = 'bench-form-clinician';
-const FEEDBACK_TOKEN = 'BPSfeedback2026';
-
-// ── Reference verification ──────────────────────────────
-function updateRefProgress(checkbox) {
-  var item = checkbox.closest('.ref-check-item');
-  if (checkbox.checked) { item.classList.add('verified'); }
-  else { item.classList.remove('verified'); }
-  var checklist = checkbox.closest('.ref-checklist');
-  var total = checklist.querySelectorAll('.ref-checkbox').length;
-  var checked = checklist.querySelectorAll('.ref-checkbox:checked').length;
-  var progressEl = checklist.querySelector('.ref-progress');
-  if (progressEl) {
-    progressEl.textContent = checked + ' / ' + total + ' verified';
-    if (checked === total) {
-      progressEl.style.background = 'hsl(152,52%,93%)';
-      progressEl.style.color = 'hsl(152,69%,25%)';
-      progressEl.style.borderColor = 'hsl(152,52%,78%)';
-    }
-  }
-}
-
-// ── Section editor ──────────────────────────────────────
-function parseSections(html) {
-  // Split html_content by H2 headings into sections
-  var sections = [];
-  var parts = html.split(/(?=<h2[^>]*>)/i);
-  parts.forEach(function(part, idx) {
-    if (!part.trim()) return;
-    var titleMatch = part.match(/<h2[^>]*>(.*?)<\/h2>/i);
-    var title = titleMatch ? titleMatch[1].replace(/<[^>]+>/g,'') : (idx === 0 ? 'Introduction' : 'Section ' + idx);
-    sections.push({ title: title, html: part });
-  });
-  return sections;
-}
-
-function toggleContentEditor(draftNum, btn) {
-  var editor = document.getElementById('content-editor-' + draftNum);
-  var body = document.getElementById('article-body-' + draftNum);
-  if (editor.style.display === 'none') {
-    // Build sections editor
-    var sectionsEl = document.getElementById('sections-editor-' + draftNum);
-    var html = body.innerHTML;
-    var sections = parseSections(html);
-    sectionsEl.innerHTML = '';
-    sections.forEach(function(sec, i) {
-      var block = document.createElement('div');
-      block.className = 'section-block';
-      block.dataset.index = i;
-      block.innerHTML =
-        '<div class="section-block-header">' +
-          '<span class="section-block-title">' + sec.title + '</span>' +
-          '<button class="section-edit-btn" onclick="toggleSectionEdit(this)">&#9998; Edit this section</button>' +
-        '</div>' +
-        '<div class="section-preview">' + sec.html + '</div>' +
-        '<textarea class="section-textarea" style="display:none" spellcheck="true">' + sec.html.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</textarea>';
-      sectionsEl.appendChild(block);
-    });
-    editor.style.display = 'block';
-    btn.textContent = '&#10007; Close editor';
-    body.style.opacity = '0.4';
-  } else {
-    editor.style.display = 'none';
-    btn.innerHTML = '&#9998; Edit content';
-    body.style.opacity = '1';
-  }
-}
-
-function toggleSectionEdit(btn) {
-  var block = btn.closest('.section-block');
-  var preview = block.querySelector('.section-preview');
-  var textarea = block.querySelector('.section-textarea');
-  if (textarea.style.display === 'none') {
-    // Decode HTML entities for editing
-    var raw = textarea.value.replace(/&lt;/g,'<').replace(/&gt;/g,'>');
-    textarea.value = raw;
-    textarea.style.display = 'block';
-    preview.style.display = 'none';
-    btn.textContent = '&#10007; Close';
-    textarea.focus();
-  } else {
-    // Update preview with edited content
-    var newHtml = textarea.value;
-    preview.innerHTML = newHtml;
-    textarea.value = newHtml.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    textarea.style.display = 'none';
-    preview.style.display = 'block';
-    btn.innerHTML = '&#9998; Edit this section';
-  }
-}
-
-function getReconstructedHtml(draftNum) {
-  var sectionsEl = document.getElementById('sections-editor-' + draftNum);
-  var blocks = sectionsEl.querySelectorAll('.section-block');
-  var html = '';
-  blocks.forEach(function(block) {
-    var textarea = block.querySelector('.section-textarea');
-    var preview = block.querySelector('.section-preview');
-    // Use textarea value if currently being edited, otherwise use preview
-    if (textarea.style.display !== 'none') {
-      html += textarea.value;
-    } else {
-      html += preview.innerHTML;
-    }
-  });
-  return html;
-}
-
-async function saveContent(draftNum) {
-  var article = document.getElementById('draft-' + draftNum);
-  var draftFile = article.dataset.draftFile;
-  var statusEl = document.getElementById('save-status-' + draftNum);
-
-  statusEl.className = 'save-status saving';
-  statusEl.textContent = 'Saving...';
-
-  try {
-    // Get current draft from GitHub
-    var getRes = await fetch(
-      'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/drafts/' + draftFile,
-      { headers: { 'Accept': 'application/vnd.github.v3+json' } }
-    );
-    if (!getRes.ok) throw new Error('Could not read draft file');
-    var fileData = await getRes.json();
-    var draft = JSON.parse(atob(fileData.content.replace(/
-/g, '')));
-
-    // Update html_content with edited sections
-    draft.html_content = getReconstructedHtml(draftNum);
-
-    // Push back to GitHub
-    var putRes = await fetch(
-      'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/drafts/' + draftFile,
-      {
-        method: 'PUT',
-        headers: { 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: 'Edit draft: ' + (draft.title || draftFile),
-          content: btoa(unescape(encodeURIComponent(JSON.stringify(draft, null, 2)))),
-          sha: fileData.sha,
-          branch: 'main'
-        })
-      }
-    );
-
-    if (!putRes.ok) {
-      var err = await putRes.json();
-      throw new Error(err.message || 'Save failed');
-    }
-
-    // Update live preview
-    var body = document.getElementById('article-body-' + draftNum);
-    body.innerHTML = draft.html_content;
-    body.style.opacity = '1';
-
-    statusEl.className = 'save-status success';
-    statusEl.textContent = '&#10003; Saved successfully. Changes will appear when preview page next regenerates.';
-
-  } catch(err) {
-    statusEl.className = 'save-status error';
-    statusEl.textContent = 'Error: ' + err.message;
-  }
-}
-</script>
 </head>
 <body>
-  <nav class="site-nav">
-    <a href="https://benchmarkps.org" class="nav-brand">
-      <img src="/assets/benchmark-icon-nav-BhAe3FNc.png" alt="Benchmark PS" onerror="this.style.display='none'">
-      <span>
-        <div class="nav-wordmark-main">Benchmark</div>
-        <div class="nav-wordmark-sub">Performance Systems</div>
-      </span>
-    </a>
-    <div class="nav-right">
-      
-      <a href="https://benchmarkps.org/blog" class="nav-back">&#8592; Live blog</a>
-    </div>
-  </nav>
 
-  <div class="page-header">
-    <h1>Weekly Draft Review</h1>
-    <p>10 April &#8212; 16 April 2026 &middot; 0 articles ready</p>
-    <div class="generated">Generated: 09 April 2026</div>
+<nav class="site-nav">
+  <a href="https://benchmarkps.org" class="nav-brand">
+    <img src="/assets/benchmark-icon-nav-BhAe3FNc.png" alt="Benchmark PS" onerror="this.style.display='none'">
+    <span>
+      <div class="nav-wordmark-main">Benchmark</div>
+      <div class="nav-wordmark-sub">Performance Systems</div>
+    </span>
+  </a>
+  <div class="nav-right">
+    <span class="nav-badge" id="nav-badge"></span>
+    <a href="https://benchmarkps.org/blog" class="nav-link">&#8592; Live blog</a>
   </div>
+</nav>
 
-  <div class="drafts-container">
-    <div class="instructions">
-      <strong>Review each article before it publishes.</strong>
-      Posts go live daily at 07:00 UTC. Use the buttons at the top or bottom of each article to
-      <strong>approve</strong>, <strong>skip</strong>, <strong>edit the title</strong>, or <strong>delay</strong>.
-      All posts publish automatically unless you take action.
-    </div>
-    
-    
-    <div class="empty-state">
-  <h2>No drafts available</h2>
-  <p>Drafts are generated every Monday. Trigger the Generate Drafts workflow in GitHub Actions to create this week's drafts.</p>
+<div class="page-header">
+  <h1>Weekly Draft Review</h1>
+  <p id="page-sub">Loading drafts from GitHub...</p>
+  <div class="sub" id="page-sub2"></div>
 </div>
-  </div>
 
-  <footer class="site-footer">
-    <a href="https://benchmarkps.org/blog">Live blog</a> &middot;
-    <a href="https://benchmarkps.org">benchmarkps.org</a> &middot;
-    Internal review page
-  </footer>
+<div id="main-content">
+  <div class="loading-screen">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Fetching this week's drafts...</div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <a href="https://benchmarkps.org/blog">Live blog</a> &middot;
+  <a href="https://benchmarkps.org">benchmarkps.org</a> &middot;
+  Internal review page
+</footer>
+
+<script>
+const OWNER  = 'maunger-art';
+const REPO   = 'bench-form-clinician';
+const BRANCH = 'main';
+const API    = `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
+const APPROVAL = 'https://benchmarkps.org/blog/approve/';
+const TOKEN  = 'BPSfeedback2026';
+
+let drafts = [];
+
+async function init() {
+  try {
+    const r = await fetch(`${API}/drafts?ref=${BRANCH}`, {
+      headers: { Accept: 'application/vnd.github.v3+json' }
+    });
+    if (!r.ok) { showEmpty('No drafts folder found. Run the Monday Draft Generation workflow.'); return; }
+    const files = (await r.json()).filter(f => f.name.endsWith('.json'));
+    if (!files.length) { showEmpty('No drafts this week. Run the Monday Draft Generation workflow in GitHub Actions.'); return; }
+
+    drafts = await Promise.all(files.map(async f => {
+      const d = await (await fetch(f.download_url)).json();
+      return { filename: f.name, sha: f.sha, data: d };
+    }));
+    drafts.sort((a,b) => (a.data.queue_position||99) - (b.data.queue_position||99));
+    render();
+  } catch(e) { showEmpty('Error: ' + e.message); }
+}
+
+function render() {
+  const now = new Date();
+  const ws = new Date(now); ws.setDate(now.getDate()+1);
+  const we = new Date(now); we.setDate(now.getDate()+7);
+  const f = d => d.toLocaleDateString('en-GB',{day:'numeric',month:'long'});
+  document.getElementById('page-sub').textContent = `${f(ws)} — ${f(we)} · ${drafts.length} drafts ready`;
+  document.getElementById('page-sub2').textContent = `Live from GitHub · ${new Date().toLocaleTimeString('en-GB')}`;
+  const badge = document.getElementById('nav-badge');
+  badge.textContent = drafts.length + ' drafts';
+  badge.style.display = 'inline-block';
+
+  const toc = drafts.map((d,i) => `
+    <div class="toc-item">
+      <span class="toc-num">#${i+1}</span>
+      <a href="#draft-${i+1}">${x(d.data.title||d.filename)}</a>
+      <span class="toc-date">${schedDate(i)}</span>
+    </div>`).join('');
+
+  const cards = drafts.map((d,i) => card(d,i)).join('');
+
+  document.getElementById('main-content').innerHTML = `
+    <div class="drafts-container">
+      <div class="instructions">
+        <strong>Review each article before it publishes.</strong>
+        Posts go live daily at 07:00 UTC. Approve, skip, edit title, or delay using the buttons.
+        Use <strong>&#9998; Edit content</strong> to edit sections inline and save back to GitHub.
+        All posts publish automatically unless you act.
+      </div>
+      <div class="toc"><h3>This week</h3><div class="toc-list">${toc}</div></div>
+      ${cards}
+    </div>`;
+}
+
+function card(d, i) {
+  const num = i+1;
+  const dt = d.data;
+  const t = dt.title || d.filename;
+  const te = encodeURIComponent(t);
+  const tags = (dt.tags||[]).slice(0,4).map(t=>`<span class="tag">${x(t)}</span>`).join(' ');
+  const faq = (dt.faq||[]).map(f=>`<div class="faq-item"><h4>${x(f.q)}</h4><p>${x(f.a)}</p></div>`).join('');
+  const faqHtml = faq ? `<div class="faq-section"><h3>Frequently Asked Questions</h3>${faq}</div>` : '';
+  const refs = buildRefs(dt.html_content||'', num);
+
+  return `
+<div class="draft-article" id="draft-${num}">
+  <div class="draft-header">
+    <div class="draft-meta-top">
+      <span class="draft-number">Draft #${num}</span>
+      <span class="draft-date">Scheduled: ${schedDate(i)}</span>
+    </div>
+    <div class="draft-title">${x(t)}</div>
+    <div class="draft-meta">
+      ${dt.cluster?`<span class="cluster-badge">${x(dt.cluster)}</span>`:''}
+      ${tags}
+    </div>
+    <p class="draft-description">${x(dt.meta_description||'')}</p>
+    <div class="draft-actions">
+      <a href="${APPROVAL}?token=${TOKEN}&n=${num}&t=${te}&a=approve" class="btn btn-approve">&#10003; Approve</a>
+      <a href="${APPROVAL}?token=${TOKEN}&n=${num}&t=${te}&a=skip" class="btn btn-skip">&#10007; Skip</a>
+      <a href="${APPROVAL}?token=${TOKEN}&n=${num}&t=${te}&a=edit" class="btn btn-edit">&#9998; Edit title</a>
+      <a href="${APPROVAL}?token=${TOKEN}&n=${num}&t=${te}&a=delay" class="btn btn-delay">&#9201; Delay</a>
+      <button class="btn btn-edit-content" id="ecbtn-${num}" onclick="toggleEditor(${i})">&#9998; Edit content</button>
+    </div>
+  </div>
+  <div class="draft-content">
+    <div class="article-body" id="body-${num}">${dt.html_content||'<p>No content.</p>'}${faqHtml}</div>
+    ${refs}
+  </div>
+  <div class="section-editor-panel" id="epanel-${num}">
+    <div class="editor-toolbar">
+      <span class="editor-toolbar-label">&#9998; Click a section title to edit it</span>
+      <div class="editor-toolbar-actions">
+        <button class="btn btn-save" onclick="save(${i})">&#10003; Save to GitHub</button>
+        <button class="btn btn-cancel-edit" onclick="toggleEditor(${i})">Close</button>
+      </div>
+    </div>
+    <div class="sections-list" id="slist-${num}"></div>
+    <div class="save-status" id="sstatus-${num}"></div>
+  </div>
+  <div class="draft-footer-actions">
+    <a href="${APPROVAL}?token=${TOKEN}&n=${num}&t=${te}&a=approve" class="btn btn-approve">&#10003; Approve for publication</a>
+    <a href="${APPROVAL}?token=${TOKEN}&n=${num}&t=${te}&a=skip" class="btn btn-skip">&#10007; Skip</a>
+  </div>
+</div>`;
+}
+
+function toggleEditor(i) {
+  const num = i+1;
+  const panel = document.getElementById(`epanel-${num}`);
+  const btn   = document.getElementById(`ecbtn-${num}`);
+  const body  = document.getElementById(`body-${num}`);
+  if (panel.classList.contains('open')) {
+    panel.classList.remove('open');
+    btn.classList.remove('active');
+    btn.innerHTML = '&#9998; Edit content';
+    body.style.opacity = '1';
+  } else {
+    buildEditor(i);
+    panel.classList.add('open');
+    btn.classList.add('active');
+    btn.innerHTML = '&#10007; Close editor';
+    body.style.opacity = '0.4';
+    panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+}
+
+function buildEditor(i) {
+  const num   = i+1;
+  const bodyEl = document.getElementById(`body-${num}`);
+  const listEl = document.getElementById(`slist-${num}`);
+  const kids   = Array.from(bodyEl.children);
+  const secs   = [];
+  let cur = null;
+  kids.forEach(el => {
+    if (el.tagName === 'H2') {
+      if (cur) secs.push(cur);
+      cur = { title: el.textContent.trim(), els: [el] };
+    } else {
+      if (!cur) cur = { title: 'Introduction', els: [] };
+      cur.els.push(el);
+    }
+  });
+  if (cur && cur.els.length) secs.push(cur);
+  listEl.innerHTML = '';
+  secs.forEach((sec, si) => {
+    const tmp = document.createElement('div');
+    sec.els.forEach(el => tmp.appendChild(el.cloneNode(true)));
+    const html = tmp.innerHTML;
+    const blk  = document.createElement('div');
+    blk.className = 'section-block';
+    blk.id = `sb-${num}-${si}`;
+    const hdr  = document.createElement('div');
+    hdr.className = 'section-block-header';
+    const ttl  = document.createElement('span');
+    ttl.className = 'section-block-title';
+    ttl.textContent = sec.title || `Section ${si+1}`;
+    const ebtn = document.createElement('button');
+    ebtn.className = 'section-edit-btn';
+    ebtn.innerHTML = '&#9998; Edit';
+    ebtn.onclick = () => toggleSec(num, si);
+    hdr.appendChild(ttl); hdr.appendChild(ebtn);
+    const prev = document.createElement('div');
+    prev.className = 'section-preview';
+    prev.id = `sp-${num}-${si}`;
+    prev.innerHTML = html;
+    const ta = document.createElement('textarea');
+    ta.className = 'section-textarea';
+    ta.id = `st-${num}-${si}`;
+    ta.spellcheck = true;
+    ta.value = html;
+    blk.appendChild(hdr); blk.appendChild(prev); blk.appendChild(ta);
+    listEl.appendChild(blk);
+  });
+}
+
+function toggleSec(num, si) {
+  const blk  = document.getElementById(`sb-${num}-${si}`);
+  const prev = document.getElementById(`sp-${num}-${si}`);
+  const ta   = document.getElementById(`st-${num}-${si}`);
+  const btn  = blk.querySelector('.section-edit-btn');
+  if (!ta.classList.contains('visible')) {
+    ta.value = prev.innerHTML;
+    ta.classList.add('visible'); prev.style.display = 'none';
+    blk.classList.add('editing'); btn.innerHTML = '&#10003; Done'; ta.focus();
+  } else {
+    prev.innerHTML = ta.value;
+    ta.classList.remove('visible'); prev.style.display = '';
+    blk.classList.remove('editing'); btn.innerHTML = '&#9998; Edit';
+  }
+}
+
+async function save(i) {
+  const num = i+1;
+  const st  = document.getElementById(`sstatus-${num}`);
+  const ll  = document.getElementById(`slist-${num}`);
+  st.className = 'save-status saving'; st.textContent = 'Saving to GitHub...';
+  try {
+    let newHtml = '';
+    ll.querySelectorAll('.section-block').forEach((blk, si) => {
+      const ta = document.getElementById(`st-${num}-${si}`);
+      const pr = document.getElementById(`sp-${num}-${si}`);
+      newHtml += ta.classList.contains('visible') ? ta.value : pr.innerHTML;
+    });
+    const fr = await fetch(`${API}/drafts/${drafts[i].filename}?ref=${BRANCH}`, {
+      headers: { Accept: 'application/vnd.github.v3+json' }
+    });
+    if (!fr.ok) throw new Error('Could not read file');
+    const fd  = await fr.json();
+    const upd = { ...drafts[i].data, html_content: newHtml };
+    const enc = btoa(unescape(encodeURIComponent(JSON.stringify(upd, null, 2))));
+    const pr  = await fetch(`${API}/drafts/${drafts[i].filename}`, {
+      method: 'PUT',
+      headers: { Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: `Edit: ${upd.title||drafts[i].filename}`, content: enc, sha: fd.sha, branch: BRANCH })
+    });
+    if (!pr.ok) { const e = await pr.json(); throw new Error(e.message||'Save failed'); }
+    drafts[i].data = upd;
+    st.className = 'save-status success'; st.textContent = '&#10003; Saved to GitHub';
+    setTimeout(() => { st.textContent = ''; st.className = 'save-status'; }, 4000);
+  } catch(e) { st.className = 'save-status error'; st.textContent = 'Error: ' + e.message; }
+}
+
+function buildRefs(html, num) {
+  const p = new DOMParser();
+  const d = p.parseFromString(html, 'text/html');
+  const ol = d.querySelector('ol.references');
+  if (!ol) return '';
+  const items = Array.from(ol.querySelectorAll('li'));
+  if (!items.length) return '';
+  const its = items.map((li, i) => {
+    const txt = li.textContent.trim();
+    const sh  = txt.length > 120 ? txt.slice(0,120)+'...' : txt;
+    const q   = encodeURIComponent(txt.replace(/\d{4};\d+.*$/,'').replace(/[^\w\s]/g,' ').trim().slice(0,100));
+    return `<div class="ref-item" id="ri-${num}-${i}">
+      <input type="checkbox" class="ref-checkbox" onchange="chk(${num},${i},this)">
+      <span class="ref-num">${i+1}</span>
+      <span class="ref-text">${x(sh)}</span>
+      <a href="https://pubmed.ncbi.nlm.nih.gov/?term=${q}" target="_blank" rel="noopener" class="pubmed-link">PubMed &#8599;</a>
+    </div>`;
+  }).join('');
+  return `<div class="ref-checklist">
+    <div class="ref-checklist-header">
+      <span class="ref-checklist-title">&#10003; Reference verification</span>
+      <span class="ref-checklist-subtitle">Verify before approving</span>
+      <span class="ref-progress" id="rp-${num}">0 / ${items.length} verified</span>
+    </div>
+    <div class="ref-items">${its}</div>
+    <div class="ref-note">Click PubMed to verify each reference. Tick when confirmed. If not found, edit or skip.</div>
+  </div>`;
+}
+
+function chk(num, i, cb) {
+  const item = document.getElementById(`ri-${num}-${i}`);
+  cb.checked ? item.classList.add('verified') : item.classList.remove('verified');
+  const cl = cb.closest('.ref-checklist');
+  const tot = cl.querySelectorAll('.ref-checkbox').length;
+  const chkd = cl.querySelectorAll('.ref-checkbox:checked').length;
+  const pg = document.getElementById(`rp-${num}`);
+  pg.textContent = `${chkd} / ${tot} verified`;
+  if (chkd === tot) { pg.style.background='hsl(152,52%,93%)'; pg.style.color='hsl(152,69%,25%)'; }
+}
+
+function schedDate(i) {
+  const d = new Date(); d.setDate(d.getDate()+i+1);
+  return d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+}
+
+function showEmpty(msg) {
+  document.getElementById('page-sub').textContent = 'No drafts available';
+  document.getElementById('main-content').innerHTML = `
+    <div class="drafts-container">
+      <div class="empty-state"><h2>No drafts this week</h2><p>${msg}</p></div>
+    </div>`;
+}
+
+function x(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+init();
+</script>
 </body>
 </html>
