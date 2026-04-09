@@ -45,6 +45,78 @@ def load_drafts() -> list[dict]:
     return drafts[:7]
 
 
+def extract_references(html_content: str) -> list[str]:
+    """Extract reference list items from html_content."""
+    import re
+    refs = []
+    # Match <ol class="references">...</ol>
+    ol_match = re.search(r'<ol[^>]*class="references"[^>]*>(.*?)</ol>', html_content, re.DOTALL | re.IGNORECASE)
+    if not ol_match:
+        return refs
+    ol_html = ol_match.group(1)
+    # Extract each <li> item
+    items = re.findall(r'<li[^>]*>(.*?)</li>', ol_html, re.DOTALL)
+    for item in items:
+        # Strip HTML tags
+        clean = re.sub(r'<[^>]+>', '', item).strip()
+        clean = re.sub(r'\s+', ' ', clean)
+        if clean and len(clean) > 10:
+            refs.append(clean)
+    return refs
+
+
+def build_pubmed_url(reference_text: str) -> str:
+    """Build a PubMed search URL from reference text."""
+    import urllib.parse
+    # Extract likely searchable terms: author surname + key words from title
+    # Strip journal/year info (usually after the last full stop before journal abbrev)
+    text = reference_text[:120]
+    # Remove common punctuation noise
+    text = re.sub(r'\d{4};\d+.*$', '', text).strip()
+    text = re.sub(r'[^\w\s]', ' ', text)
+    text = re.sub(r'\s+', ' ', text).strip()
+    query = urllib.parse.quote(text[:100])
+    return f"https://pubmed.ncbi.nlm.nih.gov/?term={query}"
+
+
+def build_reference_checklist(references: list[str]) -> str:
+    """Build an HTML reference verification checklist."""
+    if not references:
+        return ""
+
+    items = ""
+    for i, ref in enumerate(references):
+        pubmed_url = build_pubmed_url(ref)
+        short_ref = ref[:120] + ("..." if len(ref) > 120 else "")
+        items += f"""
+<div class="ref-check-item">
+  <label class="ref-check-label">
+    <input type="checkbox" class="ref-checkbox" onchange="updateRefProgress(this)">
+    <span class="ref-num">{i+1}</span>
+    <span class="ref-text">{short_ref}</span>
+  </label>
+  <a href="{pubmed_url}" target="_blank" rel="noopener" class="pubmed-link">
+    Search PubMed &#8599;
+  </a>
+</div>"""
+
+    return f"""
+<div class="ref-checklist">
+  <div class="ref-checklist-header">
+    <span class="ref-checklist-title">&#10003; Reference verification</span>
+    <span class="ref-checklist-subtitle">Check each citation exists before approving</span>
+    <span class="ref-progress" id="ref-progress-{{draft_id}}">0 / {len(references)} verified</span>
+  </div>
+  <div class="ref-checklist-items">
+    {items}
+  </div>
+  <div class="ref-checklist-note">
+    Click "Search PubMed" to verify each reference exists. Tick when confirmed.
+    If a reference cannot be found, edit the title or skip this draft.
+  </div>
+</div>"""
+
+
 def get_upcoming_dates(count: int) -> list[str]:
     dates = []
     current = date.today() + timedelta(days=1)
@@ -88,6 +160,8 @@ def build_preview_page(drafts: list[dict]) -> str:
 
         tags_html = " ".join(f'<span class="tag">{t}</span>' for t in tags[:4])
         faq_html = build_faq_html(faq)
+        references = extract_references(html_content)
+        ref_checklist = build_reference_checklist(references).replace('{draft_id}', str(i+1))
 
         t_encoded = urllib.parse.quote(title)
         approve_url = f"{APPROVAL_BASE_URL}/?token={FEEDBACK_TOKEN}&n={i+1}&t={t_encoded}&a=approve"
@@ -129,6 +203,7 @@ def build_preview_page(drafts: list[dict]) -> str:
       {html_content}
       {faq_html}
     </div>
+    {ref_checklist}
   </div>
   <div class="draft-footer-actions">
     <a href="{approve_url}" class="btn btn-approve">&#10003; Approve for publication</a>
@@ -219,6 +294,23 @@ def build_preview_page(drafts: list[dict]) -> str:
     .faq-item h4 {{ font-size:0.88rem; font-weight:600; color:var(--navy); margin-bottom:0.35rem; }}
     .faq-item p {{ font-size:0.85rem; color:var(--mid); margin-bottom:0; line-height:1.6; }}
     .draft-footer-actions {{ padding:1.25rem 2rem; background:var(--warm); display:flex; gap:0.6rem; flex-wrap:wrap; }}
+    /* Reference checklist */
+    .ref-checklist {{ margin:2rem 0 0; padding:1.5rem; background:hsl(39,92%,97%); border:1px solid hsl(39,92%,85%); border-radius:10px; }}
+    .ref-checklist-header {{ display:flex; align-items:baseline; gap:1rem; flex-wrap:wrap; margin-bottom:1rem; }}
+    .ref-checklist-title {{ font-size:0.85rem; font-weight:700; color:hsl(35,88%,30%); }}
+    .ref-checklist-subtitle {{ font-size:0.78rem; color:var(--mid); flex:1; }}
+    .ref-progress {{ font-size:0.75rem; font-weight:700; color:hsl(35,88%,35%); background:white; padding:0.2rem 0.6rem; border-radius:4px; border:1px solid hsl(39,92%,78%); }}
+    .ref-checklist-items {{ display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1rem; }}
+    .ref-check-item {{ display:flex; align-items:flex-start; gap:0.75rem; padding:0.6rem 0.75rem; background:white; border-radius:6px; border:1px solid hsl(39,92%,85%); }}
+    .ref-check-label {{ display:flex; align-items:flex-start; gap:0.6rem; flex:1; cursor:pointer; }}
+    .ref-checkbox {{ margin-top:2px; flex-shrink:0; width:14px; height:14px; accent-color:var(--green); }}
+    .ref-num {{ font-size:0.72rem; font-weight:700; color:var(--mid); min-width:18px; flex-shrink:0; margin-top:1px; }}
+    .ref-text {{ font-size:0.78rem; color:var(--navy); line-height:1.5; }}
+    .ref-check-item.verified {{ background:hsl(152,52%,97%); border-color:hsl(152,52%,80%); }}
+    .ref-check-item.verified .ref-text {{ color:var(--mid); }}
+    .pubmed-link {{ flex-shrink:0; font-size:0.72rem; font-weight:700; color:var(--blue); text-decoration:none; white-space:nowrap; padding:0.2rem 0.5rem; background:var(--blue-pale); border-radius:4px; margin-top:1px; }}
+    .pubmed-link:hover {{ background:var(--blue-light); text-decoration:none; }}
+    .ref-checklist-note {{ font-size:0.75rem; color:var(--mid); line-height:1.5; font-style:italic; }}
     .btn {{ display:inline-block; padding:0.55rem 1.25rem; border-radius:7px; font-size:0.82rem; font-weight:700; text-decoration:none; transition:opacity 0.15s; white-space:nowrap; }}
     .btn:hover {{ opacity:0.8; text-decoration:none; }}
     .btn-approve {{ background:hsl(152,52%,93%); color:var(--green); border:1px solid hsl(152,52%,78%); }}
@@ -231,12 +323,35 @@ def build_preview_page(drafts: list[dict]) -> str:
     .site-footer {{ background:var(--navy); padding:2rem; text-align:center; color:rgba(255,255,255,0.35); font-size:0.78rem; margin-top:2rem; }}
     .site-footer a {{ color:rgba(255,255,255,0.5); text-decoration:none; }}
     .site-footer a:hover {{ color:white; }}
+    /* Checked state */
     @media (max-width:640px) {{
       .site-nav {{ padding:0 1.25rem; }}
       .draft-header, .draft-content, .draft-footer-actions {{ padding:1.25rem; }}
       .draft-title {{ font-size:1.2rem; }}
     }}
   </style>
+<script>
+function updateRefProgress(checkbox) {{
+  var item = checkbox.closest('.ref-check-item');
+  if (checkbox.checked) {{
+    item.classList.add('verified');
+  }} else {{
+    item.classList.remove('verified');
+  }}
+  var checklist = checkbox.closest('.ref-checklist');
+  var total = checklist.querySelectorAll('.ref-checkbox').length;
+  var checked = checklist.querySelectorAll('.ref-checkbox:checked').length;
+  var progressEl = checklist.querySelector('.ref-progress');
+  if (progressEl) {{
+    progressEl.textContent = checked + ' / ' + total + ' verified';
+    if (checked === total) {{
+      progressEl.style.background = 'hsl(152,52%,93%)';
+      progressEl.style.color = 'hsl(152,69%,25%)';
+      progressEl.style.borderColor = 'hsl(152,52%,78%)';
+    }}
+  }}
+}}
+</script>
 </head>
 <body>
   <nav class="site-nav">
