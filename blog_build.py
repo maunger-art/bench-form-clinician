@@ -14,7 +14,7 @@ from pathlib import Path
 # BRAND CONFIGURATION
 # ─────────────────────────────────────────────
 SITE_NAME = "Benchmark PS"
-SITE_URL = "https://maunger-art.github.io/bench-form-clinician/"
+SITE_URL = "https://benchmarkps.org/blog/"
 BRAND_PRIMARY_COLOR = "#1A3C5E"
 BRAND_ACCENT_COLOR = "#2E86AB"
 BRAND_FONT = "Inter, system-ui, sans-serif"

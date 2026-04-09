@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://maunger-art.github.io/bench-form-clinician//sitemap.xml
+Sitemap: https://benchmarkps.org/blog//sitemap.xml
