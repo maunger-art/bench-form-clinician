@@ -94,13 +94,6 @@ const Navbar = () => {
             >
               Login
             </a>
-            <Button
-              size="sm"
-              asChild
-              className="bg-brand-blue-mid hover:bg-brand-blue-mid/80 text-primary-foreground text-[13px] font-semibold px-5 rounded-md"
-            >
-              <a href="https://platform.benchmarkps.org/login?signup=true">Create Account</a>
-            </Button>
           </div>
 
           <button
@@ -124,9 +117,6 @@ const Navbar = () => {
               </a>
             ))}
             <a href="https://platform.benchmarkps.org/login" className="text-primary-foreground/70 text-sm font-medium py-1">Login</a>
-            <Button size="sm" asChild className="bg-brand-blue-mid text-primary-foreground w-full mt-2">
-              <a href="https://platform.benchmarkps.org/login?signup=true">Create Account</a>
-            </Button>
           </div>
         )}
       </nav>
