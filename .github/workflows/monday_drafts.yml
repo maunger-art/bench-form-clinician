@@ -44,4 +44,5 @@ jobs:
           git config user.email "bot@benchmarkps.org"
           git add queue.json drafts/ output/preview/
           git commit -m "Weekly drafts: $(date +%Y-%m-%d)" || echo "Nothing to commit"
+          git pull --rebase origin main
           git push

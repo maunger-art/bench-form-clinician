@@ -39,10 +39,14 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python social_snippets.py
 
+      - name: Generate preview page
+        run: python generate_preview_page.py
+
       - name: Commit and push
         run: |
           git config user.name "Benchmark PS Bot"
           git config user.email "bot@benchmarkps.org"
           git add posts_manifest.json queue.json output/ output/social/
           git commit -m "Daily post: $(date +%Y-%m-%d)" || echo "Nothing to commit"
+          git pull --rebase origin main
           git push
