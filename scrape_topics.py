@@ -1,9 +1,20 @@
 """
-scrape_topics.py — Automatically refills queue.json with high-value article topics
-scraped from Reddit, Google People Also Ask, and curated MSK keyword clusters.
+scrape_topics.py — Automatically refills queue.json with high-value article topics.
+
+Sources:
+  - Reddit (17 subreddits)
+  - Google People Also Ask
+  - PubMed Entrez API (latest MSK research papers)
+  - BJSM Blog RSS
+  - NICE Guidelines RSS
+  - Physio Edge Podcast RSS
+  - The Running Physio RSS
+  - The Sports Physio RSS
+  - Physiopedia RSS
+  - Curated fallback topics (50+)
 
 Runs before generate_post.py in the daily GitHub Actions workflow.
-Only adds topics when queue.json has fewer than 7 items remaining.
+Only refills when queue.json drops below REFILL_THRESHOLD items.
 """
 
 import json
@@ -11,6 +22,7 @@ import re
 import time
 import urllib.request
 import urllib.parse
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import anthropic
@@ -19,27 +31,33 @@ BASE_DIR = Path(__file__).parent
 QUEUE_PATH = BASE_DIR / "queue.json"
 MANIFEST_PATH = BASE_DIR / "posts_manifest.json"
 
-# Minimum queue size before we refill
 REFILL_THRESHOLD = 7
-# How many new topics to add per refill
 REFILL_COUNT = 14
 
-# Reddit communities to scrape for MSK questions
+# ─────────────────────────────────────────────
+# SOURCE CONFIGURATION
+# ─────────────────────────────────────────────
+
 SUBREDDITS = [
     "physio",
     "physicaltherapy",
     "sportsrehab",
+    "backpain",
+    "kneeinjury",
+    "ACL",
+    "flexibility",
     "running",
     "cycling",
     "weightlifting",
     "tennis",
     "golf",
-    "backpain",
-    "kneeinjury",
-    "ACL",
+    "triathlon",
+    "crossfit",
+    "overcominggravity",
+    "Rowing",
+    "medicine",
 ]
 
-# Seed search queries for Google PAA scraping
 SEARCH_QUERIES = [
     "physiotherapy assessment MSK",
     "how to treat knee osteoarthritis physiotherapy",
@@ -58,15 +76,56 @@ SEARCH_QUERIES = [
     "sports injury rehabilitation protocol",
 ]
 
-# Curated fallback topics per cluster — used when scraping yields insufficient results
+RSS_FEEDS = [
+    {
+        "name": "BJSM Blog",
+        "url": "https://blogs.bmj.com/bjsm/feed/",
+        "type": "rss",
+    },
+    {
+        "name": "NICE MSK Guidelines",
+        "url": "https://www.nice.org.uk/guidance/published?ngt=&ndt=Guideline&ndr=Musculoskeletal+conditions&nds=Published&format=rss",
+        "type": "rss",
+    },
+    {
+        "name": "Physio Edge Podcast",
+        "url": "https://feeds.buzzsprout.com/1853414.rss",
+        "type": "podcast_rss",
+    },
+    {
+        "name": "The Running Physio",
+        "url": "https://www.therunningphysio.com/feed/",
+        "type": "rss",
+    },
+    {
+        "name": "The Sports Physio",
+        "url": "https://thesportsphysio.wordpress.com/feed/",
+        "type": "rss",
+    },
+    {
+        "name": "Physiopedia Latest",
+        "url": "https://www.physio-pedia.com/index.php?title=Special:NewPages&feed=rss",
+        "type": "rss",
+    },
+]
+
+PUBMED_QUERIES = [
+    "musculoskeletal physiotherapy outcomes measurement",
+    "ACL rehabilitation return sport criteria",
+    "clinical decision support physiotherapy",
+    "MSK conservative care effectiveness",
+    "physiotherapy outcome measures reliability",
+]
+
 FALLBACK_TOPICS = [
-    # Objective Assessment
     "How to Use Handheld Dynamometry in a Standard Physiotherapy Appointment",
     "Normative Strength Data for Lower Limb Rehabilitation: A Clinical Reference",
     "Single-Leg Hop Testing: How to Administer, Score, and Interpret Results",
     "Range of Motion Assessment in Physiotherapy: Improving Consistency Across Clinicians",
     "Functional Movement Screening in MSK Physiotherapy: What the Evidence Supports",
-    # MSK Outcomes
+    "Isometric vs Isotonic Strength Testing in Physiotherapy: When Each Is Appropriate",
+    "Grip Strength as a Clinical Marker: What It Tells You Beyond Hand Function",
+    "Implementing Objective Assessment in a 30-Minute Physiotherapy Appointment",
     "Hamstring Strain Rehabilitation: Criteria-Based Return to Sport Protocols",
     "Patellofemoral Pain in Runners: Assessment Findings and Exercise Progressions",
     "Shoulder Impingement vs Rotator Cuff Tear: Clinical Differentiation and Management",
@@ -77,32 +136,46 @@ FALLBACK_TOPICS = [
     "Plantar Fasciitis Management: Load Management and Exercise Protocols",
     "Cervical Radiculopathy: Conservative Management in Primary Care Physiotherapy",
     "Groin Pain in Athletes: Differential Diagnosis and Rehabilitation",
-    # Clinical Decision-Making
+    "Lateral Ankle Instability: Rehabilitation Beyond the Acute Phase",
+    "Tibial Stress Fractures in Runners: Return to Running Criteria",
+    "De Quervain Tenosynovitis: Conservative Management and Outcome Expectations",
+    "Frozen Shoulder: Stage-Based Management and Realistic Outcome Timelines",
+    "Tennis Elbow: Why Most Cases Resolve and What Accelerates Recovery",
     "Red Flags in MSK Assessment: What Every Physiotherapist Must Screen For",
     "When to Refer for Imaging in MSK Physiotherapy: Clinical Decision Rules",
     "Pain Education in Physiotherapy: How to Explain Central Sensitisation to Patients",
     "Setting Rehabilitation Goals with Patients: Outcome Measure Selection in Practice",
     "Stratifying MSK Patients by Complexity: A Framework for Caseload Management",
-    # Clinic Business
+    "The STarT Back Tool in Practice: Using Risk Stratification to Match Treatment Intensity",
+    "Prognostic Factors in MSK Physiotherapy: What Predicts a Good Outcome",
+    "Shared Decision Making in Physiotherapy: How to Have Better Goal-Setting Conversations",
     "How to Build a Physiotherapy Referral Network with GPs and Consultants",
     "Physiotherapy Outcome Reporting for Private Medical Insurance: What Insurers Want",
     "Patient Retention in Physiotherapy: Why Patients Drop Out and How to Reduce It",
     "Pricing Physiotherapy Services: How to Communicate Value Beyond Session Cost",
     "Building a Physiotherapy Brand on LinkedIn: What Actually Works",
-    # Cost of MSK Inaction
+    "How to Recruit and Retain Junior Physiotherapists in a Private Practice",
+    "Clinical Supervision in Physiotherapy: Building a Framework That Improves Outcomes",
+    "The Business Case for Specialising Your Physiotherapy Practice",
     "The Cost of Delayed Physiotherapy: What the Evidence Says About Early Intervention",
     "MSK Conditions and Workplace Absence: The Case for Employer-Funded Physiotherapy",
     "Avoiding Unnecessary Physiotherapy Referrals: How Objective Data Changes the Picture",
     "Physiotherapy vs Surgery for Common MSK Conditions: A Comparative Evidence Review",
     "Value-Based Healthcare in Physiotherapy: What Outcomes-Based Contracting Looks Like",
-    # Technology
+    "GLP-1 Medications and MSK Health: What Physiotherapists Need to Know",
+    "The Ageing Workforce and MSK Demand: What Practice Owners Should Be Planning For",
     "Telehealth Physiotherapy for MSK Conditions: Evidence, Limitations, and Best Practice",
     "AI in Physiotherapy Clinical Decision Support: Where the Technology Actually Stands",
     "Digital Exercise Prescription in Physiotherapy: Platforms, Evidence, and Patient Uptake",
     "Wearable Technology in MSK Rehabilitation: What Data Is Actually Clinically Useful",
     "Electronic Outcome Measurement in Physiotherapy: Implementation Without the Burden",
+    "Using Smartphone Apps for Physiotherapy Home Exercise: What Patients Actually Do",
 ]
 
+
+# ─────────────────────────────────────────────
+# UTILITY
+# ─────────────────────────────────────────────
 
 def load_json(path):
     with open(path) as f:
@@ -114,79 +187,157 @@ def save_json(path, data):
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
-def get_reddit_questions(subreddit: str, limit: int = 25) -> list[str]:
-    """Fetch top questions from a subreddit using Reddit's JSON API."""
-    questions = []
+def fetch_url(url: str, headers: dict = None, timeout: int = 12) -> str | None:
     try:
-        url = f"https://www.reddit.com/r/{subreddit}/top.json?limit={limit}&t=month"
-        req = urllib.request.Request(url, headers={"User-Agent": "BenchmarkPS-BlogBot/1.0"})
-        with urllib.request.urlopen(req, timeout=10) as response:
-            data = json.loads(response.read())
-            posts = data.get("data", {}).get("children", [])
-            for post in posts:
-                title = post.get("data", {}).get("title", "")
-                # Only keep posts that look like questions or topics
-                if any(kw in title.lower() for kw in [
-                    "how", "what", "why", "when", "should", "best", "help",
-                    "pain", "injury", "rehab", "physio", "exercise", "strength",
-                    "return", "surgery", "recovery", "assessment", "treatment"
-                ]):
-                    questions.append(title)
+        default_headers = {
+            "User-Agent": "BenchmarkPS-BlogBot/2.0 (blog@benchmarkps.org)",
+            "Accept": "application/rss+xml, application/xml, text/xml, */*",
+        }
+        if headers:
+            default_headers.update(headers)
+        req = urllib.request.Request(url, headers=default_headers)
+        with urllib.request.urlopen(req, timeout=timeout) as response:
+            return response.read().decode("utf-8", errors="ignore")
     except Exception as e:
-        print(f"  Reddit {subreddit}: {e}")
-    return questions
+        print(f"  Fetch error {url[:60]}: {e}")
+        return None
+
+
+# ─────────────────────────────────────────────
+# SCRAPERS
+# ─────────────────────────────────────────────
+
+def get_reddit_topics(subreddit: str, limit: int = 20) -> list[str]:
+    topics = []
+    url = f"https://www.reddit.com/r/{subreddit}/top.json?limit={limit}&t=month"
+    content = fetch_url(url)
+    if not content:
+        return topics
+    try:
+        data = json.loads(content)
+        posts = data.get("data", {}).get("children", [])
+        for post in posts:
+            title = post.get("data", {}).get("title", "").strip()
+            if len(title) < 15:
+                continue
+            if any(kw in title.lower() for kw in [
+                "how", "what", "why", "when", "should", "best", "help",
+                "pain", "injury", "rehab", "physio", "exercise", "strength",
+                "return", "surgery", "recovery", "assessment", "treatment",
+                "muscle", "knee", "shoulder", "back", "hip", "ankle", "sport",
+                "running", "cycling", "training", "load", "protocol", "evidence",
+            ]):
+                topics.append(title)
+    except Exception as e:
+        print(f"  Reddit parse error r/{subreddit}: {e}")
+    return topics
 
 
 def get_google_paa(query: str) -> list[str]:
-    """Scrape Google's 'People Also Ask' questions for a search query."""
     questions = []
-    try:
-        encoded = urllib.parse.quote(query)
-        url = f"https://www.google.com/search?q={encoded}&hl=en"
-        req = urllib.request.Request(
-            url,
-            headers={
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-                "Accept-Language": "en-GB,en;q=0.9",
-            }
-        )
-        with urllib.request.urlopen(req, timeout=10) as response:
-            html = response.read().decode("utf-8", errors="ignore")
-            # Extract PAA questions from data-q attributes and jsname patterns
-            patterns = [
-                r'data-q="([^"]{20,120})"',
-                r'"([^"]{20,120}\?)"',
-            ]
-            for pattern in patterns:
-                matches = re.findall(pattern, html)
-                for match in matches:
-                    if "?" in match and len(match) > 20:
-                        questions.append(match)
-        time.sleep(1)  # Be polite
-    except Exception as e:
-        print(f"  Google PAA '{query}': {e}")
+    encoded = urllib.parse.quote(query)
+    url = f"https://www.google.com/search?q={encoded}&hl=en&gl=gb"
+    content = fetch_url(url, headers={
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept-Language": "en-GB,en;q=0.9",
+    })
+    if not content:
+        return questions
+    for pattern in [r'data-q="([^"]{20,120})"', r'"([A-Z][^"]{20,100}\?)"']:
+        for match in re.findall(pattern, content):
+            if "?" in match and 20 < len(match) < 120:
+                questions.append(match)
+    time.sleep(1.5)
     return questions
 
+
+def get_rss_topics(feed: dict) -> list[str]:
+    topics = []
+    content = fetch_url(feed["url"])
+    if not content:
+        return topics
+    try:
+        content_clean = re.sub(r' xmlns[^"]*"[^"]*"', '', content)
+        content_clean = re.sub(r'<[a-z]+:', '<', content_clean)
+        content_clean = re.sub(r'</[a-z]+:', '</', content_clean)
+        root = ET.fromstring(content_clean)
+        for item in root.findall(".//item")[:20]:
+            title = item.findtext("title", "").strip()
+            description = item.findtext("description", "").strip()
+            description = re.sub(r'<[^>]+>', ' ', description)
+            description = re.sub(r'\s+', ' ', description).strip()[:300]
+            if title and len(title) > 15:
+                topics.append(title)
+            if description and len(description) > 50:
+                for sentence in re.split(r'[.!?]', description)[:2]:
+                    sentence = sentence.strip()
+                    if 30 < len(sentence) < 150:
+                        topics.append(sentence)
+    except Exception as e:
+        print(f"  RSS parse error {feed['name']}: {e}")
+    return topics
+
+
+def get_pubmed_topics() -> list[str]:
+    topics = []
+    base_search = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+    base_fetch = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
+
+    for query in PUBMED_QUERIES[:3]:
+        try:
+            encoded = urllib.parse.quote(query)
+            search_url = f"{base_search}?db=pubmed&term={encoded}&retmax=8&sort=date&retmode=json"
+            content = fetch_url(search_url)
+            if not content:
+                continue
+            data = json.loads(content)
+            ids = data.get("esearchresult", {}).get("idlist", [])
+            if not ids:
+                continue
+            summary_url = f"{base_fetch}?db=pubmed&id={','.join(ids)}&retmode=json"
+            content2 = fetch_url(summary_url)
+            if not content2:
+                continue
+            data2 = json.loads(content2)
+            for uid, item in data2.get("result", {}).items():
+                if uid == "uids":
+                    continue
+                title = item.get("title", "").strip().rstrip(".")
+                if title and len(title) > 20:
+                    topics.append(title)
+            time.sleep(0.4)
+        except Exception as e:
+            print(f"  PubMed '{query[:40]}': {e}")
+
+    return topics
+
+
+# ─────────────────────────────────────────────
+# CLAUDE FILTER
+# ─────────────────────────────────────────────
 
 def filter_and_rank_topics(
     raw_topics: list[str],
     existing_titles: list[str],
-    existing_queue: list[str]
+    existing_queue: list[str],
+    source_summary: str = "",
 ) -> list[str]:
-    """Use Claude to filter, deduplicate, and rank topics by clinical relevance."""
     client = anthropic.Anthropic()
 
     existing_all = set(t.lower() for t in existing_titles + existing_queue)
 
-    # Pre-filter obvious duplicates
     candidates = []
+    seen = set()
     for topic in raw_topics:
         topic = topic.strip()
-        if len(topic) < 15 or len(topic) > 200:
+        if len(topic) < 15 or len(topic) > 250:
             continue
-        # Skip if too similar to existing
+        key = topic.lower()[:40]
+        if key in seen:
+            continue
+        seen.add(key)
         if any(
-            topic.lower()[:30] in existing.lower() or existing.lower()[:30] in topic.lower()
+            topic.lower()[:35] in existing.lower() or existing.lower()[:35] in topic.lower()
             for existing in existing_all
         ):
             continue
@@ -195,31 +346,40 @@ def filter_and_rank_topics(
     if not candidates:
         return []
 
-    # Deduplicate
-    candidates = list(dict.fromkeys(candidates))[:60]
+    candidates = candidates[:80]
 
-    prompt = f"""You are a content strategist for Benchmark PS, a physiotherapy outcomes platform.
+    prompt = f"""You are a content strategist for Benchmark PS, a UK physiotherapy performance measurement platform.
 
-Below is a list of raw topic candidates scraped from Reddit and Google. Your job is to:
-1. Select the {REFILL_COUNT} most valuable topics for a physiotherapy clinic audience
-2. Rewrite each as a compelling, specific article title (not a question — a statement or guide title)
-3. Prioritise topics about: MSK assessment, clinical decision-making, rehabilitation protocols, 
-   outcomes measurement, clinic management, and the business case for physiotherapy
-4. Avoid: generic wellness content, nutrition, mental health unless directly MSK-related,
-   anything already well covered by the existing posts
+Sources scraped today: {source_summary}
 
-Existing posts to avoid duplicating:
-{chr(10).join(f"- {t}" for t in existing_titles[:20])}
+Select and rewrite the {REFILL_COUNT} best article topics for a UK physiotherapy clinic audience.
 
-Raw candidates:
+PRIORITY (in order):
+1. MSK rehabilitation protocols and clinical decision-making
+2. Objective assessment and outcome measurement in physiotherapy
+3. Evidence-based practice gaps and how to close them
+4. Clinic operations, staffing efficiency, and business case
+5. Healthcare economics and the cost of MSK inaction
+
+REWRITE RULES:
+- Convert questions to declarative titles
+- Convert academic titles to practitioner-friendly language
+- Keep titles specific — include condition names, techniques, or thresholds
+- Format: "Topic: Subtitle" or "How to [do X]" or "[Condition]: What the Evidence Shows"
+- No em dashes, no clickbait, no superlatives
+
+EXISTING POSTS — do not duplicate:
+{chr(10).join(f"- {t}" for t in existing_titles[:25])}
+
+RAW CANDIDATES:
 {chr(10).join(f"- {t}" for t in candidates)}
 
-Return ONLY a JSON array of {REFILL_COUNT} article title strings. No other text.
-Example: ["Title one", "Title two", ...]"""
+Return ONLY a valid JSON array of exactly {REFILL_COUNT} strings. No preamble, no markdown fences.
+["Title one", "Title two", ...]"""
 
     message = client.messages.create(
         model="claude-sonnet-4-20250514",
-        max_tokens=1000,
+        max_tokens=1200,
         messages=[{"role": "user", "content": prompt}],
     )
 
@@ -233,64 +393,89 @@ Example: ["Title one", "Title two", ...]"""
     return json.loads(raw)
 
 
+# ─────────────────────────────────────────────
+# MAIN
+# ─────────────────────────────────────────────
+
 def main():
     queue = load_json(QUEUE_PATH)
     manifest = load_json(MANIFEST_PATH)
 
-    print(f"Queue has {len(queue)} items. Threshold: {REFILL_THRESHOLD}")
+    print(f"Queue: {len(queue)} items | Threshold: {REFILL_THRESHOLD}")
 
     if len(queue) >= REFILL_THRESHOLD:
-        print("Queue is sufficiently full. No refill needed.")
+        print("Queue sufficiently full. No refill needed.")
         return
 
-    print(f"Refilling queue with {REFILL_COUNT} new topics...")
+    print(f"Refilling — targeting {REFILL_COUNT} new topics...\n")
 
     existing_titles = [p["title"] for p in manifest]
     raw_topics = []
+    source_log = []
 
-    # 1. Scrape Reddit
-    print("Scraping Reddit...")
-    for subreddit in SUBREDDITS[:6]:  # Limit to avoid rate limiting
-        questions = get_reddit_questions(subreddit, limit=20)
-        raw_topics.extend(questions)
-        print(f"  r/{subreddit}: {len(questions)} candidates")
-        time.sleep(0.5)
+    # 1. Reddit
+    print("[Reddit]")
+    for subreddit in SUBREDDITS:
+        results = get_reddit_topics(subreddit)
+        raw_topics.extend(results)
+        print(f"  r/{subreddit}: {len(results)}")
+        time.sleep(0.4)
+    source_log.append(f"Reddit ({len(SUBREDDITS)} subreddits)")
 
-    # 2. Scrape Google PAA
-    print("Scraping Google PAA...")
-    for query in SEARCH_QUERIES[:5]:  # Limit to avoid blocks
-        questions = get_google_paa(query)
-        raw_topics.extend(questions)
-        print(f"  '{query}': {len(questions)} candidates")
+    # 2. Google PAA
+    print("\n[Google PAA]")
+    for query in SEARCH_QUERIES[:6]:
+        results = get_google_paa(query)
+        raw_topics.extend(results)
+        print(f"  '{query[:45]}': {len(results)}")
+    source_log.append("Google PAA")
 
-    # 3. Add curated fallbacks to ensure we always have enough
+    # 3. PubMed
+    print("\n[PubMed]")
+    pubmed = get_pubmed_topics()
+    raw_topics.extend(pubmed)
+    print(f"  Papers: {len(pubmed)}")
+    source_log.append(f"PubMed ({len(pubmed)} papers)")
+
+    # 4. RSS feeds
+    print("\n[RSS Feeds]")
+    for feed in RSS_FEEDS:
+        results = get_rss_topics(feed)
+        raw_topics.extend(results)
+        print(f"  {feed['name']}: {len(results)}")
+        time.sleep(0.3)
+    source_log.append(f"RSS ({len(RSS_FEEDS)} feeds)")
+
+    # 5. Fallbacks
     raw_topics.extend(FALLBACK_TOPICS)
+    source_log.append("Curated fallbacks")
 
-    print(f"Total raw candidates: {len(raw_topics)}")
+    print(f"\nTotal raw candidates: {len(raw_topics)}")
 
-    # 4. Filter and rank with Claude
-    if raw_topics:
-        try:
-            new_topics = filter_and_rank_topics(raw_topics, existing_titles, queue)
-            print(f"Claude selected {len(new_topics)} topics")
-        except Exception as e:
-            print(f"Claude filtering failed: {e}. Using fallback topics directly.")
-            # Use fallbacks directly, filtering obvious duplicates
-            existing_lower = {t.lower() for t in existing_titles + queue}
-            new_topics = [
-                t for t in FALLBACK_TOPICS
-                if t.lower() not in existing_lower
-            ][:REFILL_COUNT]
+    # 6. Claude filter
+    try:
+        new_topics = filter_and_rank_topics(
+            raw_topics, existing_titles, queue, " | ".join(source_log)
+        )
+        print(f"\nClaude selected {len(new_topics)} topics:")
+    except Exception as e:
+        print(f"\nClaude filtering failed: {e} — using fallbacks")
+        existing_lower = {t.lower() for t in existing_titles + queue}
+        new_topics = [
+            t for t in FALLBACK_TOPICS
+            if t.lower() not in existing_lower
+        ][:REFILL_COUNT]
 
-    # 5. Add to queue
+    # 7. Update queue
+    added = 0
     for topic in new_topics:
         if topic not in queue:
             queue.append(topic)
+            added += 1
+            print(f"  + {topic}")
 
     save_json(QUEUE_PATH, queue)
-    print(f"Queue now has {len(queue)} items.")
-    for t in new_topics:
-        print(f"  + {t}")
+    print(f"\nQueue: {added} added, {len(queue)} total.")
 
 
 if __name__ == "__main__":
