@@ -34,7 +34,7 @@ const BrandLogoInline = ({ size = "md" }: { size?: "sm" | "md" }) => {
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [bannerVisible, setBannerVisible] = useState(true);
+  
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -58,20 +58,17 @@ const Navbar = () => {
 
   return (
     <>
-      {bannerVisible && (
-        <div id="earlyAccessBanner" style={{background: 'hsl(199, 68%, 51%)', color: 'white', padding: '0.65rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', fontSize: '0.85rem', fontWeight: 500, flexWrap: 'wrap', textAlign: 'center', position: 'fixed', top: 0, left: 0, right: 0, zIndex: 51}}>
+      <div id="earlyAccessBanner" style={{background: 'hsl(199, 68%, 51%)', color: 'white', padding: '0.65rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', fontSize: '0.85rem', fontWeight: 500, flexWrap: 'wrap', textAlign: 'center', position: 'fixed', top: 0, left: 0, right: 0, zIndex: 51}}>
           <span><strong>Now in early access — free to get started.</strong> Join physiotherapy clinics already measuring outcomes with Benchmark PS.</span>
           <a href="https://platform.benchmarkps.org/login?signup=true" style={{background: 'white', color: 'hsl(199, 68%, 51%)', padding: '0.3rem 1rem', borderRadius: '5px', fontWeight: 700, fontSize: '0.8rem', textDecoration: 'none', whiteSpace: 'nowrap'}}>Create Account &rarr;</a>
-          <button onClick={() => setBannerVisible(false)} style={{position: 'absolute', right: '1rem', background: 'none', border: 'none', color: 'rgba(255,255,255,0.7)', cursor: 'pointer', fontSize: '1.1rem'}}>×</button>
         </div>
-      )}
       <nav
         className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
             ? "bg-navy/[0.97] backdrop-blur-xl shadow-lg"
             : "bg-navy/[0.97] backdrop-blur-xl"
         }`}
-        style={{ top: bannerVisible ? '38px' : '0' }}
+        style={{ top: '38px' }}
       >
         <div className="max-w-[1180px] mx-auto px-5 sm:px-6 md:px-12 h-[60px] sm:h-[66px] flex items-center justify-between">
           <a href="#" className="flex items-center">
