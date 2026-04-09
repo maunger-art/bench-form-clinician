@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Feedback — Benchmark PS</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+    :root {
+      --navy: hsl(213, 66%, 16%);
+      --blue-mid: hsl(199, 68%, 51%);
+      --warm: hsl(213, 33%, 97%);
+      --warm-mid: hsl(212, 26%, 90%);
+      --mid: hsl(211, 27%, 39%);
+      --green: hsl(152, 69%, 32%);
+      --red: hsl(0, 72%, 45%);
+      --amber: hsl(35, 88%, 43%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--warm);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 2.5rem;
+      max-width: 520px;
+      width: 100%;
+      box-shadow: 0 8px 40px rgba(30, 58, 92, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.75rem;
+    }
+    .logo-wordmark-main {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--navy);
+      line-height: 1;
+    }
+    .logo-wordmark-sub {
+      font-size: 7px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--blue-mid);
+      margin-top: 3px;
+      line-height: 1;
+    }
+
+    .label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--blue-mid);
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+
+    .post-number {
+      font-size: 12px;
+      color: var(--mid);
+      margin-bottom: 1.5rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      border-radius: 10px;
+      border: 2px solid var(--warm-mid);
+      background: white;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--navy);
+      transition: all 0.15s;
+      text-align: left;
+      width: 100%;
+    }
+    .action-btn:hover { border-color: var(--blue-mid); background: hsl(202, 78%, 97%); }
+    .action-btn.selected-approve { border-color: var(--green); background: hsl(152, 52%, 96%); color: var(--green); }
+    .action-btn.selected-skip { border-color: var(--red); background: hsl(0, 72%, 97%); color: var(--red); }
+    .action-btn.selected-delay { border-color: var(--amber); background: hsl(39, 92%, 96%); color: var(--amber); }
+    .action-btn.selected-edit { border-color: var(--blue-mid); background: hsl(202, 78%, 97%); color: var(--navy); }
+
+    .action-icon { font-size: 1.2rem; width: 24px; text-align: center; }
+    .action-text .title { display: block; }
+    .action-text .desc { display: block; font-size: 0.78rem; font-weight: 400; color: var(--mid); margin-top: 2px; }
+
+    .edit-field {
+      display: none;
+      margin-top: 0.75rem;
+    }
+    .edit-field.visible { display: block; }
+    .edit-field label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--mid);
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    .edit-field input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--warm-mid);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: var(--navy);
+      outline: none;
+    }
+    .edit-field input:focus { border-color: var(--blue-mid); }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .submit-btn:hover { opacity: 0.85; }
+    .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .success {
+      display: none;
+      text-align: center;
+      padding: 2rem 0;
+    }
+    .success .icon { font-size: 3rem; margin-bottom: 1rem; }
+    .success h2 { font-size: 1.3rem; color: var(--navy); margin-bottom: 0.5rem; }
+    .success p { font-size: 0.9rem; color: var(--mid); }
+
+    .error-msg {
+      display: none;
+      background: hsl(0, 72%, 97%);
+      border: 1px solid hsl(0, 72%, 85%);
+      color: var(--red);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      margin-top: 0.75rem;
+    }
+
+    .invalid-token {
+      text-align: center;
+      padding: 2rem 0;
+    }
+    .invalid-token h2 { color: var(--red); margin-bottom: 0.5rem; }
+    .invalid-token p { color: var(--mid); font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+
+    <div class="logo">
+      <div>
+        <div class="logo-wordmark-main">Benchmark</div>
+        <div class="logo-wordmark-sub">Performance Systems</div>
+      </div>
+    </div>
+
+    <div id="mainContent">
+      <div class="label">Blog Feedback</div>
+      <h1 id="postTitle">Loading...</h1>
+      <div class="post-number" id="postNumber"></div>
+
+      <div class="actions">
+        <button class="action-btn" id="btnApprove" onclick="selectAction('approve')">
+          <span class="action-icon">✓</span>
+          <span class="action-text">
+            <span class="title">Approve</span>
+            <span class="desc">Publish this article as planned</span>
+          </span>
+        </button>
+
+        <button class="action-btn" id="btnSkip" onclick="selectAction('skip')">
+          <span class="action-icon">✗</span>
+          <span class="action-text">
+            <span class="title">Skip</span>
+            <span class="desc">Remove from queue — don't publish</span>
+          </span>
+        </button>
+
+        <button class="action-btn" id="btnDelay" onclick="selectAction('delay')">
+          <span class="action-icon">⏱</span>
+          <span class="action-text">
+            <span class="title">Delay</span>
+            <span class="desc">Move to end of queue</span>
+          </span>
+        </button>
+
+        <button class="action-btn" id="btnEdit" onclick="selectAction('edit')">
+          <span class="action-icon">✎</span>
+          <span class="action-text">
+            <span class="title">Edit title</span>
+            <span class="desc">Replace with a different title before publishing</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="edit-field" id="editField">
+        <label for="newTitle">New article title</label>
+        <input type="text" id="newTitle" placeholder="Enter replacement title...">
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitFeedback()" disabled>
+        Submit Feedback
+      </button>
+
+      <div class="error-msg" id="errorMsg"></div>
+    </div>
+
+    <div class="success" id="successMsg">
+      <div class="icon">✓</div>
+      <h2>Feedback submitted</h2>
+      <p>Your feedback has been recorded and will be processed on Wednesday.</p>
+    </div>
+
+    <div class="invalid-token" id="invalidToken" style="display:none;">
+      <h2>Invalid link</h2>
+      <p>This feedback link is invalid or has expired. Please use the link from your preview email.</p>
+    </div>
+
+  </div>
+
+  <script>
+    const VALID_TOKEN = "BPSfeedback2026";
+    const GITHUB_OWNER = "maunger-art";
+    const GITHUB_REPO = "bench-form-clinician";
+    const GITHUB_API = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}`;
+
+    let selectedAction = null;
+    let postNumber = null;
+    let postTitle = null;
+
+    // Parse URL params
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    const num = params.get("n");
+    const title = decodeURIComponent(params.get("t") || "");
+
+    // Validate token
+    if (token !== VALID_TOKEN) {
+      document.getElementById("mainContent").style.display = "none";
+      document.getElementById("invalidToken").style.display = "block";
+    } else {
+      postNumber = parseInt(num);
+      postTitle = title;
+      document.getElementById("postTitle").textContent = title || "Unknown post";
+      document.getElementById("postNumber").textContent = `Post #${num} in this week's queue`;
+    }
+
+    function selectAction(action) {
+      selectedAction = action;
+
+      // Reset all buttons
+      document.getElementById("btnApprove").className = "action-btn";
+      document.getElementById("btnSkip").className = "action-btn";
+      document.getElementById("btnDelay").className = "action-btn";
+      document.getElementById("btnEdit").className = "action-btn";
+
+      // Highlight selected
+      const map = {
+        approve: "btnApprove",
+        skip: "btnSkip",
+        delay: "btnDelay",
+        edit: "btnEdit",
+      };
+      document.getElementById(map[action]).className = `action-btn selected-${action}`;
+
+      // Show/hide edit field
+      const editField = document.getElementById("editField");
+      if (action === "edit") {
+        editField.classList.add("visible");
+        document.getElementById("newTitle").value = postTitle;
+        document.getElementById("newTitle").focus();
+        document.getElementById("newTitle").select();
+      } else {
+        editField.classList.remove("visible");
+      }
+
+      document.getElementById("submitBtn").disabled = false;
+    }
+
+    async function submitFeedback() {
+      const btn = document.getElementById("submitBtn");
+      const errorMsg = document.getElementById("errorMsg");
+      errorMsg.style.display = "none";
+
+      if (!selectedAction || !postNumber) return;
+
+      const feedbackItem = { action: selectedAction.toUpperCase(), number: postNumber };
+      if (selectedAction === "edit") {
+        const newTitle = document.getElementById("newTitle").value.trim();
+        if (!newTitle) {
+          errorMsg.textContent = "Please enter a replacement title.";
+          errorMsg.style.display = "block";
+          return;
+        }
+        feedbackItem.new_title = newTitle;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Submitting...";
+
+      try {
+        // Get current feedback.json from GitHub
+        const getRes = await fetch(`${GITHUB_API}/contents/feedback.json`, {
+          headers: { "Accept": "application/vnd.github.v3+json" }
+        });
+
+        if (!getRes.ok) throw new Error("Could not read feedback file");
+
+        const fileData = await getRes.json();
+        const currentContent = JSON.parse(atob(fileData.content));
+        currentContent.push(feedbackItem);
+
+        // Update feedback.json via GitHub API
+        const updateRes = await fetch(`${GITHUB_API}/contents/feedback.json`, {
+          method: "PUT",
+          headers: {
+            "Accept": "application/vnd.github.v3+json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: `Feedback: ${selectedAction} #${postNumber}`,
+            content: btoa(JSON.stringify(currentContent, null, 2)),
+            sha: fileData.sha,
+          })
+        });
+
+        if (!updateRes.ok) {
+          const err = await updateRes.json();
+          throw new Error(err.message || "Failed to save feedback");
+        }
+
+        // Show success
+        document.getElementById("mainContent").style.display = "none";
+        document.getElementById("successMsg").style.display = "block";
+
+      } catch (err) {
+        errorMsg.textContent = `Error: ${err.message}. Please try again or reply to the preview email.`;
+        errorMsg.style.display = "block";
+        btn.disabled = false;
+        btn.textContent = "Submit Feedback";
+      }
+    }
+  </script>
+</body>
+</html>
