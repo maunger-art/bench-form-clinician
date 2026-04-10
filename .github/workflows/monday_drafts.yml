@@ -16,7 +16,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          ref: main
 
       - uses: actions/setup-python@v5
         with:
@@ -41,4 +40,4 @@ jobs:
           git config user.email "bot@benchmarkps.org"
           git add drafts/ queue.json
           git commit -m "Weekly drafts: $(date +%Y-%m-%d)" || echo "Nothing to commit"
-          git push origin HEAD:main --force
+          git push origin HEAD:main
