@@ -65,13 +65,16 @@ def search_pubmed(query: str, max_results: int = 10) -> list[str]:
     })
     url = f"{ENTREZ_BASE}/esearch.fcgi?{params}"
 
-    try:
-        with urllib.request.urlopen(url, timeout=10) as r:
-            data = json.loads(r.read())
-        return data.get("esearchresult", {}).get("idlist", [])
-    except Exception as e:
-        print(f"    PubMed search error: {e}")
-        return []
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(url, timeout=20) as r:
+                data = json.loads(r.read())
+            return data.get("esearchresult", {}).get("idlist", [])
+        except Exception as e:
+            print(f"    PubMed search attempt {attempt+1} failed: {e}")
+            if attempt < 2:
+                time.sleep(2 ** attempt)
+    return []
 
 
 def fetch_pubmed_details(pmids: list[str]) -> list[dict]:
@@ -89,12 +92,17 @@ def fetch_pubmed_details(pmids: list[str]) -> list[dict]:
     })
     url = f"{ENTREZ_BASE}/esummary.fcgi?{params}"
 
-    try:
-        with urllib.request.urlopen(url, timeout=15) as r:
-            data = json.loads(r.read())
-    except Exception as e:
-        print(f"    PubMed fetch error: {e}")
-        return []
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(url, timeout=20) as r:
+                data = json.loads(r.read())
+            break
+        except Exception as e:
+            print(f"    PubMed fetch attempt {attempt+1} failed: {e}")
+            if attempt < 2:
+                time.sleep(2 ** attempt)
+            else:
+                return []
 
     results = data.get("result", {})
     uids = results.get("uids", [])

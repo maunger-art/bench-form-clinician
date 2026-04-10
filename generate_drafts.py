@@ -179,13 +179,18 @@ def main():
 
         try:
             # Fetch real PubMed references first
+            print(f"  Querying PubMed...")
             references = fetch_references_for_topic(topic, target_count=15)
+            print(f"  PubMed returned {len(references)} references")
 
             article = generate_article(topic, manifest, references)
 
             # Store verified reference PMIDs for audit trail
             if references:
                 article["verified_pmids"] = [r["pmid"] for r in references]
+                print(f"  Stored {len(references)} verified PMIDs")
+            else:
+                print(f"  WARNING: No PubMed references — article will use Claude memory only")
 
             # Ensure no slug collision
             slug = article.get("slug", "")
