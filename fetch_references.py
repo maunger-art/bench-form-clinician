@@ -178,7 +178,7 @@ def fetch_pubmed_details(pmids: list[str]) -> list[dict]:
     return papers
 
 
-def fetch_references_for_topic(topic: str, target_count: int = 15) -> list[dict]:
+def fetch_references_for_topic(topic: str, target_count: int = 10) -> list[dict]:
     """
     Main function: fetch real PubMed references for a topic.
     Returns up to target_count verified papers with full citation data.
@@ -234,14 +234,20 @@ def format_references_for_prompt(references: list[dict]) -> str:
         lines.append(f"    URL: {ref['pubmed_url']}")
         lines.append("")
 
-    lines.append("REFERENCE INSTRUCTIONS:")
-    lines.append("- Cite ONLY the references listed above — do not invent any others")
-    lines.append("- Use superscript numbers inline: <sup>1</sup>, <sup>2</sup> etc")
-    lines.append("- The reference list must use <ol class=\"references\"> and include the exact citation text")
-    lines.append("- Each <li> must end with: <a href=\"[URL]\" target=\"_blank\">[PMID]</a>")
-    lines.append("- Only cite a reference if it is genuinely relevant to the claim being made")
-    lines.append("- You may use a subset of provided references — quality over quantity")
-    lines.append("- Minimum 5 references from the list must be used")
+    lines.append("THESE ARE YOUR ONLY PERMITTED SOURCES. DO NOT ADD ANY OTHERS.")
+    lines.append("")
+    lines.append("REFERENCE RULES — HARD CONSTRAINTS:")
+    lines.append("- Use ONLY the references numbered above — no books, no guidelines, no other papers")
+    lines.append("- Read these references FIRST, then write content supported by them")
+    lines.append("- Do NOT write a claim and then find a reference — only write claims these papers support")
+    lines.append("- Select the 5-7 MOST RELEVANT references — do not use all of them")
+    lines.append("- A focused article with 5 highly relevant citations beats a padded one with 12")
+    lines.append("- Use superscript inline: <sup>1</sup> where the number matches the list below")
+    lines.append("- Reference list at end of html_content: <ol class=\"references\">")
+    lines.append("- Every <li> MUST include citation text AND the exact PubMed URL as a link:")
+    lines.append("  <li>Author. Title. Journal. Year;Vol:Pages. <a href=\"https://pubmed.ncbi.nlm.nih.gov/PMID/\" target=\"_blank\">PubMed</a></li>")
+    lines.append("- Replace PMID with the actual number from the list above")
+    lines.append("- If a claim cannot be supported by these references, do not make that claim")
 
     return "\n".join(lines)
 
