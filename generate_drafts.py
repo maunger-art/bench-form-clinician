@@ -83,7 +83,32 @@ BENCHMARK PS CONTEXT
 - MSK care problem: up to 43% of physiotherapy care is non-recommended; over 90% of
   physios rely on subjective strength testing; fewer than 10% use objective tools
 - Do not position Benchmark PS as replacing physiotherapists — it is infrastructure
-  that supports clinical judgement"""
+  that supports clinical judgement
+
+OUTPUT FORMAT
+Respond ONLY with a valid JSON object. No preamble, no markdown code fences.
+
+{
+  "title": "The exact article title",
+  "meta_description": "150-160 character SEO meta description",
+  "slug": "url-friendly-slug-all-lowercase-hyphens",
+  "html_content": "<p>Article HTML with [PMID:xxxxx] tokens inline — NO reference section...</p>",
+  "tags": ["tag1", "tag2", "tag3"],
+  "cluster": "Cluster name",
+  "faq": [
+    {"q": "Question one?", "a": "Answer one."},
+    {"q": "Question two?", "a": "Answer two."},
+    {"q": "Question three?", "a": "Answer three."}
+  ]
+}
+
+CRITICAL OUTPUT RULES:
+- html_content uses semantic HTML: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <strong>
+- Do NOT include <html>, <head>, <body>, or <h1> tags in html_content
+- Do NOT include a References section in html_content — the validator builds it
+- Cite ONLY with [PMID:xxxxx] tokens inline in the body — example: [PMID:27539507]
+- Do NOT include the FAQ in html_content
+- slug must be lowercase with hyphens only, no spaces or special characters"""
 
 
 def load_json(path):
