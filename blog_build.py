@@ -24,7 +24,7 @@ PUBLISHER_LOGO = "https://benchmarkps.org/assets/benchmark-icon-nav-BhAe3FNc.png
 LOGO_URL = "/assets/benchmark-icon-nav-BhAe3FNc.png"
 
 CTA_TEXT = "See how Benchmark PS works in practice"
-CTA_URL = "https://benchmarkps.org/demo"
+CTA_URL = "https://platform.benchmarkps.org/login?signup=true"
 BANNER_TEXT = "Now in early access — free to get started."
 BANNER_SUBTEXT = "Join physiotherapy clinics already measuring outcomes with Benchmark PS."
 BANNER_CTA = "Create Account"
@@ -406,7 +406,7 @@ def build_post_page(post, all_posts):
     {faq_html}
     <div class="cta-box">
       <p><strong>{CTA_TEXT}</strong></p>
-      <a href="{CTA_URL}">Join the Mailing List</a>
+      <a href="{CTA_URL}">Get Early Access</a>
       <p style="margin-top:0.75rem;font-size:0.78rem;color:rgba(255,255,255,0.5)">
         Or <a href="{BANNER_URL}" style="color:rgba(255,255,255,0.75);text-decoration:underline">create your free account</a>
       </p>
