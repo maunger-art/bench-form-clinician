@@ -22,34 +22,52 @@ TOOL = "BenchmarkPSBlog"
 EMAIL = "info@benchmarkps.org"
 
 
+def extract_keywords(topic: str) -> str:
+    """Extract short search-friendly keywords from a topic string."""
+    import re
+    # Remove common stop words and keep clinical terms
+    stop = {'why', 'how', 'what', 'does', 'the', 'a', 'an', 'and', 'or', 'to',
+            'is', 'in', 'for', 'of', 'that', 'with', 'without', 'your', 'our',
+            'clinics', 'actually', 'looks', 'like', 'can', 'do', 'good', 'more',
+            'patients', 'from', 'are', 'its', 'this', 'at', 'we', 'it', 'be',
+            'implement', 'reduce', 'improve', 'look', 'retain', 'percent'}
+    words = re.findall(r'[a-zA-Z]+', topic.lower())
+    keywords = [w for w in words if w not in stop and len(w) > 3]
+    # Take top 4-5 most meaningful words
+    return ' '.join(keywords[:5])
+
+
 def build_search_queries(topic: str) -> list[str]:
     """
     Build multiple targeted PubMed search queries for a topic.
-    Returns 3-4 queries covering different aspects.
+    Uses progressive fallback — starts specific, gets broader if needed.
     """
-    # Clean topic for query use
-    topic_clean = topic.lower().strip()
-
-    # Base MSK/physiotherapy filter
+    keywords = extract_keywords(topic)
+    words = keywords.split()
     msk_filter = '("physical therapy" OR "physiotherapy" OR "musculoskeletal" OR "rehabilitation")'
 
-    # Extract key clinical terms from topic
     queries = []
 
-    # Query 1: Direct topic search with clinical filter
-    queries.append(f'({topic_clean}) AND {msk_filter}')
+    # Tier 1: Full keywords with MSK filter
+    queries.append(f'{keywords} AND {msk_filter}')
 
-    # Query 2: Outcome measurement focus if relevant
-    if any(w in topic_clean for w in ['outcome', 'measure', 'assess', 'benchmark']):
-        queries.append(f'({topic_clean}) AND ("outcome measure" OR "clinical measurement" OR "functional assessment")')
+    # Tier 2: Full keywords with evidence filter
+    queries.append(f'{keywords} AND ("systematic review" OR "randomised controlled trial" OR "meta-analysis")')
 
-    # Query 3: Systematic review / high quality evidence
-    queries.append(f'({topic_clean}) AND {msk_filter} AND ("systematic review" OR "randomised controlled trial" OR "meta-analysis")')
+    # Tier 3: First 3 keywords only with MSK filter (broader)
+    if len(words) > 2:
+        short_kw = ' '.join(words[:3])
+        queries.append(f'{short_kw} AND {msk_filter}')
 
-    # Query 4: Clinical practice / guidelines
-    queries.append(f'({topic_clean}) AND ("clinical practice" OR "clinical guideline" OR "evidence-based")')
+    # Tier 4: First 2 keywords only (most broad)
+    if len(words) > 1:
+        shortest_kw = ' '.join(words[:2])
+        queries.append(f'{shortest_kw} AND {msk_filter}')
 
-    return queries[:4]
+    # Tier 5: Single most important keyword
+    queries.append(f'{words[0]} AND {msk_filter}')
+
+    return queries
 
 
 def search_pubmed(query: str, max_results: int = 10) -> list[str]:
