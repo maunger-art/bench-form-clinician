@@ -145,17 +145,16 @@
   .nav-link:hover, .nav-link.active { color: white; text-decoration: none; }
   .nav-cta { background: hsl(199, 68%, 51%); color: white; padding: 0.45rem 1.25rem; border-radius: 6px; font-weight: 600; font-size: 13px; text-decoration: none; }
   .nav-cta:hover { opacity: 0.85; text-decoration: none; }
+  .cta-box { background: var(--navy); color: white; padding: 2rem 2.5rem; border-radius: 10px; margin: 3.5rem 0; text-align: center; }
+  .cta-box p { color: rgba(255,255,255,0.8); margin: 0 0 0.25rem; }
+  .cta-box a { display: inline-block; background: hsl(199, 68%, 51%); color: white; padding: 0.75rem 2rem; border-radius: 7px; font-weight: 700; margin-top: 1rem; font-size: 0.95rem; text-decoration: none; }
+  .cta-box a:hover { opacity: 0.85; text-decoration: none; }
 
-  .trial-banner {
-    background: hsl(199, 68%, 51%);
-    color: white;
-    text-align: center;
-    padding: 0.6rem 1rem;
+
     font-size: 0.82rem;
     font-weight: 600;
     letter-spacing: 0.01em;
   }
-  .trial-banner a { color: white; text-decoration: underline; font-weight: 700; }
 
   .article-wrap { max-width: var(--max-width); margin: 3rem auto; padding: 0 1.5rem; }
   .article-meta { font-size: 0.82rem; color: var(--mid); margin-bottom: 1.25rem; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
@@ -208,32 +207,20 @@
 
   /* ── Early access banner ── */
   .early-access-banner {
-    background: hsl(199, 68%, 51%);
-    color: white;
-    padding: 0.65rem 1.5rem;
+    background: hsl(202, 78%, 91%);
+    color: hsl(213, 66%, 16%);
+    padding: 0.55rem 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 500;
-    flex-wrap: wrap;
     text-align: center;
     position: relative;
+    border-bottom: 1px solid hsl(202, 60%, 82%);
   }
   .early-access-banner strong { font-weight: 700; }
-  .early-access-banner a.banner-cta {
-    background: white;
-    color: hsl(199, 68%, 51%);
-    padding: 0.3rem 1rem;
-    border-radius: 5px;
-    font-weight: 700;
-    font-size: 0.8rem;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: opacity 0.2s;
-  }
-  .early-access-banner a.banner-cta:hover { opacity: 0.85; text-decoration: none; }
   .banner-close {
     position: absolute;
     right: 1rem;
@@ -261,12 +248,6 @@
 </head>
 <body>
   
-<div class="early-access-banner" id="earlyAccessBanner">
-  <span><strong>Now in early access — free to get started.</strong> Join physiotherapy clinics already measuring outcomes with Benchmark PS.</span>
-  <a href="https://platform.benchmarkps.org/login?signup=true" class="banner-cta">Create Account &rarr;</a>
-  <button class="banner-close" onclick="document.getElementById('earlyAccessBanner').style.display='none'" aria-label="Close">&times;</button>
-</div>
-  
 <nav class="site-nav">
   <a href="https://benchmarkps.org" class="nav-brand">
     <img src="/assets/benchmark-icon-nav-BhAe3FNc.png" alt="Benchmark PS" onerror="this.style.display='none'">
@@ -285,9 +266,10 @@
     <a href="https://platform.benchmarkps.org/login?signup=true" class="nav-cta">Create Account</a>
   </div>
 </nav>
-<div class="trial-banner">
-  Try Benchmark PS free for 28 days — no obligations, no card required.
-  <a href="https://platform.benchmarkps.org/login?signup=true">Create Account</a>
+  
+<div class="early-access-banner" id="earlyAccessBanner">
+  <span><strong>Now in early access — free to get started.</strong> Join physiotherapy clinics already measuring outcomes with Benchmark PS.</span>
+  <button class="banner-close" onclick="document.getElementById('earlyAccessBanner').style.display='none'" aria-label="Close">&times;</button>
 </div>
   <main class="article-wrap">
     <div class="article-meta">
@@ -322,7 +304,11 @@
   <h3>Do patients actually care about seeing objective measurement data?</h3>
   <p>Yes — practices using systematic measurement report 73% higher retention rates and over 85% protocol completion rates compared to 60-65% industry averages. Patients stay longer when they can see measurable progress.</p>
 </div></div>
-
+    <div class="cta-box">
+      <p><strong>Try Benchmark PS free for 28 days</strong></p>
+      <p>No obligations, no card required.</p>
+      <a href="https://platform.benchmarkps.org/login?signup=true">Create Account</a>
+    </div>
   </main>
   
 <footer class="site-footer">
