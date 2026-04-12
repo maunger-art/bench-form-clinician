@@ -22,10 +22,75 @@ TOOL = "BenchmarkPSBlog"
 EMAIL = "info@benchmarkps.org"
 
 
+# Maps business/management topic signals to structured PubMed queries
+# Uses three-layer approach: clinical anchor + economics layer + topic intent
+# with explicit GBD/epidemiology exclusion
+TOPIC_CLINICAL_MAPPING = [
+    # Outcome measurement / business case / retention / pricing
+    (["business case", "outcome measurement", "retain", "retention",
+      "pricing", "charge more", "hidden cost", "inconsistent"],
+     [
+      '("Physical Therapy Modalities"[MeSH] OR physiotherapy[tiab]) AND ("Outcome Assessment, Health Care"[MeSH] OR outcome measure*[tiab] OR PROMs[tiab]) AND (cost[tiab] OR value[tiab] OR efficiency[tiab]) NOT (global burden of disease[tiab] OR GBD[tiab])',
+      '(physiotherapy[tiab] OR "physical therapy"[tiab]) AND (PROMs[tiab] OR "patient reported outcome"[tiab]) AND ("Health Services Research"[MeSH] OR value[tiab] OR utilization[tiab])',
+      '("Outcome Assessment, Health Care"[MeSH]) AND ("Physical Therapy Modalities"[MeSH]) AND ("Cost-Benefit Analysis"[MeSH] OR economic*[tiab])',
+      '(physiotherapy[tiab]) AND (benchmarking[tiab] OR "outcome tracking"[tiab] OR "routine outcome"[tiab]) AND (efficiency[tiab] OR value[tiab])',
+      '("Rehabilitation"[MeSH]) AND ("Outcome Assessment, Health Care"[MeSH]) AND (resource[tiab] OR cost[tiab])',
+     ]),
+
+    # Patient adherence / dropout / engagement
+    (["adherence", "dropout", "dropout", "engagement", "patient retention"],
+     [
+      '("Patient Compliance"[MeSH] OR adherence[tiab]) AND (physiotherapy[tiab] OR rehabilitation[MeSH]) AND (outcome*[tiab] OR cost[tiab])',
+      '(physiotherapy[tiab]) AND (dropout[tiab] OR retention[tiab] OR adherence[tiab]) AND (effectiveness[tiab] OR outcome*[tiab])',
+      '("Patient Compliance"[MeSH]) AND ("Physical Therapy Modalities"[MeSH]) AND (utilization[tiab] OR cost[tiab])',
+      '(physiotherapy[tiab]) AND (engagement[tiab] OR adherence[tiab]) AND ("health outcomes"[tiab] OR value[tiab])',
+      '("Rehabilitation"[MeSH]) AND (attendance[tiab] OR adherence[tiab]) AND (efficiency[tiab] OR utilization[tiab])',
+     ]),
+
+    # Staffing / workforce / margins
+    (["staffing", "margins", "workforce", "senior clinician",
+      "standardised care", "skill mix", "staffing mix"],
+     [
+      '("Health Workforce"[MeSH] OR staffing[tiab] OR workforce[tiab]) AND (physiotherapy[tiab] OR rehabilitation[MeSH]) AND (efficiency[tiab] OR productivity[tiab] OR cost[tiab])',
+      '("Personnel Staffing and Scheduling"[MeSH]) AND ("Rehabilitation"[MeSH]) AND (model of care[tiab] OR service delivery[tiab])',
+      '(allied health[tiab] OR physiotherapy[tiab]) AND (staffing model*[tiab] OR skill mix[tiab]) AND (cost[tiab] OR efficiency[tiab])',
+      '("Delivery of Health Care"[MeSH]) AND (rehabilitation[MeSH]) AND (workforce[tiab] OR staffing[tiab]) AND (outcome*[tiab])',
+      '(physiotherapy[tiab]) AND (task shifting[tiab] OR delegation[tiab]) AND (cost[tiab] OR productivity[tiab])',
+     ]),
+
+    # Economic / value-based / cost-effectiveness
+    (["economic case", "economic", "value-based", "cost-effective"],
+     [
+      '("Value-Based Health Care"[tiab] OR "value-based care"[tiab]) AND (physiotherapy[tiab] OR rehabilitation[MeSH])',
+      '("Cost-Benefit Analysis"[MeSH]) AND ("Musculoskeletal Diseases"[MeSH]) AND ("Physical Therapy Modalities"[MeSH])',
+      '(physiotherapy[tiab]) AND (value[tiab] OR cost-effectiveness[tiab]) AND (outcome*[tiab])',
+      '("Health Care Costs"[MeSH]) AND (rehabilitation[MeSH]) AND (musculoskeletal[tiab])',
+      '(physiotherapy[tiab]) AND ("bundled payment"[tiab] OR "value-based care"[tiab]) AND (outcome*[tiab] OR cost[tiab])',
+     ]),
+
+    # Technology / digital / telehealth
+    (["technology", "digital", "telehealth", "app", "wearable", "remote"],
+     [
+      '("Telemedicine"[MeSH] OR telehealth[tiab]) AND (physiotherapy[tiab] OR rehabilitation[MeSH]) AND (outcome*[tiab])',
+      '("Mobile Applications"[MeSH] OR digital health[tiab] OR mHealth[tiab]) AND (physiotherapy[tiab]) AND (outcome*[tiab])',
+      '(physiotherapy[tiab]) AND (technology[tiab] OR wearable*[tiab]) AND (outcome*[tiab] OR effectiveness[tiab])',
+      '("Physical Therapy Modalities"[MeSH]) AND (remote[tiab] OR digital[tiab]) AND (outcome*[tiab])',
+     ]),
+]
+
+
+def get_clinical_queries(topic: str) -> list[str] | None:
+    """Return clinical PubMed queries for business/management topics that lack direct evidence."""
+    topic_lower = topic.lower()
+    for signals, queries in TOPIC_CLINICAL_MAPPING:
+        if any(signal in topic_lower for signal in signals):
+            return queries
+    return None
+
+
 def extract_keywords(topic: str) -> str:
     """Extract short search-friendly keywords from a topic string."""
     import re
-    # Remove common stop words and keep clinical terms
     stop = {'why', 'how', 'what', 'does', 'the', 'a', 'an', 'and', 'or', 'to',
             'is', 'in', 'for', 'of', 'that', 'with', 'without', 'your', 'our',
             'clinics', 'actually', 'looks', 'like', 'can', 'do', 'good', 'more',
@@ -33,38 +98,37 @@ def extract_keywords(topic: str) -> str:
             'implement', 'reduce', 'improve', 'look', 'retain', 'percent'}
     words = re.findall(r'[a-zA-Z]+', topic.lower())
     keywords = [w for w in words if w not in stop and len(w) > 3]
-    # Take top 4-5 most meaningful words
     return ' '.join(keywords[:5])
 
 
 def build_search_queries(topic: str) -> list[str]:
     """
     Build multiple targeted PubMed search queries for a topic.
-    Uses progressive fallback — starts specific, gets broader if needed.
+    For business/management topics, uses curated clinical queries.
+    For clinical topics, uses progressive keyword fallback.
     """
+    # Check if topic needs clinical query substitution
+    clinical_queries = get_clinical_queries(topic)
+    if clinical_queries:
+        return clinical_queries
+
+    # Standard keyword-based queries for clinical topics
     keywords = extract_keywords(topic)
     words = keywords.split()
     msk_filter = '("physical therapy" OR "physiotherapy" OR "musculoskeletal" OR "rehabilitation")'
 
     queries = []
-
-    # Tier 1: Full keywords with MSK filter
     queries.append(f'{keywords} AND {msk_filter}')
-
-    # Tier 2: Full keywords with evidence filter
     queries.append(f'{keywords} AND ("systematic review" OR "randomised controlled trial" OR "meta-analysis")')
 
-    # Tier 3: First 3 keywords only with MSK filter (broader)
     if len(words) > 2:
         short_kw = ' '.join(words[:3])
         queries.append(f'{short_kw} AND {msk_filter}')
 
-    # Tier 4: First 2 keywords only (most broad)
     if len(words) > 1:
         shortest_kw = ' '.join(words[:2])
         queries.append(f'{shortest_kw} AND {msk_filter}')
 
-    # Tier 5: Single most important keyword
     queries.append(f'{words[0]} AND {msk_filter}')
 
     return queries
@@ -162,6 +226,13 @@ def fetch_pubmed_details(pmids: list[str]) -> list[dict]:
             citation += f":{pages}"
         citation += "."
 
+        # Build short_cite: "First Author et al., YEAR" or "Author, YEAR"
+        first_author_surname = authors[0].split(" ")[0] if authors else "Unknown"
+        if len(authors) > 1:
+            short_cite = f"{first_author_surname} et al., {pub_year}"
+        else:
+            short_cite = f"{first_author_surname}, {pub_year}"
+
         papers.append({
             "pmid": uid,
             "title": title,
@@ -172,6 +243,8 @@ def fetch_pubmed_details(pmids: list[str]) -> list[dict]:
             "issue": issue,
             "pages": pages,
             "citation": citation,
+            "citation_text": citation,   # alias for validate_repair_citations.py
+            "short_cite": short_cite,
             "pubmed_url": f"https://pubmed.ncbi.nlm.nih.gov/{uid}/",
         })
 
@@ -222,32 +295,17 @@ def fetch_references_for_topic(topic: str, target_count: int = 10) -> list[dict]
 
 
 def format_references_for_prompt(references: list[dict]) -> str:
-    """Format reference list for inclusion in Claude prompt."""
+    """Format reference list for inclusion in Claude prompt using token workflow."""
     if not references:
         return ""
 
-    lines = ["VERIFIED REFERENCES FROM PUBMED (use these — do not fabricate additional ones):"]
+    lines = ["APPROVED REFERENCE PACK — these are the ONLY sources you may cite:"]
     lines.append("")
     for i, ref in enumerate(references, 1):
         lines.append(f"[{i}] PMID: {ref['pmid']}")
-        lines.append(f"    Citation: {ref['citation']}")
-        lines.append(f"    URL: {ref['pubmed_url']}")
+        lines.append(f"    {ref['citation']}")
+        lines.append(f"    Short cite: {ref.get('short_cite', '')}")
         lines.append("")
-
-    lines.append("THESE ARE YOUR ONLY PERMITTED SOURCES. DO NOT ADD ANY OTHERS.")
-    lines.append("")
-    lines.append("REFERENCE RULES — HARD CONSTRAINTS:")
-    lines.append("- Use ONLY the references numbered above — no books, no guidelines, no other papers")
-    lines.append("- Read these references FIRST, then write content supported by them")
-    lines.append("- Do NOT write a claim and then find a reference — only write claims these papers support")
-    lines.append("- Select the 5-7 MOST RELEVANT references — do not use all of them")
-    lines.append("- A focused article with 5 highly relevant citations beats a padded one with 12")
-    lines.append("- Use superscript inline: <sup>1</sup> where the number matches the list below")
-    lines.append("- Reference list at end of html_content: <ol class=\"references\">")
-    lines.append("- Every <li> MUST include citation text AND the exact PubMed URL as a link:")
-    lines.append("  <li>Author. Title. Journal. Year;Vol:Pages. <a href=\"https://pubmed.ncbi.nlm.nih.gov/PMID/\" target=\"_blank\">PubMed</a></li>")
-    lines.append("- Replace PMID with the actual number from the list above")
-    lines.append("- If a claim cannot be supported by these references, do not make that claim")
 
     return "\n".join(lines)
 

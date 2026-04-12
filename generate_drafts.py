@@ -8,13 +8,14 @@ Run every Monday at 07:00 UTC via GitHub Actions (before preview page generation
 """
 
 import json
-import subprocess
 import sys
+import tempfile
 from datetime import date, timedelta
 from pathlib import Path
 
 import anthropic
 from fetch_references import fetch_references_for_topic, format_references_for_prompt
+from validate_repair_citations import run_pipeline as validate_and_repair
 
 BASE_DIR = Path(__file__).parent
 QUEUE_PATH = BASE_DIR / "queue.json"
@@ -43,39 +44,32 @@ VOICE AND STYLE
 - No excessive bold text — only use bold for genuinely critical terms
 - Use UK English spelling throughout
 
-REFERENCES — ABSOLUTE RULES — READ BEFORE WRITING ANYTHING
+CITATION RULES — READ CAREFULLY
+You will receive an APPROVED REFERENCE PACK below. These are the only sources you may cite.
 
-The user will provide a numbered list of VERIFIED PubMed references below.
-These are the ONLY sources you are permitted to cite. No exceptions.
+Your task:
+1. Write the article body in clean HTML
+2. Cite references ONLY using inline PMID tokens in this exact format: [PMID:12345678]
+3. Do NOT write clickable links yourself — a separate validation script handles this
+4. Do NOT write or format the final References section — the script builds it
+5. Do NOT invent references, substitute alternatives, or use anything from memory
+6. Every inline citation must map to a PMID in the provided reference pack
+7. If there are not enough suitable references for a claim, leave it uncited rather than inventing
 
-BEFORE YOU WRITE A SINGLE WORD of the article, read the provided references carefully.
-Build your arguments around what these papers actually say.
-Do not write a claim and then look for a reference to support it.
-Write claims that are directly supported by the provided references.
-
-HARD RULES — violating any of these makes the output unusable:
-1. You MUST NOT cite any source not in the provided list — not books, not guidelines,
-   not papers you know from training, not anything. Only the provided list.
-2. Every factual claim must be supported by a reference from the provided list.
-   If a claim cannot be supported by the provided list, do not make that claim.
-3. Use 5-7 of the MOST RELEVANT references — do not use all of them.
-   Quality and relevance matter far more than quantity.
-   A tight article with 5 highly relevant citations is better than a padded one with 12.
-4. Use superscript numbers inline: <sup>1</sup> where 1 matches the reference number
-5. The reference list MUST use <ol class="references"> at the end of html_content
-6. Every <li> MUST include the citation text AND a direct PubMed link using the exact URL:
-   <li>Author et al. Title. Journal. Year;Vol(Issue):Pages. <a href="https://pubmed.ncbi.nlm.nih.gov/PMID/" target="_blank">PubMed</a></li>
-   Replace PMID with the actual PMID number from the provided list.
-7. The reference numbers in the text must match the reference list exactly
+HARD RULES:
+- Only use PMIDs from the supplied reference pack — nothing else
+- Never output author-year inline citations unless backed by a valid [PMID:xxxxx] token
+- Never output raw bibliography HTML from memory
+- Never add a paper not present in the reference pack
+- 5-7 well-chosen citations beats padding with 12 weak ones
 
 STRUCTURE
-- One H1 (the article title)
-- 4–6 H2 sections, each covering a distinct sub-topic
-- Each section: 2–4 tight paragraphs with inline superscript citations
+- 4-6 H2 sections, each covering a distinct sub-topic
+- Each section: 2-4 tight paragraphs with inline [PMID:xxxxx] tokens where claims need support
 - Practical, numbered or bulleted takeaways where useful
 - One CTA section at the end — not a sales pitch, a natural next step
-- Reference list at the very end inside html_content
-- Target length: 1,200–1,800 words (excluding references)
+- Target length: 1,200-1,800 words
+- Do NOT include a References section — the validation script builds it
 
 BENCHMARK PS CONTEXT
 - Benchmark PS replaces subjective clinical assessment with standardised, objective
@@ -89,28 +83,7 @@ BENCHMARK PS CONTEXT
 - MSK care problem: up to 43% of physiotherapy care is non-recommended; over 90% of
   physios rely on subjective strength testing; fewer than 10% use objective tools
 - Do not position Benchmark PS as replacing physiotherapists — it is infrastructure
-  that supports clinical judgement
-
-OUTPUT FORMAT
-Respond ONLY with a valid JSON object. No preamble, no markdown code fences.
-
-{
-  "title": "The exact article title",
-  "meta_description": "150–160 character SEO meta description",
-  "slug": "url-friendly-slug-all-lowercase-hyphens",
-  "html_content": "<p>Full article HTML...</p>",
-  "tags": ["tag1", "tag2", "tag3"],
-  "cluster": "Cluster name from the keyword clusters",
-  "faq": [
-    {"q": "Question one?", "a": "Answer one."},
-    {"q": "Question two?", "a": "Answer two."},
-    {"q": "Question three?", "a": "Answer three."}
-  ]
-}
-
-The html_content should use semantic HTML: <h2>, <h3>, <p>, <ul>, <ol>, <li>,
-<blockquote>, <strong>. Do not include <html>, <head>, <body>, or <h1> tags.
-Do not include the FAQ in html_content; it is handled separately via the faq array."""
+  that supports clinical judgement"""
 
 
 def load_json(path):
@@ -121,6 +94,66 @@ def load_json(path):
 def save_json(path, data):
     with open(path, "w") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
+
+
+def validate_citations(article: dict, references: list) -> dict:
+    """
+    Run the deterministic citation validator on the generated article.
+    Replaces [PMID:xxxxx] tokens with clickable links and builds the reference list.
+    Returns updated article dict with repaired html_content.
+    """
+    import tempfile, json as _json
+    from pathlib import Path as _Path
+
+    # Build reference pack in the format validate_repair_citations.py expects
+    ref_pack = []
+    for r in references:
+        ref_pack.append({
+            "pmid": r["pmid"],
+            "pubmed_url": r["pubmed_url"],
+            "citation_text": r.get("citation_text", r.get("citation", "")),
+            "short_cite": r.get("short_cite", f"{r.get('authors','').split(',')[0].strip()}, {r.get('year','')}")
+        })
+
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = _Path(tmp)
+        input_path = tmp_path / "article.html"
+        refs_path = tmp_path / "refs.json"
+        output_path = tmp_path / "article.repaired.html"
+        report_path = tmp_path / "report.json"
+
+        # Write input files
+        input_path.write_text(article.get("html_content", ""), encoding="utf-8")
+        refs_path.write_text(_json.dumps(ref_pack, ensure_ascii=False), encoding="utf-8")
+
+        # Run validator
+        result = validate_and_repair(
+            input_path=input_path,
+            refs_path=refs_path,
+            output_path=output_path,
+            report_path=report_path,
+            strict_inline_order=True,
+            remove_unknown_inline=True,
+            fail_on_unknown=False,
+        )
+
+        # Read report
+        report = _json.loads(report_path.read_text(encoding="utf-8"))
+        refs_written = report.get("references_written", [])
+        unknown = report.get("unknown_inline_pmids", [])
+
+        if unknown:
+            print(f"  WARNING: Removed {len(unknown)} unknown inline PMIDs: {unknown}")
+        if refs_written:
+            print(f"  Validator: {len(refs_written)} verified references in final article")
+        else:
+            print(f"  WARNING: Validator found no valid inline citations")
+
+        # Update article with repaired html_content
+        if output_path.exists():
+            article["html_content"] = output_path.read_text(encoding="utf-8")
+
+    return article
 
 
 def generate_article(topic: str, existing_posts: list, references: list) -> dict:
@@ -139,10 +172,16 @@ def generate_article(topic: str, existing_posts: list, references: list) -> dict
         "NICE guidelines over individual studies."
     )
 
+    pmid_list = ", ".join([f"[PMID:{r['pmid']}]" for r in references]) if references else "none"
+
     user_message = (
         f"Write a full blog article on the following topic for the Benchmark PS blog:\n\n"
         f"TOPIC: {topic}"
         f"{existing_context}\n\n"
+        f"MANDATORY: Cite references inline using PMID tokens.\n"
+        f"Available PMIDs: {pmid_list}\n"
+        f"Use at least 5 of these tokens in the article body like this: [PMID:12345678]\n"
+        f"Do NOT write a References section — the validator builds it.\n\n"
         f"{ref_block}\n\n"
         f"Return only the JSON object as described. No other text."
     )
@@ -199,6 +238,10 @@ def main():
                 print(f"  Stored {len(references)} verified PMIDs")
             else:
                 print(f"  WARNING: No PubMed references — article will use Claude memory only")
+
+            # Run citation validator to replace [PMID:xxxxx] tokens and build reference list
+            if references:
+                article = validate_citations(article, references)
 
             # Ensure no slug collision
             slug = article.get("slug", "")
