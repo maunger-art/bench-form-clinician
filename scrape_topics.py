@@ -118,58 +118,65 @@ PUBMED_QUERIES = [
 ]
 
 FALLBACK_TOPICS = [
-    "How to Use Handheld Dynamometry in a Standard Physiotherapy Appointment",
-    "Normative Strength Data for Lower Limb Rehabilitation: A Clinical Reference",
-    "Single-Leg Hop Testing: How to Administer, Score, and Interpret Results",
-    "Range of Motion Assessment in Physiotherapy: Improving Consistency Across Clinicians",
-    "Functional Movement Screening in MSK Physiotherapy: What the Evidence Supports",
-    "Isometric vs Isotonic Strength Testing in Physiotherapy: When Each Is Appropriate",
-    "Grip Strength as a Clinical Marker: What It Tells You Beyond Hand Function",
-    "Implementing Objective Assessment in a 30-Minute Physiotherapy Appointment",
-    "Hamstring Strain Rehabilitation: Criteria-Based Return to Sport Protocols",
-    "Patellofemoral Pain in Runners: Assessment Findings and Exercise Progressions",
-    "Shoulder Impingement vs Rotator Cuff Tear: Clinical Differentiation and Management",
-    "Ankle Sprain Rehabilitation: From Acute Management to Return to Sport",
-    "Hip Osteoarthritis Conservative Management: What Physiotherapy Can and Cannot Do",
-    "Achilles Tendinopathy: The Evidence for Loading vs Rest",
-    "Meniscal Tear Without Surgery: When Physiotherapy Is Enough",
-    "Plantar Fasciitis Management: Load Management and Exercise Protocols",
-    "Cervical Radiculopathy: Conservative Management in Primary Care Physiotherapy",
-    "Groin Pain in Athletes: Differential Diagnosis and Rehabilitation",
-    "Lateral Ankle Instability: Rehabilitation Beyond the Acute Phase",
-    "Tibial Stress Fractures in Runners: Return to Running Criteria",
-    "De Quervain Tenosynovitis: Conservative Management and Outcome Expectations",
-    "Frozen Shoulder: Stage-Based Management and Realistic Outcome Timelines",
-    "Tennis Elbow: Why Most Cases Resolve and What Accelerates Recovery",
-    "Red Flags in MSK Assessment: What Every Physiotherapist Must Screen For",
-    "When to Refer for Imaging in MSK Physiotherapy: Clinical Decision Rules",
-    "Pain Education in Physiotherapy: How to Explain Central Sensitisation to Patients",
-    "Setting Rehabilitation Goals with Patients: Outcome Measure Selection in Practice",
-    "Stratifying MSK Patients by Complexity: A Framework for Caseload Management",
-    "The STarT Back Tool in Practice: Using Risk Stratification to Match Treatment Intensity",
-    "Prognostic Factors in MSK Physiotherapy: What Predicts a Good Outcome",
-    "Shared Decision Making in Physiotherapy: How to Have Better Goal-Setting Conversations",
-    "How to Build a Physiotherapy Referral Network with GPs and Consultants",
-    "Physiotherapy Outcome Reporting for Private Medical Insurance: What Insurers Want",
-    "Patient Retention in Physiotherapy: Why Patients Drop Out and How to Reduce It",
-    "Pricing Physiotherapy Services: How to Communicate Value Beyond Session Cost",
-    "Building a Physiotherapy Brand on LinkedIn: What Actually Works",
-    "How to Recruit and Retain Junior Physiotherapists in a Private Practice",
-    "Clinical Supervision in Physiotherapy: Building a Framework That Improves Outcomes",
-    "The Business Case for Specialising Your Physiotherapy Practice",
-    "The Cost of Delayed Physiotherapy: What the Evidence Says About Early Intervention",
-    "MSK Conditions and Workplace Absence: The Case for Employer-Funded Physiotherapy",
-    "Avoiding Unnecessary Physiotherapy Referrals: How Objective Data Changes the Picture",
-    "Physiotherapy vs Surgery for Common MSK Conditions: A Comparative Evidence Review",
-    "Value-Based Healthcare in Physiotherapy: What Outcomes-Based Contracting Looks Like",
-    "GLP-1 Medications and MSK Health: What Physiotherapists Need to Know",
-    "The Ageing Workforce and MSK Demand: What Practice Owners Should Be Planning For",
-    "Telehealth Physiotherapy for MSK Conditions: Evidence, Limitations, and Best Practice",
-    "AI in Physiotherapy Clinical Decision Support: Where the Technology Actually Stands",
-    "Digital Exercise Prescription in Physiotherapy: Platforms, Evidence, and Patient Uptake",
-    "Wearable Technology in MSK Rehabilitation: What Data Is Actually Clinically Useful",
-    "Electronic Outcome Measurement in Physiotherapy: Implementation Without the Burden",
-    "Using Smartphone Apps for Physiotherapy Home Exercise: What Patients Actually Do",
+    # ── TIER 1: Clinical conditions and testing protocols (24) ──
+    "ACL Reconstruction: Objective Criteria for Return to Running",
+    "ACL Return-to-Sport Testing Battery: Benchmark Thresholds That Actually Predict Re-Injury",
+    "Knee Osteoarthritis Conservative Care: What Good Progress Looks Like in Numbers",
+    "Patellofemoral Pain: Strength, Hop, and Load-Tolerance Benchmarks for Discharge",
+    "Hamstring Strain: Eccentric Strength and Sprint-Readiness Criteria",
+    "Achilles Tendinopathy: Calf Capacity Benchmarks and Pain-Monitoring Thresholds",
+    "Rotator Cuff Related Shoulder Pain: The Strength and ROM Markers That Matter",
+    "Frozen Shoulder: ROM Recovery Milestones and When Progress Is Too Slow",
+    "Lateral Ankle Instability: Hop, Balance, and Calf Benchmarks for Safe Discharge",
+    "Plantar Fasciitis: Load Tolerance, Calf Strength, and Morning Pain Trend Markers",
+    "Low Back Pain Conservative Management: Functional Outcome Benchmarks That Guide Decisions",
+    "Cervical Radiculopathy: Strength, Neurodynamic, and Symptom Response Markers",
+    "Hip Osteoarthritis: Objective Testing for Function Before and After Rehab Blocks",
+    "Athletic Groin Pain: Adductor Strength Benchmarks and Return-to-Play Criteria",
+    "Tibial Stress Fracture: Loading Progression Markers and Return-to-Run Criteria",
+    "Tennis Elbow: Grip-Strength Recovery Benchmarks and Pain-Load Relationships",
+    "De Quervain Tenosynovitis: Grip, Pinch, and Function Recovery Tracking",
+    "Meniscal Injury Managed Conservatively: What to Measure and When",
+    "Post-Op Meniscus Repair: Progression Criteria Using Simple Field Tests",
+    "Runners in Rehab: Lower-Limb Capacity Benchmarks That Change Clinical Decisions",
+    "Cyclists: Objective Testing for Knee, Hip, and Back Symptom Patterns",
+    "Weightlifters in Rehab: Shoulder, Hip, and Trunk Capacity Testing",
+    "Football Players: Field-Based Return-to-Play Metrics Physiotherapists Can Use",
+    "Rugby Players: Contact-Readiness and Lower-Limb Performance Benchmarks",
+
+    # ── TIER 2: Assessment methodology and outcome measurement (10) ──
+    "Handheld Dynamometry in MSK Practice: What It Can Reliably Tell You",
+    "Isometric Testing in Physiotherapy: When to Use It and How to Interpret Change",
+    "Limb Symmetry Index: Useful Metric or Misleading Shortcut",
+    "Single-Leg Hop Tests: What They Measure and What They Miss",
+    "Grip Strength as a Systemic Marker in MSK Physiotherapy",
+    "Range-of-Motion Testing: Reliability, Error, and Reassessment Intervals",
+    "PROMs in MSK Rehab: Which Measures Are Worth Collecting Routinely",
+    "MCID Versus MDC: What Counts as Real Change in Physiotherapy Practice",
+    "Between-Session Reliability: How Much Change Is Enough to Act On",
+    "Inter-Rater Variability in MSK Assessment: How to Reduce Noise in Your Testing",
+
+    # ── TIER 3: Clinical decision-making (6) ──
+    "Criteria-Based Progression Versus Time-Based Rehab: What the Evidence Supports",
+    "Return-to-Sport Decisions: How Objective Deficits Predict Re-Injury Risk",
+    "Discharge Criteria in MSK Physiotherapy: What Good Enough Should Look Like Numerically",
+    "When Test Results Should Trigger Referral Rather Than Progression",
+    "Using Objective Data to Manage Plateaus in Rehabilitation",
+    "Shared Decision Making With Numbers: Improving Patient Buy-In Without Overcomplicating Care",
+
+    # ── TIER 4: Technology vs low-tech workflows (4) ──
+    "What Handheld Dynamometry Can Replace in Everyday MSK Practice",
+    "Smartphone Video Versus Lab Systems: When Low-Cost Tools Are Clinically Sufficient",
+    "Stopwatch, Step, and Bodyweight Tests Versus Force Plates: What You Lose and Gain",
+    "Telehealth Outcome Monitoring That Is Clinically Useful Rather Than Admin-Heavy",
+
+    # ── TIER 5: Business and health economics (6) ──
+    "The Business Case for Outcome Measurement in Private Physiotherapy",
+    "What Objective Outcome Data Demonstrates to Payers and Insurers",
+    "Reducing Treatment Variation: The Clinical and Commercial Upside",
+    "Staffing Efficiency When Assessment and Progression Are Standardised",
+    "Premium Pricing and Premium Evidence: When Objective Data Justifies the Difference",
+    "Value-Based MSK Care: What Clinic Owners Need to Measure First",
 ]
 
 
@@ -354,19 +361,44 @@ Sources scraped today: {source_summary}
 
 Select and rewrite the {REFILL_COUNT} best article topics for a UK physiotherapy clinic audience.
 
-PRIORITY (in order):
-1. MSK rehabilitation protocols and clinical decision-making
-2. Objective assessment and outcome measurement in physiotherapy
-3. Evidence-based practice gaps and how to close them
-4. Clinic operations, staffing efficiency, and business case
-5. Healthcare economics and the cost of MSK inaction
+CONTENT ARCHITECTURE (strict 80/20 split):
+
+TIER 1 — Clinical conditions and testing protocols (40% of output)
+  Select topics about objective testing, benchmark thresholds, and measurable
+  recovery criteria for specific MSK conditions. Include athletic populations
+  (football, rugby, running, cycling, weightlifting) alongside clinical populations.
+  Draw from sports science research as well as physiotherapy literature.
+
+TIER 2 — Assessment methodology and outcome measurement (20% of output)
+  Select topics about how to measure, what to measure, and what the numbers mean.
+  Reliability, validity, MCID, inter-rater variability, handheld dynamometry,
+  hop tests, grip strength, ROM, PROMs.
+
+TIER 3 — Clinical decision-making (15% of output)
+  Select topics where objective data changes a specific clinical decision:
+  progression, discharge, return to sport, referral, plateau management.
+  Frame as: clinical problem → decision point → objective variable → threshold.
+
+TIER 4 — Low-tech implementation (5% of output)
+  Select topics about implementing objective testing without expensive equipment.
+  Handheld dynamometry vs force plates. Smartphone tools. Field tests.
+
+TIER 5 — Business and health economics (20% of output)
+  Select topics aimed at clinic owners and practice managers.
+  Frame as: clinical consistency first, commercial consequences second.
+  Topics: payer requirements, outcome data and defensible care, staffing
+  efficiency, reducing treatment variation, value-based contracting.
+  NEVER frame as practice management or marketing advice.
 
 REWRITE RULES:
 - Convert questions to declarative titles
 - Convert academic titles to practitioner-friendly language
-- Keep titles specific — include condition names, techniques, or thresholds
-- Format: "Topic: Subtitle" or "How to [do X]" or "[Condition]: What the Evidence Shows"
-- No em dashes, no clickbait, no superlatives
+- Keep titles specific — include condition names, techniques, thresholds, or specific tests
+- Clinical topics: "[Condition]: [Specific Testing Variable or Decision]"
+- Assessment topics: "[Test/Tool]: What It Can and Cannot Tell You"
+- Decision-making topics: focus on the decision, not the condition
+- Business topics: clinical framing first, never lead with money or marketing
+- No em dashes, no clickbait, no superlatives, no vague titles like "the importance of X"
 
 EXISTING POSTS — do not duplicate:
 {chr(10).join(f"- {t}" for t in existing_titles[:25])}
