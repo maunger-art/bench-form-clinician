@@ -26,6 +26,7 @@ from topic_normalizer import normalize_topic, SearchBrief
 from query_builder import get_valid_queries, QuerySpec
 from paper_ranker import rank_papers, PoolDiagnostics
 from evidence_memory import detect_cluster
+from multi_source_retriever import retrieve_candidates as multi_retrieve
 
 ENTREZ_BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
 TOOL = "BenchmarkPSBlog"
@@ -307,8 +308,8 @@ def build_evidence_pack(
             valid_count = sum(1 for q in queries if q.is_valid)
             print(f"  Queries: {valid_count} valid (attempt {attempt + 1})")
 
-        # Retrieve candidates
-        candidates = _retrieve_candidates(queries, pmids_per_query=20)
+        # Retrieve candidates from all sources
+        candidates = multi_retrieve(queries, topic=title, topic_cluster=topic_cluster, pmids_per_query=20)
 
         if len(candidates) < MIN_POOL_SIZE and attempt < max_retries:
             if verbose:

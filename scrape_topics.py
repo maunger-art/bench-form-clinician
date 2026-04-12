@@ -478,7 +478,18 @@ def main():
         time.sleep(0.3)
     source_log.append(f"RSS ({len(RSS_FEEDS)} feeds)")
 
-    # 5. Fallbacks
+    # 5. Protocol library topics (highest priority — platform-anchored)
+    try:
+        from protocol_knowledge import get_all_article_topics
+        protocol_topics = get_all_article_topics(n_per_test=2)
+        protocol_titles = [t["topic"] for t in protocol_topics]
+        raw_topics.extend(protocol_titles)
+        source_log.append(f"Protocol library ({len(protocol_titles)} topics from {len(protocol_topics)//2} tests)")
+        print(f"[Protocol library] {len(protocol_titles)} topics generated")
+    except Exception as e:
+        print(f"  Protocol library error: {e}")
+
+    # 6. Curated fallback topics
     raw_topics.extend(FALLBACK_TOPICS)
     source_log.append("Curated fallbacks")
 

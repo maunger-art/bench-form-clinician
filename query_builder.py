@@ -1,245 +1,166 @@
 """
-query_builder.py — Generates 6 validated PubMed query variants per topic.
+query_builder.py — Generates compact PubMed retrieval queries.
 
-Every query must contain:
-  A. Clinical anchor (MeSH + tiab)
-  B. Domain anchor
-  C. Topic-intent block
-  D. Exclusion block
+Architecture:
+  RETRIEVAL layer (this file): short, candidate-generating, no NOT blocks
+  RANKING layer (paper_ranker.py): strict filtering, penalties, exclusions
 
-Queries that fail validation are not run.
+Key rule: Do NOT put NOT/exclusion logic in retrieval queries.
+PubMed's URL encoding corrupts NOT operators, silently returning 0 results.
+Exclusion is handled downstream by the ranker's domain penalty system.
+
+Each topic gets 5 compact queries:
+  Q1-Q2: high precision (condition + intent, with evidence filter)
+  Q3-Q4: balanced (condition + intent, no evidence filter)
+  Q5: broad recall (clinical anchor + condition only)
 """
 
 from __future__ import annotations
 from dataclasses import dataclass
-from topic_normalizer import SearchBrief, INTENT_MAPPING, STANDARD_EXCLUSIONS
+from topic_normalizer import SearchBrief, INTENT_MAPPING
 
 
 # ---------------------------------------------------------------------------
-# Required query blocks
+# Core blocks — kept short
 # ---------------------------------------------------------------------------
 
+# Short clinical anchor — just the most common terms
 CLINICAL_ANCHOR = (
-    '("Physical Therapy Modalities"[mh] OR physiotherapy[tiab] OR '
-    '"physical therapy"[tiab] OR rehabilitation[tiab])'
+    '(physiotherapy[tiab] OR "physical therapy"[tiab] OR rehabilitation[tiab])'
 )
 
+# Short domain anchor
 DOMAIN_ANCHOR = (
-    '(musculoskeletal[tiab] OR "Musculoskeletal Diseases"[mh] OR orthopaedic[tiab] OR '
-    '"back pain"[tiab] OR osteoarthritis[tiab] OR tendinopathy[tiab] OR '
-    '"sports medicine"[tiab] OR "physical rehabilitation"[tiab])'
+    '(musculoskeletal[tiab] OR orthopaedic[tiab] OR "sports medicine"[tiab] OR rehabilitation[tiab])'
 )
 
-EXCLUSION_BLOCK = (
-    'NOT ("global burden of disease"[tiab] OR GBD[tiab] OR psychotherapy[tiab] '
-    'OR pharmacy[tiab] OR "pelvic organ prolapse"[tiab] OR priapism[tiab] '
-    'OR oncology[tiab] OR dermatology[tiab])'
+# High-quality evidence filter (short version)
+HIGH_EVIDENCE = (
+    '("systematic review"[tiab] OR "meta-analysis"[tiab] OR "randomised controlled trial"[tiab] OR "randomized controlled trial"[tiab] OR "clinical trial"[pt])'
 )
 
-# High-quality evidence filter
-HIGH_EVIDENCE_FILTER = (
-    '("systematic review"[tiab] OR "meta-analysis"[tiab] OR '
-    '"randomised controlled trial"[tiab] OR "randomized controlled trial"[tiab] OR '
-    '"cohort study"[tiab] OR "clinical trial"[pt])'
-)
+
+# ---------------------------------------------------------------------------
+# Condition-specific domain blocks — compact, single condition
+# ---------------------------------------------------------------------------
+
+CONDITION_BLOCKS = {
+    "acl":          '(ACL[tiab] OR "anterior cruciate ligament"[tiab])',
+    "patellofemoral": '("patellofemoral pain"[tiab] OR "patellofemoral syndrome"[tiab])',
+    "knee":         '(knee[tiab] OR "knee osteoarthritis"[tiab])',
+    "hamstring":    '("hamstring strain"[tiab] OR "hamstring injury"[tiab])',
+    "achilles":     '("Achilles tendinopathy"[tiab] OR "Achilles tendon"[tiab])',
+    "shoulder":     '(shoulder[tiab] OR "rotator cuff"[tiab])',
+    "ankle":        '("ankle instability"[tiab] OR "ankle sprain"[tiab] OR ankle[tiab])',
+    "plantar":      '("plantar fasciitis"[tiab] OR "heel pain"[tiab])',
+    "back":         '("low back pain"[tiab] OR lumbar[tiab] OR "back pain"[tiab])',
+    "hip":          '(hip[tiab] OR "hip osteoarthritis"[tiab])',
+    "elbow":        '("tennis elbow"[tiab] OR "lateral epicondylitis"[tiab])',
+    "runner":       '(runner[tiab] OR running[tiab] OR "running injury"[tiab])',
+    "athlete":      '(athlete[tiab] OR athletic[tiab] OR "return to sport"[tiab])',
+    "football":     '(football[tiab] OR soccer[tiab] OR "return to play"[tiab])',
+    "osteoarthritis": '(osteoarthritis[tiab] OR "knee OA"[tiab])',
+    "msk":          DOMAIN_ANCHOR,
+    "conservative": '("conservative care"[tiab] OR "non-surgical"[tiab] OR physiotherapy[tiab])',
+}
+
+
+# ---------------------------------------------------------------------------
+# Intent blocks — compact
+# ---------------------------------------------------------------------------
+
+INTENT_BLOCKS = {
+    "outcome measurement":     '(outcome measure*[tiab] OR PROM*[tiab] OR "functional outcome"[tiab])',
+    "discharge criteria":      '("return to sport"[tiab] OR "return to play"[tiab] OR criteria[tiab] OR discharge[tiab])',
+    "return to sport":         '("return to sport"[tiab] OR "return to play"[tiab] OR criteria[tiab])',
+    "testing methodology":     '(dynamometry[tiab] OR "hop test"[tiab] OR "limb symmetry"[tiab] OR reliability[tiab])',
+    "adherence":               '(adherence[tiab] OR compliance[tiab] OR retention[tiab])',
+    "staffing":                '(staffing[tiab] OR workforce[tiab] OR "skill mix"[tiab])',
+    "value":                   '(cost[tiab] OR value[tiab] OR "cost-effectiveness"[tiab] OR efficiency[tiab])',
+    "technology":              '(telehealth[tiab] OR digital[tiab] OR smartphone[tiab] OR wearable*[tiab])',
+    "progression":             '(progression[tiab] OR "criteria-based"[tiab] OR "treatment protocol"[tiab])',
+    "conservative care":       '("conservative care"[tiab] OR "non-surgical"[tiab] OR "conservative treatment"[tiab])',
+    "clinical decision":       '("clinical decision"[tiab] OR "clinical reasoning"[tiab] OR criteria[tiab])',
+    "low tech implementation": '(dynamometry[tiab] OR "field test"[tiab] OR "handheld"[tiab] OR implementation[tiab])',
+}
 
 
 @dataclass
 class QuerySpec:
     query_string: str
-    family: str  # high_precision | balanced | broad | fallback
+    family: str
     index: int
-    has_clinical_anchor: bool
-    has_domain_anchor: bool
-    has_intent_block: bool
-    has_exclusion: bool
-    is_valid: bool
-    validation_reason: str = ""
-
-
-def _validate_query(query: str, family: str, index: int) -> QuerySpec:
-    """Check that a query contains all four required blocks."""
-    has_clinical = any(t in query for t in [
-        '"Physical Therapy Modalities"', 'physiotherapy[tiab]',
-        '"physical therapy"[tiab]', 'rehabilitation[tiab]',
-    ])
-    has_domain = any(t in query for t in [
-        'musculoskeletal[tiab]', '"Musculoskeletal Diseases"',
-        'orthopaedic[tiab]', 'osteoarthritis[tiab]', 'tendinopathy[tiab]',
-        '"back pain"', 'sports medicine', 'physical rehabilitation',
-        'ACL[tiab]', 'ligament[tiab]', 'knee[tiab]', 'shoulder[tiab]',
-        'hamstring[tiab]', 'achilles[tiab]', 'ankle[tiab]', 'hip[tiab]',
-        'plantar[tiab]', 'patellofemoral[tiab]', 'lumbar[tiab]',
-        '"anterior cruciate"', 'rotator cuff', 'tennis elbow',
-        'groin[tiab]', 'tibial[tiab]', 'elbow[tiab]', 'athlete[tiab]',
-        'football[tiab]', 'runner[tiab]', 'running[tiab]', 'sport[tiab]',
-    ])
-    has_intent = len(query) > 200  # Intent block adds substantial length
-    has_exclusion = 'NOT' in query and 'GBD' in query
-
-    missing = []
-    if not has_clinical:
-        missing.append("clinical anchor")
-    if not has_domain:
-        missing.append("domain anchor")
-    if not has_intent:
-        missing.append("intent block")
-    if not has_exclusion:
-        missing.append("exclusion block")
-
-    is_valid = len(missing) == 0
-    reason = f"Missing: {', '.join(missing)}" if missing else "OK"
-
-    return QuerySpec(
-        query_string=query,
-        family=family,
-        index=index,
-        has_clinical_anchor=has_clinical,
-        has_domain_anchor=has_domain,
-        has_intent_block=has_intent,
-        has_exclusion=has_exclusion,
-        is_valid=is_valid,
-        validation_reason=reason,
-    )
+    is_valid: bool = True
+    validation_reason: str = "OK"
 
 
 def build_queries(brief: SearchBrief) -> list[QuerySpec]:
     """
-    Generate 6 query variants for a topic brief.
-    Returns only validated queries (all 4 blocks present).
-
-    Query families:
-      Q1-Q2: high precision (MeSH + tiab, narrow)
-      Q3-Q4: balanced (MeSH + free text)
-      Q5: broad recall
-      Q6: fallback / adjacent services
+    Generate 5 compact retrieval queries.
+    No NOT blocks. No complex multi-layer structures.
+    Exclusion is handled by the ranker.
     """
-    # Get intent blocks for detected intents
-    intent_blocks = []
-    for intent in brief.detected_intents:
-        block = INTENT_MAPPING.get(intent, {}).get("mesh_block", "")
-        if block:
-            intent_blocks.append(block)
-
-    # Fallback intent block if nothing detected
-    if not intent_blocks:
-        intent_blocks = ['(outcome*[tiab] OR function*[tiab] OR assessment[tiab])']
-
-    primary_intent = intent_blocks[0]
-    secondary_intent = intent_blocks[1] if len(intent_blocks) > 1 else intent_blocks[0]
-
-    # Domain-specific condition block — condition-specific testing variables
-    condition_block = ""
+    # Get condition block
     cond = brief.detected_conditions[0] if brief.detected_conditions else "msk"
+    cond_block = CONDITION_BLOCKS.get(cond, DOMAIN_ANCHOR)
 
-    if cond == "acl":
-        condition_block = '(ACL[tiab] OR "anterior cruciate ligament"[tiab] OR "knee reconstruction"[tiab])' 
-    elif cond == "patellofemoral":
-        condition_block = '("patellofemoral pain"[tiab] OR "patellofemoral syndrome"[tiab] OR "knee pain"[tiab])'
-    elif cond == "knee":
-        condition_block = '(knee[tiab] OR "knee osteoarthritis"[tiab] OR "knee replacement"[tiab])'
-    elif cond == "hamstring":
-        condition_block = '("hamstring strain"[tiab] OR "hamstring injury"[tiab] OR "posterior chain"[tiab])'
-    elif cond == "achilles":
-        condition_block = '("Achilles tendinopathy"[tiab] OR "Achilles tendon"[tiab] OR tendinopathy[tiab])'
-    elif cond == "shoulder":
-        condition_block = '(shoulder[tiab] OR "rotator cuff"[tiab] OR "shoulder impingement"[tiab])'
-    elif cond == "ankle":
-        condition_block = '("lateral ankle"[tiab] OR "ankle instability"[tiab] OR "ankle sprain"[tiab])'
-    elif cond == "plantar":
-        condition_block = '("plantar fasciitis"[tiab] OR "heel pain"[tiab] OR "plantar fascia"[tiab])'
-    elif cond == "back":
-        condition_block = '("low back pain"[tiab] OR lumbar[tiab] OR spine[tiab] OR "back pain"[tiab])'
-    elif cond == "hip":
-        condition_block = '(hip[tiab] OR "hip osteoarthritis"[tiab] OR "groin pain"[tiab])'
-    elif cond == "elbow":
-        condition_block = '("tennis elbow"[tiab] OR "lateral epicondylitis"[tiab] OR "elbow"[tiab])'
-    elif cond == "runner":
-        condition_block = '(runner[tiab] OR running[tiab] OR "running injury"[tiab] OR "lower limb"[tiab])'
-    elif cond == "athlete":
-        condition_block = '(athlete[tiab] OR athletic[tiab] OR "return to sport"[tiab] OR "return to play"[tiab])'
-    elif cond == "football":
-        condition_block = '(football[tiab] OR soccer[tiab] OR "return to play"[tiab] OR "lower limb"[tiab])'
-    elif cond == "osteoarthritis":
-        condition_block = '(osteoarthritis[tiab] OR "knee OA"[tiab] OR "hip OA"[tiab])'
-    else:
-        condition_block = DOMAIN_ANCHOR
+    # Get primary and secondary intent blocks
+    primary_intent_key = brief.detected_intents[0] if brief.detected_intents else "outcome measurement"
+    secondary_intent_key = brief.detected_intents[1] if len(brief.detected_intents) > 1 else primary_intent_key
 
-    # Business layer for business topics
-    business_block = ""
-    if brief.is_business_topic:
-        business_block = (
-            '("Health Care Costs"[mh] OR "Cost-Benefit Analysis"[mh] OR '
-            'value[tiab] OR cost-effectiveness[tiab] OR efficiency[tiab] OR '
-            '"health services"[tiab] OR "service delivery"[tiab])'
-        )
+    primary_intent = INTENT_BLOCKS.get(primary_intent_key, '(outcome*[tiab] OR function*[tiab])')
+    secondary_intent = INTENT_BLOCKS.get(secondary_intent_key, '(assessment[tiab] OR measure*[tiab])')
 
     queries = []
 
-    # Q1: High precision — MeSH + condition + primary intent + evidence filter
-    q1_parts = [CLINICAL_ANCHOR, condition_block, primary_intent, HIGH_EVIDENCE_FILTER, EXCLUSION_BLOCK]
-    queries.append((" AND ".join(q1_parts), "high_precision"))
+    # Q1: High precision — condition + primary intent + evidence filter
+    q1 = f"{CLINICAL_ANCHOR} AND {cond_block} AND {primary_intent} AND {HIGH_EVIDENCE}"
+    queries.append(QuerySpec(q1, "high_precision", 1))
 
-    # Q2: High precision — MeSH + domain + primary intent (no evidence filter)
-    q2_parts = [CLINICAL_ANCHOR, DOMAIN_ANCHOR, primary_intent, EXCLUSION_BLOCK]
-    queries.append((" AND ".join(q2_parts), "high_precision"))
+    # Q2: High precision — condition + primary intent (no evidence filter)
+    q2 = f"{CLINICAL_ANCHOR} AND {cond_block} AND {primary_intent}"
+    queries.append(QuerySpec(q2, "high_precision", 2))
 
-    # Q3: Balanced — clinical anchor + condition + secondary intent
-    q3_parts = [CLINICAL_ANCHOR, condition_block, secondary_intent, EXCLUSION_BLOCK]
-    queries.append((" AND ".join(q3_parts), "balanced"))
+    # Q3: Balanced — condition + secondary intent
+    q3 = f"{CLINICAL_ANCHOR} AND {cond_block} AND {secondary_intent}"
+    queries.append(QuerySpec(q3, "balanced", 3))
 
-    # Q4: Balanced — with business layer if applicable, else evidence quality
-    if brief.is_business_topic and business_block:
-        q4_parts = [CLINICAL_ANCHOR, DOMAIN_ANCHOR, business_block, EXCLUSION_BLOCK]
-    else:
-        q4_parts = [CLINICAL_ANCHOR, DOMAIN_ANCHOR, secondary_intent, HIGH_EVIDENCE_FILTER, EXCLUSION_BLOCK]
-    queries.append((" AND ".join(q4_parts), "balanced"))
+    # Q4: Balanced — domain + primary intent (broader condition)
+    q4 = f"{CLINICAL_ANCHOR} AND {DOMAIN_ANCHOR} AND {primary_intent}"
+    queries.append(QuerySpec(q4, "balanced", 4))
 
-    # Q5: Broad recall — clinical anchor + domain + broad terms
-    broad_intent = '(outcome*[tiab] OR function*[tiab] OR assessment[tiab] OR effectiveness[tiab] OR benchmark*[tiab] OR normative[tiab])' 
-    q5_parts = [CLINICAL_ANCHOR, DOMAIN_ANCHOR, broad_intent, EXCLUSION_BLOCK]
-    queries.append((" AND ".join(q5_parts), "broad"))
+    # Q5: Broad recall — clinical anchor + condition only
+    q5 = f"{CLINICAL_ANCHOR} AND {cond_block}"
+    queries.append(QuerySpec(q5, "broad", 5))
 
-    # Q6: Fallback / adjacent services
-    if brief.is_business_topic:
-        fallback_intent = (
-            '("Delivery of Health Care"[mh] OR "Health Services Research"[mh] OR '
-            '"model of care"[tiab] OR "service delivery"[tiab] OR workforce[tiab])'
-        )
-    elif cond in ["acl", "knee", "shoulder"]:
-        fallback_intent = '("rehabilitation"[mh] OR "exercise therapy"[mh] OR "physical activity"[mh])'
-    else:
-        fallback_intent = '("Allied Health Personnel"[mh] OR "clinical practice"[tiab] OR "evidence-based"[tiab])'
-    q6_parts = [CLINICAL_ANCHOR, DOMAIN_ANCHOR, fallback_intent, EXCLUSION_BLOCK]
-    queries.append((" AND ".join(q6_parts), "fallback"))
-
-    # Validate all queries
-    validated = []
-    for i, (q, family) in enumerate(queries, 1):
-        spec = _validate_query(q, family, i)
-        validated.append(spec)
-
-    return validated
+    return queries
 
 
 def get_valid_queries(brief: SearchBrief) -> list[QuerySpec]:
-    """Return only valid queries (all 4 blocks present)."""
-    all_queries = build_queries(brief)
-    valid = [q for q in all_queries if q.is_valid]
-    invalid = [q for q in all_queries if not q.is_valid]
-    if invalid:
-        print(f"  Query validation: {len(valid)} valid, {len(invalid)} rejected")
-        for q in invalid:
-            print(f"    Q{q.index} ({q.family}): {q.validation_reason}")
-    return valid
+    """Return all queries (all are valid — no NOT blocks to fail)."""
+    queries = build_queries(brief)
+    # Log lengths for diagnostics
+    for q in queries:
+        if len(q.query_string) > 400:
+            print(f"    WARNING: Q{q.index} is {len(q.query_string)} chars — consider shortening")
+    return queries
 
 
 if __name__ == "__main__":
     from topic_normalizer import normalize_topic
-    title = "The Business Case for Outcome Measurement in Physiotherapy Clinics"
-    brief = normalize_topic(title)
-    queries = get_valid_queries(brief)
-    print(f"\n{len(queries)} valid queries for: {title[:60]}")
-    for q in queries:
-        print(f"\nQ{q.index} [{q.family}] Valid={q.is_valid}")
-        print(f"  {q.query_string[:120]}...")
+    import urllib.parse
+
+    topics = [
+        "ACL Return-to-Sport Testing: Which Criteria Actually Predict Re-Injury Risk",
+        "Knee Osteoarthritis and Conservative Care: Setting Realistic Expectations",
+        "The Business Case for Outcome Measurement in Physiotherapy Clinics",
+    ]
+
+    for title in topics:
+        brief = normalize_topic(title)
+        queries = get_valid_queries(brief)
+        print(f"\n{title[:65]}")
+        for q in queries:
+            encoded_len = len(urllib.parse.quote(q.query_string))
+            print(f"  Q{q.index} [{q.family}] raw={len(q.query_string)} encoded={encoded_len}")
+            print(f"    {q.query_string[:80]}...")

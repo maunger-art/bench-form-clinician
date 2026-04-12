@@ -354,6 +354,19 @@ def normalize_topic(title: str) -> SearchBrief:
     else:
         primary_domain = "musculoskeletal rehabilitation"
 
+    # Enrich with protocol library terms if available
+    try:
+        from protocol_knowledge import PROTOCOL_LIBRARY
+        for test in PROTOCOL_LIBRARY:
+            if test.test_name.lower() in title_lower or test.body_region.lower() in title_lower:
+                intent_terms.extend(test.pubmed_search_terms)
+                if test.conditions:
+                    conditions = list(set(conditions + [test.body_region.lower().replace(' ', '_')]))
+                break
+        intent_terms = list(dict.fromkeys(intent_terms))[:10]
+    except Exception:
+        pass
+
     return SearchBrief(
         title=title,
         primary_domain=primary_domain,
