@@ -6,7 +6,7 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://benchmarkps.org/blog/posts/business-case-outcome-measurement-physiotherapy/</loc>
+    <loc>https://benchmarkps.org/blog/posts/single-leg-calf-raise-test-achilles-calf-capacity/</loc>
     <lastmod>2025-04-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -36,7 +36,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://benchmarkps.org/blog/posts/staffing-mix-physiotherapy-margins/</loc>
+    <loc>https://benchmarkps.org/blog/posts/knee-extension-strength-acl-reconstruction-return-to-sport/</loc>
     <lastmod>2025-04-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -54,7 +54,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://benchmarkps.org/blog/posts/economic-case-better-msk-conservative-care/</loc>
+    <loc>https://benchmarkps.org/blog/posts/hip-adductor-abductor-strength-athletes-groin-injury/</loc>
     <lastmod>2025-04-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -68,6 +68,30 @@
   <url>
     <loc>https://benchmarkps.org/blog/posts/physiotherapy-outcome-measurement-patient-retention-pricing/</loc>
     <lastmod>2026-04-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://benchmarkps.org/blog/posts/trunk-endurance-testing-low-back-rehabilitation-plank-side-plank-sorenson/</loc>
+    <lastmod>2025-04-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://benchmarkps.org/blog/posts/shoulder-rotation-strength-overhead-athletes-er-ir-ratio/</loc>
+    <lastmod>2025-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://benchmarkps.org/blog/posts/business-case-outcome-measurement-physiotherapy/</loc>
+    <lastmod>2025-03-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://benchmarkps.org/blog/posts/economic-case-better-msk-conservative-care/</loc>
+    <lastmod>2025-03-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
