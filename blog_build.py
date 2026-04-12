@@ -105,8 +105,10 @@ def build_footer():
 def build_banner():
     return f"""
 <div class="early-access-banner" id="earlyAccessBanner">
-  <span><strong>{BANNER_TEXT}</strong> {BANNER_SUBTEXT}</span>
-  <button class="banner-close" onclick="document.getElementById('earlyAccessBanner').style.display='none'" aria-label="Close">&times;</button>
+  <div class="banner-inner">
+    <span><strong>{BANNER_TEXT}</strong> {BANNER_SUBTEXT}</span>
+    <button class="banner-close" onclick="document.getElementById('earlyAccessBanner').style.display='none'" aria-label="Close">&times;</button>
+  </div>
 </div>"""
 
 
@@ -229,32 +231,34 @@ def build_css():
   .early-access-banner {
     background: hsl(202, 78%, 91%);
     color: hsl(213, 66%, 16%);
+    font-size: 0.82rem;
+    font-weight: 500;
+    border-bottom: 1px solid hsl(202, 60%, 82%);
+    position: relative;
+  }
+  .early-access-banner .banner-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
     padding: 0.55rem 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    font-size: 0.82rem;
-    font-weight: 500;
     text-align: center;
-    position: relative;
-    border-bottom: 1px solid hsl(202, 60%, 82%);
   }
   .early-access-banner strong { font-weight: 700; }
   .banner-close {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
     background: none;
     border: none;
-    color: rgba(255,255,255,0.7);
+    color: hsl(213, 66%, 35%);
     cursor: pointer;
     font-size: 1.1rem;
     line-height: 1;
     padding: 0.25rem;
+    margin-left: auto;
+    flex-shrink: 0;
   }
-  .banner-close:hover { color: white; }
+  .banner-close:hover { color: hsl(213, 66%, 16%); }
 
   @media (max-width: 640px) {
     .site-nav { padding: 0 1.25rem; }
