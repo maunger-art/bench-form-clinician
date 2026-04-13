@@ -10,12 +10,14 @@ permissions:
 
 jobs:
   generate-drafts:
-    name: Generate Weekly Drafts
+    name: Generate Weekly Drafts and Preview Page
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -34,10 +36,11 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python generate_drafts.py
 
-      - name: Commit and push drafts only
+      - name: Commit and push drafts
         run: |
           git config user.name "Benchmark PS Bot"
           git config user.email "bot@benchmarkps.org"
           git add drafts/ queue.json
           git commit -m "Weekly drafts: $(date +%Y-%m-%d)" || echo "Nothing to commit"
-          git push origin HEAD:main
+          git pull --rebase origin main
+          git push

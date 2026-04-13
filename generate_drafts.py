@@ -242,7 +242,19 @@ def generate_article(topic: str, existing_posts: list, references: list) -> dict
             raw = raw[4:]
         raw = raw.strip()
 
-    return json.loads(raw)
+    # Strip any trailing content after the JSON object
+    last_brace = raw.rfind("}")
+    if last_brace != -1:
+        raw = raw[:last_brace + 1]
+
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        # Attempt repair: encode to bytes and back to catch encoding issues
+        import re
+        # Remove control characters that break JSON parsing
+        raw = re.sub(r'[--]', '', raw)
+        return json.loads(raw)
 
 
 def main():
