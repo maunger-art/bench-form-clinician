@@ -29,8 +29,55 @@ REVEAL BOUNDARY:
 """
 
 from __future__ import annotations
+import json
+import os
 from dataclasses import dataclass, field
 from typing import Optional
+
+# ---------------------------------------------------------------------------
+# Load canonical protocol data from protocol_data.json
+# This contains the exact equipment, key points, and steps from the platform
+# ---------------------------------------------------------------------------
+
+_PROTOCOL_DATA_PATH = os.path.join(os.path.dirname(__file__), "protocol_data.json")
+
+def _load_protocol_data() -> dict:
+    try:
+        with open(_PROTOCOL_DATA_PATH) as f:
+            return {int(k): v for k, v in json.load(f).items()}
+    except Exception:
+        return {}
+
+CANONICAL_PROTOCOLS: dict[int, dict] = _load_protocol_data()
+
+
+def get_canonical_protocol(test_id: int) -> dict | None:
+    """
+    Return the canonical Benchmark PS protocol for a given test_id.
+    Returns dict with: equipment, key_points, protocol_steps, reference
+    Returns None if not found.
+    """
+    return CANONICAL_PROTOCOLS.get(test_id)
+
+
+def get_protocol_summary(test_id: int) -> str:
+    """
+    Return a concise summary of the canonical protocol for use in article generation.
+    This is what gets injected into the system prompt so Claude writes to protocol.
+    """
+    p = CANONICAL_PROTOCOLS.get(test_id)
+    if not p:
+        return ""
+    
+    lines = []
+    if p.get("equipment"):
+        lines.append(f"Equipment: {p['equipment'][:200]}")
+    if p.get("key_points"):
+        lines.append(f"Key Points: {p['key_points'][:300]}")
+    if p.get("reference"):
+        lines.append(f"Protocol reference: {p['reference'][:150]}")
+    
+    return "\n".join(lines)
 
 
 # ---------------------------------------------------------------------------
