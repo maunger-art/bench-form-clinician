@@ -10,7 +10,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
-import anthropic
+import llm as anthropic  # Max-plan shim (was: import anthropic)
 
 BASE_DIR = Path(__file__).parent
 MANIFEST_PATH = BASE_DIR / "posts_manifest.json"

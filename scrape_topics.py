@@ -25,7 +25,7 @@ import urllib.parse
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-import anthropic
+import llm as anthropic  # Max-plan shim (was: import anthropic)
 
 BASE_DIR = Path(__file__).parent
 QUEUE_PATH = BASE_DIR / "queue.json"

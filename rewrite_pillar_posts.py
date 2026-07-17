@@ -27,7 +27,7 @@ import time
 from datetime import date
 from pathlib import Path
 
-import anthropic
+import llm as anthropic  # Max-plan shim (was: import anthropic)
 from fetch_references import fetch_references_for_topic, format_references_for_prompt
 from validate_repair_citations import run_pipeline as validate_and_repair
 
