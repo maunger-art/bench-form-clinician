@@ -381,6 +381,8 @@ def build_preview_page(drafts: list[dict]) -> str:
 <script>
 const GITHUB_OWNER = 'maunger-art';
 const GITHUB_REPO = 'bench-form-clinician';
+const WORKER_URL = '{APPROVAL_BASE_URL}';
+const FEEDBACK_TOKEN = '{FEEDBACK_TOKEN}';
 const FEEDBACK_TOKEN = 'BPSfeedback2026';
 
 // ── Reference verification ──────────────────────────────
@@ -497,45 +499,30 @@ async function saveContent(draftNum) {{
   statusEl.textContent = 'Saving...';
 
   try {{
-    // Get current draft from GitHub
-    var getRes = await fetch(
-      'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/drafts/' + draftFile,
-      {{ headers: {{ 'Accept': 'application/vnd.github.v3+json' }} }}
-    );
-    if (!getRes.ok) throw new Error('Could not read draft file');
-    var fileData = await getRes.json();
-    var draft = JSON.parse(atob(fileData.content.replace(/\n/g, '')));
-
-    // Update html_content with edited sections
-    draft.html_content = getReconstructedHtml(draftNum);
-
-    // Push back to GitHub
-    var putRes = await fetch(
-      'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/drafts/' + draftFile,
+    // Save through the blog-feedback Worker (it holds the GitHub token server-side).
+    // A browser PUT straight to GitHub can't work — you can't ship a write token in JS.
+    var newHtml = getReconstructedHtml(draftNum);
+    var res = await fetch(
+      WORKER_URL + '/?token=' + encodeURIComponent(FEEDBACK_TOKEN) + '&a=savedraft&file=' + encodeURIComponent(draftFile),
       {{
-        method: 'PUT',
-        headers: {{ 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' }},
-        body: JSON.stringify({{
-          message: 'Edit draft: ' + (draft.title || draftFile),
-          content: btoa(unescape(encodeURIComponent(JSON.stringify(draft, null, 2)))),
-          sha: fileData.sha,
-          branch: 'main'
-        }})
+        method: 'POST',
+        headers: {{ 'Content-Type': 'application/json' }},
+        body: JSON.stringify({{ html_content: newHtml }})
       }}
     );
-
-    if (!putRes.ok) {{
-      var err = await putRes.json();
-      throw new Error(err.message || 'Save failed');
+    if (!res.ok) {{
+      var t = '';
+      try {{ t = (await res.json()).error || ''; }} catch(e) {{}}
+      throw new Error(t || ('Save failed (' + res.status + ')'));
     }}
 
     // Update live preview
     var body = document.getElementById('article-body-' + draftNum);
-    body.innerHTML = draft.html_content;
+    body.innerHTML = newHtml;
     body.style.opacity = '1';
 
     statusEl.className = 'save-status success';
-    statusEl.textContent = '&#10003; Saved successfully. Changes will appear when preview page next regenerates.';
+    statusEl.textContent = '&#10003; Saved. Changes apply when the preview page next regenerates.';
 
   }} catch(err) {{
     statusEl.className = 'save-status error';

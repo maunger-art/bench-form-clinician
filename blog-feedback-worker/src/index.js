@@ -71,14 +71,64 @@ small{color:#94a3b8}</style></head><body><div class="card">${body}
 
 const esc = (s) => String(s).replace(/</g, "&lt;");
 
+// CORS for the savedraft fetch() called from the review page (different origin).
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+const json = (obj, status = 200) =>
+  new Response(JSON.stringify(obj), { status, headers: { "Content-Type": "application/json", ...CORS } });
+
+// Save an edited full article (title/body) back to its draft file in drafts/.
+async function saveDraftFile(env, file, payload) {
+  const api = `https://api.github.com/repos/${REPO}/contents/drafts/${file}`;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const getRes = await fetch(`${api}?ref=main`, { headers: ghHeaders(env) });
+    if (!getRes.ok) throw new Error(`read draft failed: ${getRes.status}`);
+    const cur = await getRes.json();
+    let draft;
+    try { draft = JSON.parse(b64decode(cur.content)); } catch { throw new Error("draft JSON parse error"); }
+    if (payload.html_content != null) draft.html_content = payload.html_content;
+    if (payload.title != null && String(payload.title).trim() !== "") draft.title = String(payload.title).trim();
+    const putRes = await fetch(api, {
+      method: "PUT",
+      headers: { ...ghHeaders(env), "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: `Edit draft ${file}`,
+        content: b64encode(JSON.stringify(draft, null, 2) + "\n"),
+        sha: cur.sha,
+        branch: "main",
+      }),
+    });
+    if (putRes.ok) return;
+    if (putRes.status !== 409) throw new Error(`write draft failed: ${putRes.status}`);
+  }
+  throw new Error("draft write conflict after retries");
+}
+
 export default {
   async fetch(request, env) {
+    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
+
     const url = new URL(request.url);
     const q = url.searchParams;
     const token = q.get("token") || "";
     const n = parseInt(q.get("n") || "", 10);
     const a = (q.get("a") || "").toLowerCase();
     const title = q.get("t") || "";
+
+    // savedraft: JSON API called via fetch() from the review page (edit full body/title).
+    if (a === "savedraft") {
+      if (request.method !== "POST") return json({ error: "POST required" }, 405);
+      if (token !== env.FEEDBACK_TOKEN) return json({ error: "invalid token" }, 403);
+      const file = q.get("file") || "";
+      if (!/^[\w.\-]+\.json$/.test(file)) return json({ error: "invalid draft file" }, 400);
+      let payload;
+      try { payload = await request.json(); } catch { return json({ error: "bad JSON body" }, 400); }
+      try { await saveDraftFile(env, file, payload); return json({ ok: true }); }
+      catch (e) { return json({ error: String(e) }, 500); }
+    }
 
     if (token !== env.FEEDBACK_TOKEN)
       return page("Invalid link", `<h1>Link expired or invalid</h1><p>Please use the buttons from the latest preview email.</p>`, 403);
