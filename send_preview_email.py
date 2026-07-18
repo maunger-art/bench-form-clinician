@@ -83,10 +83,13 @@ def build_email_html(topics: list[str], summaries: list[dict], dates: list[str])
         summary = summaries[i]["summary"] if i < len(summaries) else ""
         row_bg = "#ffffff" if i % 2 == 0 else "#f8fafc"
         import urllib.parse
-        t_encoded = urllib.parse.quote(topic)
-        approve_url = f"{APPROVAL_BASE_URL}?token={FEEDBACK_TOKEN}&n={i+1}&t={t_encoded}&a=approve"
-        skip_url = f"{APPROVAL_BASE_URL}?token={FEEDBACK_TOKEN}&n={i+1}&t={t_encoded}&a=skip"
-        edit_url = f"{APPROVAL_BASE_URL}?token={FEEDBACK_TOKEN}&n={i+1}&t={t_encoded}&a=edit"
+        # Pre-filled reply links (mailto) so one click opens a ready-to-send instruction.
+        # There is no /approve web endpoint; feedback is actioned from the reply (see process_feedback.py).
+        _subj = urllib.parse.quote(f"Blog feedback: post #{i+1}")
+        _ctx = f"\n\nPost #{i+1}: {topic}\nScheduled: {scheduled_date}\n"
+        approve_url = f"mailto:{REPLY_TO}?subject={_subj}&body=" + urllib.parse.quote(f"APPROVE post #{i+1} (publish as scheduled){_ctx}")
+        skip_url = f"mailto:{REPLY_TO}?subject={_subj}&body=" + urllib.parse.quote(f"SKIP post #{i+1} (do not publish){_ctx}")
+        edit_url = f"mailto:{REPLY_TO}?subject={_subj}&body=" + urllib.parse.quote(f"EDIT post #{i+1} — my requested change: {_ctx}")
         rows += f"""
         <tr style="background: {row_bg};">
           <td style="padding: 16px 20px; border-bottom: 1px solid #e8edf2; width: 100px; vertical-align: top;">
