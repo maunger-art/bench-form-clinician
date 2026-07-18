@@ -18,7 +18,7 @@ const Hero = () => {
   ];
 
   return (
-    <section className="relative bg-warm pt-[66px] overflow-hidden">
+    <section className="relative bg-warm overflow-hidden">
       {/* Dot texture */}
       <div
         className="absolute inset-0 opacity-30 pointer-events-none"
