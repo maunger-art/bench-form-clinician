@@ -234,6 +234,8 @@ def send_email(subject: str, html: str, text: str):
         headers={
             "Authorization": f"Bearer {RESEND_API_KEY}",
             "Content-Type": "application/json",
+            # Cloudflare in front of Resend blocks the default python-urllib UA (403, "error code: 1010").
+            "User-Agent": "Benchmark-PS-Blog/1.0",
         },
         method="POST",
     )
