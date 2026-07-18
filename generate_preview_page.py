@@ -41,8 +41,17 @@ def load_drafts() -> list[dict]:
                 drafts.append(draft)
         except Exception:
             pass
-    drafts.sort(key=lambda d: d.get("queue_position", 99))
-    return drafts[:7]
+    # drafts/ accumulates duplicates (the same topic regenerated many times, all with the
+    # same queue_position). Keep only the newest draft per position so the review page shows
+    # 7 distinct articles, not 7 copies of position #1.
+    by_pos = {}
+    for d in drafts:
+        pos = d.get("queue_position", 99)
+        cur = by_pos.get(pos)
+        if cur is None or str(d.get("date", "")) >= str(cur.get("date", "")):
+            by_pos[pos] = d
+    deduped = sorted(by_pos.values(), key=lambda d: d.get("queue_position", 99))
+    return deduped[:7]
 
 
 def extract_references(html_content: str) -> list[str]:
