@@ -24,19 +24,25 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Set up Claude Code (Max plan auth)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install -g @anthropic-ai/claude-code
+
       - name: Refill queue if low
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: python scrape_topics.py
 
       - name: Generate post
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: python generate_post.py
 
       - name: Generate social snippets
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: python social_snippets.py
 
       - name: Generate preview page
@@ -46,7 +52,7 @@ jobs:
         run: |
           git config user.name "Benchmark PS Bot"
           git config user.email "bot@benchmarkps.org"
-          git add posts_manifest.json queue.json output/ output/social/
+          git add -A
           git commit -m "Daily post: $(date +%Y-%m-%d)" || echo "Nothing to commit"
-          git pull --rebase origin main
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME:-main}"
           git push

@@ -11,7 +11,7 @@ import os
 from datetime import date, timedelta
 from pathlib import Path
 
-import anthropic
+import llm as anthropic  # Max-plan shim (was: import anthropic)
 import urllib.request
 import urllib.parse
 

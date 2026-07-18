@@ -23,9 +23,15 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Set up Claude Code (Max plan auth)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install -g @anthropic-ai/claude-code
+
       - name: Send preview email
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           FEEDBACK_TOKEN: ${{ secrets.FEEDBACK_TOKEN }}
         run: python send_preview_email.py
