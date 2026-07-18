@@ -57,18 +57,20 @@ const Navbar = () => {
   ];
 
   return (
-    <>
-      <div id="earlyAccessBanner" style={{background: 'hsl(199, 68%, 51%)', color: 'white', padding: '0.65rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', fontSize: '0.85rem', fontWeight: 500, flexWrap: 'wrap', textAlign: 'center', position: 'fixed', top: 0, left: 0, right: 0, zIndex: 51}}>
+    // Single sticky header: banner + nav stack in normal flow, so the nav always
+    // sits directly below the banner at whatever height it is (it wraps taller on
+    // mobile) and reserves its own space — no hardcoded pixel offsets, no overlap.
+    <header className="sticky top-0 z-50">
+      <div id="earlyAccessBanner" style={{background: 'hsl(199, 68%, 51%)', color: 'white', padding: '0.65rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', fontSize: '0.85rem', fontWeight: 500, flexWrap: 'wrap', textAlign: 'center'}}>
           <span><strong>Now in early access — free to get started.</strong> Join physiotherapy clinics already measuring outcomes with Benchmark PS.</span>
           <a href="https://platform.benchmarkps.org/login?signup=true" style={{background: 'white', color: 'hsl(199, 68%, 51%)', padding: '0.3rem 1rem', borderRadius: '5px', fontWeight: 700, fontSize: '0.8rem', textDecoration: 'none', whiteSpace: 'nowrap'}}>Create Account &rarr;</a>
         </div>
       <nav
-        className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
+        className={`transition-all duration-300 ${
           scrolled
             ? "bg-navy/[0.97] backdrop-blur-xl shadow-lg"
             : "bg-navy/[0.97] backdrop-blur-xl"
         }`}
-        style={{ top: '38px' }}
       >
         <div className="max-w-[1180px] mx-auto px-5 sm:px-6 md:px-12 h-[60px] sm:h-[66px] flex items-center justify-between">
           <a href="#" className="flex items-center">
@@ -117,7 +119,7 @@ const Navbar = () => {
           </div>
         )}
       </nav>
-    </>
+    </header>
   );
 };
 
