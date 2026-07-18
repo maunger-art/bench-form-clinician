@@ -25,7 +25,7 @@ FROM_NAME = "Benchmark PS Blog"
 TO_EMAILS = ["mike@benchmarkps.org", "gus@benchmarkps.org"]
 REPLY_TO = "info@benchmarkps.org"
 FEEDBACK_TOKEN = os.environ.get("FEEDBACK_TOKEN", "BPSfeedback2026")
-APPROVAL_BASE_URL = "https://www.benchmarkps.org/blog-feedback"
+APPROVAL_BASE_URL = "https://blog-feedback.benchmarkps.workers.dev"
 
 SITE_URL = "https://benchmarkps.org/blog"
 
