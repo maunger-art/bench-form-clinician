@@ -2,11 +2,8 @@ name = "blog-feedback"
 main = "src/index.js"
 compatibility_date = "2024-11-01"
 
-# Serve at www.benchmarkps.org/blog-feedback (Cloudflare intercepts this path;
-# everything else on the domain still goes to the Render origin as normal).
-routes = [
-  { pattern = "www.benchmarkps.org/blog-feedback*", zone_name = "benchmarkps.org" },
-  { pattern = "benchmarkps.org/blog-feedback*", zone_name = "benchmarkps.org" }
-]
+# benchmarkps.org is fronted by Render's CDN, not a Cloudflare zone in this account,
+# so we serve the endpoint from the free workers.dev subdomain instead of a route.
+workers_dev = true
 
 # Secrets (set with `npx wrangler secret put`): FEEDBACK_TOKEN, GH_TOKEN
