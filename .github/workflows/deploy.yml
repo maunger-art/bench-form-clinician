@@ -1,0 +1,28 @@
+name: Deploy to Render
+
+# The GitHub -> Render webhook is unreliable on this repo, so we trigger the deploy
+# explicitly via Render's Deploy Hook. Covers both human pushes/merges to main AND
+# the automated blog workflows (whose GITHUB_TOKEN pushes don't fire a `push` event).
+on:
+  push:
+    branches: [main]
+  workflow_run:
+    workflows: ["Daily Post", "Monday Draft Generation", "Refresh Preview Page"]
+    types: [completed]
+
+concurrency:
+  group: render-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # On push: always. On workflow_run: only if the upstream run succeeded.
+    if: ${{ github.event_name == 'push' || github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Trigger Render deploy
+        run: |
+          if [ -z "${{ secrets.RENDER_DEPLOY_HOOK }}" ]; then
+            echo "::error::RENDER_DEPLOY_HOOK secret is not set — add it in repo Settings > Secrets > Actions"; exit 1
+          fi
+          curl -fsSL -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}" && echo "✅ Render deploy triggered"
