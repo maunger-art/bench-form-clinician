@@ -1,0 +1,17 @@
+[1/5] Subjective assessment isn't just a clinical quality issue. It's a margin problem hiding in plain sight.
+
+---
+
+[2/5] When clinicians can't confidently separate a 3-session patient from an 8-session patient, they default to longer courses. It looks safe. It's actually systematic over-treatment across your whole patient population.
+
+---
+
+[3/5] The maths: 200 MSK patients a month, treatment extended by 1.5 sessions each through measurement uncertainty = 300 extra sessions a year. At £45/session with 60% direct costs, that's £5,400 in lost margin, from uncertainty alone.
+
+---
+
+[4/5] Imprecise assessment also drives more frequent re-checks to track change, extending appointments and adding admin overhead. And because treatment duration depends on who's holding the goniometer, scheduling and capacity planning become guesswork.
+
+---
+
+[5/5] Standardise assessment and treatment duration stops depending on interpretation. Margin gains of 8-15% within six months are typical. Full breakdown: https://benchmarkps.com/blog/posts/hidden-cost-subjective-assessment-clinic-margins-draft-20260427/
