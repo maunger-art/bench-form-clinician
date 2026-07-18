@@ -23,6 +23,8 @@ jobs:
           python-version: "3.11"
 
       - name: Generate preview page
+        env:
+          FEEDBACK_TOKEN: ${{ secrets.FEEDBACK_TOKEN }}
         run: python generate_preview_page.py
 
       - name: Commit and push

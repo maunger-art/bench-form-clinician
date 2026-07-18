@@ -19,7 +19,7 @@ DRAFTS_DIR = BASE_DIR / "drafts"
 OUTPUT_PATH = BASE_DIR / "output" / "preview" / "index.html"
 
 SITE_URL = "https://benchmarkps.org/blog"
-APPROVAL_BASE_URL = "https://benchmarkps.org/blog/approve"
+APPROVAL_BASE_URL = "https://blog-feedback.benchmarkps.workers.dev"
 FEEDBACK_TOKEN = "BPSfeedback2026"
 LOGO_URL = "/assets/benchmark-icon-nav-BhAe3FNc.png"
 

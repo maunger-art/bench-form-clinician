@@ -133,8 +133,13 @@ def build_email_html(topics: list[str], summaries: list[dict], dates: list[str])
     <!-- Intro -->
     <div style="padding: 28px 40px 20px; border-bottom: 1px solid #e8edf2;">
       <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.7;">
-        Here are the articles scheduled to publish this week. Each post generates automatically at <strong>07:00 UTC</strong> daily.
-        To make changes before a post publishes, reply to this email with the post number and your instruction:
+        Here are the topics scheduled to publish this week. To read each article <strong>in full</strong> — title, body and references (with PubMed verification) — and Approve, Skip or Edit it, open the draft review page:
+      </p>
+      <div style="margin: 18px 0 4px; text-align: center;">
+        <a href="https://www.benchmarkps.org/blog/preview/" style="display:inline-block; background: hsl(199, 68%, 51%); color: white; text-decoration: none; font-size: 14px; font-weight: 700; padding: 12px 26px; border-radius: 8px;">&#128196; Review the full drafts &rarr;</a>
+      </div>
+      <p style="margin: 14px 0 0; font-size: 13px; color: #64748b; line-height: 1.7;">
+        Or use the quick buttons below to Approve / Skip / Edit a title from here. To make other changes, reply with the post number and instruction:
       </p>
       <div style="margin: 16px 0 0; background: #f8fafc; border-radius: 8px; padding: 16px 20px;">
         <div style="font-size: 13px; color: #334155; line-height: 1.8;">
