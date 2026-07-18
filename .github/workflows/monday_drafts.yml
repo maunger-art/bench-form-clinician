@@ -46,7 +46,7 @@ jobs:
         run: |
           git config user.name "Benchmark PS Bot"
           git config user.email "bot@benchmarkps.org"
-          git add drafts/ queue.json
+          git add -A
           git commit -m "Weekly drafts: $(date +%Y-%m-%d)" || echo "Nothing to commit"
-          git pull --rebase origin main
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME:-main}"
           git push
