@@ -1,0 +1,12 @@
+name = "blog-feedback"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+
+# Serve at www.benchmarkps.org/blog-feedback (Cloudflare intercepts this path;
+# everything else on the domain still goes to the Render origin as normal).
+routes = [
+  { pattern = "www.benchmarkps.org/blog-feedback*", zone_name = "benchmarkps.org" },
+  { pattern = "benchmarkps.org/blog-feedback*", zone_name = "benchmarkps.org" }
+]
+
+# Secrets (set with `npx wrangler secret put`): FEEDBACK_TOKEN, GH_TOKEN
