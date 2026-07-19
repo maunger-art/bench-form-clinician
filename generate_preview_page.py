@@ -176,7 +176,6 @@ def build_preview_page(drafts: list[dict]) -> str:
         approve_url = f"{APPROVAL_BASE_URL}/?token={FEEDBACK_TOKEN}&n={i+1}&t={t_encoded}&a=approve"
         skip_url = f"{APPROVAL_BASE_URL}/?token={FEEDBACK_TOKEN}&n={i+1}&t={t_encoded}&a=skip"
         edit_url = f"{APPROVAL_BASE_URL}/?token={FEEDBACK_TOKEN}&n={i+1}&t={t_encoded}&a=edit"
-        delay_url = f"{APPROVAL_BASE_URL}/?token={FEEDBACK_TOKEN}&n={i+1}&t={t_encoded}&a=delay"
 
         status_badge = ""
         if status == "approved":
@@ -206,7 +205,6 @@ def build_preview_page(drafts: list[dict]) -> str:
       <a href="{approve_url}" class="btn btn-approve">&#10003; Approve</a>
       <a href="{skip_url}" class="btn btn-skip">&#10007; Skip</a>
       <a href="{edit_url}" class="btn btn-edit">&#9998; Edit title</a>
-      <a href="{delay_url}" class="btn btn-delay">&#9201; Delay</a>
       <button class="btn btn-edit-content" onclick="toggleContentEditor({i+1}, this)">&#9998; Edit content</button>
     </div>
   </div>
@@ -411,7 +409,7 @@ function parseSections(html) {{
   var parts = html.split(/(?=<h2[^>]*>)/i);
   parts.forEach(function(part, idx) {{
     if (!part.trim()) return;
-    var titleMatch = part.match(/<h2[^>]*>(.*?)<\/h2>/i);
+    var titleMatch = part.match(/<h2[^>]*>(.*?)<\\/h2>/i);
     var title = titleMatch ? titleMatch[1].replace(/<[^>]+>/g,'') : (idx === 0 ? 'Introduction' : 'Section ' + idx);
     sections.push({{ title: title, html: part }});
   }});
@@ -555,8 +553,8 @@ async function saveContent(draftNum) {{
   <div class="drafts-container">
     <div class="instructions">
       <strong>Review each article before it publishes.</strong>
-      Posts go live daily at 07:00 UTC. Use the buttons at the top or bottom of each article to
-      <strong>approve</strong>, <strong>skip</strong>, <strong>edit the title</strong>, or <strong>delay</strong>.
+      Posts go live daily at 07:00 UTC. Use the buttons on each article to
+      <strong>approve</strong>, <strong>skip</strong>, <strong>edit the title</strong>, or <strong>edit the full content</strong> (title, body &amp; references).
       All posts publish automatically unless you take action.
     </div>
     {toc_html}
