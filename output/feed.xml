@@ -8,6 +8,13 @@
   <atom:link href="https://benchmarkps.org/blog/feed.xml" rel="self" type="application/rss+xml"/>
   
   <item>
+    <title><![CDATA[Why 43% of Physiotherapy Care Is Non-Recommended — and What Clinics Can Do About It]]></title>
+    <link>https://benchmarkps.org/blog/posts/why-43-percent-physiotherapy-care-non-recommended-what-clinics-can-do-draft-20260601/</link>
+    <guid isPermaLink="true">https://benchmarkps.org/blog/posts/why-43-percent-physiotherapy-care-non-recommended-what-clinics-can-do-draft-20260601/</guid>
+    <description><![CDATA[Evidence shows nearly half of physiotherapy care doesn't follow guidelines. Learn why this happens and practical steps to improve clinical consistency.]]></description>
+    <pubDate>2026-07-23</pubDate>
+  </item>
+  <item>
     <title><![CDATA[Defining Excellence in MSK Conservative Care: What Objective Benchmarks Tell Us About Treatment Success]]></title>
     <link>https://benchmarkps.org/blog/posts/defining-excellence-msk-conservative-care-objective-benchmarks/</link>
     <guid isPermaLink="true">https://benchmarkps.org/blog/posts/defining-excellence-msk-conservative-care-objective-benchmarks/</guid>
@@ -139,13 +146,6 @@
     <guid isPermaLink="true">https://benchmarkps.org/blog/posts/economic-case-better-msk-conservative-care/</guid>
     <description><![CDATA[Evidence shows conservative MSK care outperforms surgery on cost-effectiveness. Learn how measurement-driven physiotherapy delivers better outcomes for less.]]></description>
     <pubDate>2025-03-20</pubDate>
-  </item>
-  <item>
-    <title><![CDATA[The Business Case for Outcome Measurement in Physiotherapy Clinics]]></title>
-    <link>https://benchmarkps.org/blog/posts/business-case-outcome-measurement-physiotherapy/</link>
-    <guid isPermaLink="true">https://benchmarkps.org/blog/posts/business-case-outcome-measurement-physiotherapy/</guid>
-    <description><![CDATA[Build a defensible business case for outcome measurement in physiotherapy clinics. Evidence-based strategies to improve clinical consistency and practice sustainability.]]></description>
-    <pubDate>2025-03-15</pubDate>
   </item>
 </channel>
 </rss>
