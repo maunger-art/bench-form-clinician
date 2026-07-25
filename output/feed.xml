@@ -8,6 +8,13 @@
   <atom:link href="https://benchmarkps.org/blog/feed.xml" rel="self" type="application/rss+xml"/>
   
   <item>
+    <title><![CDATA[Staffing Mix and Physiotherapy Margins: How Standardised Care Reduces Senior Clinician Dependency]]></title>
+    <link>https://benchmarkps.org/blog/posts/staffing-mix-physiotherapy-margins-standardised-care-reduces-senior-clinician-dependency-draft-20260601/</link>
+    <guid isPermaLink="true">https://benchmarkps.org/blog/posts/staffing-mix-physiotherapy-margins-standardised-care-reduces-senior-clinician-dependency-draft-20260601/</guid>
+    <description><![CDATA[Standardised physiotherapy protocols reduce reliance on senior clinicians, improve staffing flexibility, and strengthen practice margins through consistent care delivery.]]></description>
+    <pubDate>2026-07-25</pubDate>
+  </item>
+  <item>
     <title><![CDATA[Clinical Decision-Making in a 30-Minute Appointment: A Framework for Evidence-Based Progression]]></title>
     <link>https://benchmarkps.org/blog/posts/clinical-decision-making-30-minute-appointment-framework-draft-20260601/</link>
     <guid isPermaLink="true">https://benchmarkps.org/blog/posts/clinical-decision-making-30-minute-appointment-framework-draft-20260601/</guid>
@@ -139,13 +146,6 @@
     <guid isPermaLink="true">https://benchmarkps.org/blog/posts/shoulder-rotation-strength-overhead-athletes-er-ir-ratio/</guid>
     <description><![CDATA[Evidence-based shoulder rotation strength testing for overhead athletes. Learn the ER/IR ratio thresholds that predict injury risk and guide treatment decisions.]]></description>
     <pubDate>2025-04-02</pubDate>
-  </item>
-  <item>
-    <title><![CDATA[Trunk Endurance Testing in Low Back Rehabilitation: What Plank, Side Plank, and Sorenson Tell You]]></title>
-    <link>https://benchmarkps.org/blog/posts/trunk-endurance-testing-low-back-rehabilitation-plank-side-plank-sorenson/</link>
-    <guid isPermaLink="true">https://benchmarkps.org/blog/posts/trunk-endurance-testing-low-back-rehabilitation-plank-side-plank-sorenson/</guid>
-    <description><![CDATA[Master trunk endurance testing protocols for low back rehabilitation. Learn how plank, side plank, and Sorenson tests guide clinical decisions and treatment.]]></description>
-    <pubDate>2025-04-01</pubDate>
   </item>
 </channel>
 </rss>
