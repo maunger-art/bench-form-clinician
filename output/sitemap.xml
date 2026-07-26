@@ -143,4 +143,10 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://benchmarkps.org/blog/posts/patellofemoral-pain-strength-hop-load-tolerance-benchmarks-discharge/</loc>
+    <lastmod>2026-07-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>

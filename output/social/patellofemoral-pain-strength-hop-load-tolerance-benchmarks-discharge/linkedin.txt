@@ -1,0 +1,11 @@
+A pain score under 2/10 is not a discharge criterion for patellofemoral pain.
+
+PFP has one of the worst recurrence records in musculoskeletal practice, and a large part of the reason is how clinicians decide someone is ready to leave. Pain improves before strength and load tolerance catch up, so a patient can report feeling 90% better at six weeks while still carrying a 20-25% quadriceps deficit that only shows up under load, weeks after they've stopped attending.
+
+Two patients with identical pain scores can have completely different underlying deficits. One with a 30% quad strength shortfall and normal hips, another with intact quads but a marked hip abductor and external rotation lag. Discharge both on symptoms alone and you never find out whether the mechanical driver of their pain was addressed.
+
+Benchmark against quadriceps limb symmetry of 85-90%, hip abduction and external rotation strength within 15% of the uninvolved side (measured with handheld dynamometry, not manual muscle testing), plus hop and graduated load tolerance testing before signing off.
+
+Full discharge criteria for PFP: https://benchmarkps.com/blog/posts/patellofemoral-pain-strength-hop-load-tolerance-benchmarks-discharge/
+
+#Physiotherapy #PatellofemoralPain #SportsRehab #MSK #ClinicalOutcomes
