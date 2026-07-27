@@ -1,0 +1,13 @@
+Most hamstring re-injuries aren't bad luck. They're clearance decisions made without measuring the one variable that actually predicts recurrence.
+
+Time elapsed, pain-free range of motion and subjective confidence remain the default discharge criteria in most clinics. Eccentric strength at long muscle length, the exact position sprinting loads hardest during late swing phase, rarely gets tested at all.
+
+A systematic review and meta-analysis found eccentric knee flexor strength deficits persist in a meaningful proportion of athletes well beyond the point they're cleared to train and compete (Maniar et al., 2016). Clearance and full strength recovery are not the same event.
+
+Reviews of return-to-play determinants keep pointing to the same predictors: injury severity, strength symmetry at discharge and how rehab load was progressed, not simply days since injury (Fournier-Farley et al., 2016).
+
+Set a limb symmetry threshold for eccentric strength and test it with a standardised Nordic hamstring curl protocol. No isokinetic dynamometer required.
+
+Full sprint-readiness criteria set: https://benchmarkps.com/blog/posts/hamstring-strain-eccentric-strength-sprint-readiness-criteria/
+
+#Physiotherapy #SportsRehabilitation #HamstringInjury #ReturnToPlay #EvidenceBasedPractice

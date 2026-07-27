@@ -8,6 +8,13 @@
   <atom:link href="https://benchmarkps.org/blog/feed.xml" rel="self" type="application/rss+xml"/>
   
   <item>
+    <title><![CDATA[Hamstring Strain: Eccentric Strength and Sprint-Readiness Criteria]]></title>
+    <link>https://benchmarkps.org/blog/posts/hamstring-strain-eccentric-strength-sprint-readiness-criteria/</link>
+    <guid isPermaLink="true">https://benchmarkps.org/blog/posts/hamstring-strain-eccentric-strength-sprint-readiness-criteria/</guid>
+    <description><![CDATA[Why eccentric strength deficits predict hamstring re-injury, how to test them without a dynamometer, and the sprint-readiness criteria that should gate return to play.]]></description>
+    <pubDate>2026-07-27</pubDate>
+  </item>
+  <item>
     <title><![CDATA[Patellofemoral Pain: Strength, Hop, and Load-Tolerance Benchmarks for Discharge]]></title>
     <link>https://benchmarkps.org/blog/posts/patellofemoral-pain-strength-hop-load-tolerance-benchmarks-discharge/</link>
     <guid isPermaLink="true">https://benchmarkps.org/blog/posts/patellofemoral-pain-strength-hop-load-tolerance-benchmarks-discharge/</guid>
@@ -138,13 +145,6 @@
     <link>https://benchmarkps.org/blog/posts/hip-adductor-abductor-strength-athletes-groin-injury/</link>
     <guid isPermaLink="true">https://benchmarkps.org/blog/posts/hip-adductor-abductor-strength-athletes-groin-injury/</guid>
     <description><![CDATA[Hip adductor-abductor strength imbalances predict groin injuries in athletes. Learn evidence-based testing protocols for injury prevention and return-to-play decisions.]]></description>
-    <pubDate>2025-04-08</pubDate>
-  </item>
-  <item>
-    <title><![CDATA[Knee Osteoarthritis and Conservative Care: Setting Realistic Expectations With Objective Data]]></title>
-    <link>https://benchmarkps.org/blog/posts/knee-osteoarthritis-conservative-care-evidence/</link>
-    <guid isPermaLink="true">https://benchmarkps.org/blog/posts/knee-osteoarthritis-conservative-care-evidence/</guid>
-    <description><![CDATA[Learn how objective measurement transforms knee osteoarthritis care. Evidence-based expectations, realistic goals, and data-driven decision making for physios.]]></description>
     <pubDate>2025-04-08</pubDate>
   </item>
 </channel>
