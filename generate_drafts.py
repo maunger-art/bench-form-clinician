@@ -21,6 +21,7 @@ BASE_DIR = Path(__file__).parent
 QUEUE_PATH = BASE_DIR / "queue.json"
 MANIFEST_PATH = BASE_DIR / "posts_manifest.json"
 DRAFTS_DIR = BASE_DIR / "drafts"
+GUARDRAILS = (BASE_DIR / "GUARDRAILS.md").read_text(encoding="utf-8")
 
 DRAFT_COUNT = 7  # Number of articles to pre-generate each Monday
 
@@ -231,7 +232,7 @@ def generate_article(topic: str, existing_posts: list, references: list) -> dict
     message = client.messages.create(
         model="claude-sonnet-4-20250514",
         max_tokens=4096,
-        system=SYSTEM_PROMPT,
+        system=SYSTEM_PROMPT + "\n\n" + GUARDRAILS,
         messages=[{"role": "user", "content": user_message}],
     )
 
@@ -267,8 +268,15 @@ def main():
         print("Queue is empty — no drafts to generate.")
         return
 
-    # Get existing draft slugs to avoid regenerating
+    # Existing draft slugs (collision avoidance) + topics already drafted, so we never
+    # regenerate over a draft the team has already reviewed/edited.
     existing_drafts = {f.stem for f in DRAFTS_DIR.glob("*.json")}
+    existing_draft_topics = set()
+    for f in DRAFTS_DIR.glob("*.json"):
+        try:
+            existing_draft_topics.add(json.loads(f.read_text(encoding="utf-8")).get("original_topic", ""))
+        except Exception:
+            pass
     existing_slugs = {p["slug"] for p in manifest}
 
     topics_to_draft = queue[:DRAFT_COUNT]
@@ -277,6 +285,10 @@ def main():
     generated = 0
     for i, topic in enumerate(topics_to_draft):
         print(f"[{i+1}/{len(topics_to_draft)}] {topic[:70]}")
+
+        if topic in existing_draft_topics:
+            print("  ↳ draft already exists for this topic — skipping (preserves edits)")
+            continue
 
         try:
             # Fetch real PubMed references first

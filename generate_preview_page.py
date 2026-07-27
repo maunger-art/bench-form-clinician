@@ -221,6 +221,11 @@ def build_preview_page(drafts: list[dict]) -> str:
           <button class="btn btn-cancel-edit" onclick="cancelEdit({i+1})">Cancel</button>
         </div>
       </div>
+      <div class="editor-title-row" style="margin:0 0 14px;">
+        <label class="editor-label" for="edit-title-{i+1}" style="display:block;margin-bottom:4px;">Title</label>
+        <input class="editor-title-input" id="edit-title-{i+1}" type="text" value="{title.replace('"', '&quot;')}"
+               style="width:100%;box-sizing:border-box;padding:9px 11px;font-size:1.05rem;font-family:'Lora',serif;border:1px solid #cbd5e1;border-radius:6px;" />
+      </div>
       <div class="sections-editor" id="sections-editor-{i+1}"></div>
       <div class="save-status" id="save-status-{i+1}"></div>
     </div>
@@ -380,7 +385,6 @@ def build_preview_page(drafts: list[dict]) -> str:
 const GITHUB_OWNER = 'maunger-art';
 const GITHUB_REPO = 'bench-form-clinician';
 const WORKER_URL = '{APPROVAL_BASE_URL}';
-const FEEDBACK_TOKEN = '{FEEDBACK_TOKEN}';
 const FEEDBACK_TOKEN = 'BPSfeedback2026';
 
 // ── Reference verification ──────────────────────────────
@@ -500,12 +504,14 @@ async function saveContent(draftNum) {{
     // Save through the blog-feedback Worker (it holds the GitHub token server-side).
     // A browser PUT straight to GitHub can't work — you can't ship a write token in JS.
     var newHtml = getReconstructedHtml(draftNum);
+    var titleEl = document.getElementById('edit-title-' + draftNum);
+    var newTitle = titleEl ? titleEl.value.trim() : '';
     var res = await fetch(
       WORKER_URL + '/?token=' + encodeURIComponent(FEEDBACK_TOKEN) + '&a=savedraft&file=' + encodeURIComponent(draftFile),
       {{
         method: 'POST',
         headers: {{ 'Content-Type': 'application/json' }},
-        body: JSON.stringify({{ html_content: newHtml }})
+        body: JSON.stringify({{ html_content: newHtml, title: newTitle }})
       }}
     );
     if (!res.ok) {{
@@ -518,6 +524,7 @@ async function saveContent(draftNum) {{
     var body = document.getElementById('article-body-' + draftNum);
     body.innerHTML = newHtml;
     body.style.opacity = '1';
+    if (newTitle) {{ document.getElementById('draft-title-' + draftNum).textContent = newTitle; }}
 
     statusEl.className = 'save-status success';
     statusEl.textContent = '&#10003; Saved. Changes apply when the preview page next regenerates.';

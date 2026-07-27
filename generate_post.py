@@ -16,6 +16,7 @@ BASE_DIR = Path(__file__).parent
 MANIFEST_PATH = BASE_DIR / "posts_manifest.json"
 QUEUE_PATH = BASE_DIR / "queue.json"
 DRAFTS_DIR = BASE_DIR / "drafts"
+GUARDRAILS = (BASE_DIR / "GUARDRAILS.md").read_text(encoding="utf-8")
 
 SYSTEM_PROMPT = """You are a specialist content writer for Benchmark PS, a performance 
 measurement and clinical decision-support platform for physiotherapy practices.
@@ -113,7 +114,7 @@ def generate_post(topic: str, existing_posts: list) -> dict:
     message = client.messages.create(
         model="claude-sonnet-4-20250514",
         max_tokens=4096,
-        system=SYSTEM_PROMPT,
+        system=SYSTEM_PROMPT + "\n\n" + GUARDRAILS,
         messages=[{"role": "user", "content": user_message}],
     )
 
@@ -155,6 +156,7 @@ def main():
     draft_file, draft = get_oldest_draft()
     if draft:
         print(f"Publishing from draft: {draft.get('title', 'Unknown')}")
+        published_from_draft = True
         post = draft
         post["date"] = date.today().isoformat()
         post.pop("draft", None)
@@ -163,17 +165,17 @@ def main():
         post.pop("status", None)
         post.pop("_file", None)
 
-        # Remove from queue if topic matches
+        # Remove from queue if topic matches (consumes exactly one topic)
         original_topic = draft.get("original_topic", "")
         if original_topic in queue:
             queue.remove(original_topic)
-            save_json(QUEUE_PATH, queue)
 
         # Delete draft file
         draft_file.unlink()
         print(f"  Draft published and removed: {draft_file.name}")
     else:
         # Fall back to generating on the fly
+        published_from_draft = False
         if not queue:
             print("queue.json is empty — nothing to generate.")
             sys.exit(0)
@@ -202,7 +204,9 @@ def main():
     save_json(MANIFEST_PATH, manifest)
     print(f"  Appended to manifest: {post['slug']}")
 
-    queue.pop(0)
+    # On-the-fly path consumes queue[0]; the draft path already removed its own topic above.
+    if not published_from_draft and queue:
+        queue.pop(0)
     save_json(QUEUE_PATH, queue)
     print(f"  Removed from queue. {len(queue)} articles remaining.")
 

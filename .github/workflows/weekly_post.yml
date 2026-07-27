@@ -1,8 +1,8 @@
-name: Daily Post
+name: Weekly Post
 
 on:
   schedule:
-    - cron: "0 7 * * *"
+    - cron: "0 7 * * 4"   # Thursday 07:00 UTC (after Mon drafts + Wed feedback)
   workflow_dispatch:
 
 permissions:
@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   generate-post:
-    name: Generate Daily Post
+    name: Generate Weekly Post
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -53,6 +53,6 @@ jobs:
           git config user.name "Benchmark PS Bot"
           git config user.email "bot@benchmarkps.org"
           git add -A
-          git commit -m "Daily post: $(date +%Y-%m-%d)" || echo "Nothing to commit"
+          git commit -m "Weekly post: $(date +%Y-%m-%d)" || echo "Nothing to commit"
           git pull --rebase --autostash origin "${GITHUB_REF_NAME:-main}"
           git push

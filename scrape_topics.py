@@ -31,8 +31,11 @@ BASE_DIR = Path(__file__).parent
 QUEUE_PATH = BASE_DIR / "queue.json"
 MANIFEST_PATH = BASE_DIR / "posts_manifest.json"
 
+# Weekly cadence: publish 1/week, keep a ~7-week runway. Refill when the queue dips
+# below 7, adding a few at a time so it averages roughly one new topic per week
+# (oscillates ~6–9) rather than bulk-filling to 20.
 REFILL_THRESHOLD = 7
-REFILL_COUNT = 14
+REFILL_COUNT = 3
 
 # ─────────────────────────────────────────────
 # SOURCE CONFIGURATION
