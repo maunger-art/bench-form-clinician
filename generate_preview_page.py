@@ -534,6 +534,18 @@ async function saveContent(draftNum) {{
     statusEl.textContent = 'Error: ' + err.message;
   }}
 }}
+
+// Arriving from the email's Edit button (…/preview/?edit=N#draft-N): jump to that draft
+// and open its full editor (title + body) automatically.
+window.addEventListener('DOMContentLoaded', function() {{
+  var n = new URLSearchParams(location.search).get('edit');
+  if (!n) return;
+  var article = document.getElementById('draft-' + n);
+  if (!article) return;
+  article.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+  var btn = article.querySelector('.btn-edit-content');
+  if (btn) toggleContentEditor(parseInt(n, 10), btn);
+}});
 </script>
 </head>
 <body>

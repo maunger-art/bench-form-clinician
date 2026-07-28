@@ -88,7 +88,9 @@ def build_email_html(topics: list[str], summaries: list[dict], dates: list[str])
         t_encoded = urllib.parse.quote(topic)
         approve_url = f"{APPROVAL_BASE_URL}?token={FEEDBACK_TOKEN}&n={i+1}&a=approve&t={t_encoded}"
         skip_url = f"{APPROVAL_BASE_URL}?token={FEEDBACK_TOKEN}&n={i+1}&a=skip&t={t_encoded}"
-        edit_url = f"{APPROVAL_BASE_URL}?token={FEEDBACK_TOKEN}&n={i+1}&a=edit&t={t_encoded}"
+        # Edit drops straight into the FULL draft editor on the preview page (title + body),
+        # not the old title-only queue path.
+        edit_url = f"https://www.benchmarkps.org/blog/preview/?edit={i+1}#draft-{i+1}"
         rows += f"""
         <tr style="background: {row_bg};">
           <td style="padding: 16px 20px; border-bottom: 1px solid #e8edf2; width: 100px; vertical-align: top;">
@@ -139,7 +141,7 @@ def build_email_html(topics: list[str], summaries: list[dict], dates: list[str])
         <a href="https://www.benchmarkps.org/blog/preview/" style="display:inline-block; background: hsl(199, 68%, 51%); color: white; text-decoration: none; font-size: 14px; font-weight: 700; padding: 12px 26px; border-radius: 8px;">&#128196; Review the full drafts &rarr;</a>
       </div>
       <p style="margin: 14px 0 0; font-size: 13px; color: #64748b; line-height: 1.7;">
-        Or use the quick buttons below to Approve / Skip / Edit a title from here. To make other changes, reply with the post number and instruction:
+        Or use the quick buttons below — Approve or Skip in one click, or Edit to open the full editor (title &amp; body) for that post. To make other changes, reply with the post number and instruction:
       </p>
       <div style="margin: 16px 0 0; background: #f8fafc; border-radius: 8px; padding: 16px 20px;">
         <div style="font-size: 13px; color: #334155; line-height: 1.8;">

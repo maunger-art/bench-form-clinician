@@ -285,6 +285,18 @@ async function saveContent(draftNum) {
     statusEl.textContent = 'Error: ' + err.message;
   }
 }
+
+// Arriving from the email's Edit button (…/preview/?edit=N#draft-N): jump to that draft
+// and open its full editor (title + body) automatically.
+window.addEventListener('DOMContentLoaded', function() {
+  var n = new URLSearchParams(location.search).get('edit');
+  if (!n) return;
+  var article = document.getElementById('draft-' + n);
+  if (!article) return;
+  article.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  var btn = article.querySelector('.btn-edit-content');
+  if (btn) toggleContentEditor(parseInt(n, 10), btn);
+});
 </script>
 </head>
 <body>
@@ -304,8 +316,8 @@ async function saveContent(draftNum) {
 
   <div class="page-header">
     <h1>Weekly Draft Review</h1>
-    <p>28 July &#8212; 03 August 2026 &middot; 3 articles ready</p>
-    <div class="generated">Generated: 27 July 2026</div>
+    <p>29 July &#8212; 04 August 2026 &middot; 3 articles ready</p>
+    <div class="generated">Generated: 28 July 2026</div>
   </div>
 
   <div class="drafts-container">
@@ -317,14 +329,14 @@ async function saveContent(draftNum) {
     </div>
     <div class="toc">
   <h3>This week</h3>
-  <div class="toc-list"><div class="toc-item"><span class="toc-num">#1</span><a href="#draft-1">Rotator Cuff Repair: Return-to-Sport Criteria and Prognostic Factors for Ov</a><span class="toc-date">Tuesday 28 July</span></div><div class="toc-item"><span class="toc-num">#2</span><a href="#draft-2">Simple Strength Tests That Predict Long-Term Health, Not Just Recovery</a><span class="toc-date">Wednesday 29 July</span></div><div class="toc-item"><span class="toc-num">#3</span><a href="#draft-3">Early Referral or Watchful Waiting: What Changes the Decision in Adolescent</a><span class="toc-date">Thursday 30 July</span></div></div>
+  <div class="toc-list"><div class="toc-item"><span class="toc-num">#1</span><a href="#draft-1">Rotator Cuff Repair: Return-to-Sport Criteria and Prognostic Factors for Ov</a><span class="toc-date">Wednesday 29 July</span></div><div class="toc-item"><span class="toc-num">#2</span><a href="#draft-2">Simple Strength Tests That Predict Long-Term Health, Not Just Recovery</a><span class="toc-date">Thursday 30 July</span></div><div class="toc-item"><span class="toc-num">#3</span><a href="#draft-3">Early Referral or Watchful Waiting: What Changes the Decision in Adolescent</a><span class="toc-date">Friday 31 July</span></div></div>
 </div>
     
 <div class="draft-article" id="draft-1" data-draft-file="rotator-cuff-repair-return-to-sport-overhead-athletes.json" data-draft-slug="rotator-cuff-repair-return-to-sport-overhead-athletes">
   <div class="draft-header">
     <div class="draft-meta-top">
       <span class="draft-number">Draft #1</span>
-      <span class="draft-date">Scheduled: Tuesday 28 July</span>
+      <span class="draft-date">Scheduled: Wednesday 29 July</span>
       
     </div>
     <h2 class="draft-title" id="draft-title-1">Rotator Cuff Repair: Return-to-Sport Criteria and Prognostic Factors for Overhead Athletes</h2>
@@ -469,7 +481,7 @@ async function saveContent(draftNum) {
   <div class="draft-header">
     <div class="draft-meta-top">
       <span class="draft-number">Draft #2</span>
-      <span class="draft-date">Scheduled: Wednesday 29 July</span>
+      <span class="draft-date">Scheduled: Thursday 30 July</span>
       
     </div>
     <h2 class="draft-title" id="draft-title-2">Simple Strength Tests That Predict Long-Term Health, Not Just Recovery</h2>
@@ -640,7 +652,7 @@ async function saveContent(draftNum) {
   <div class="draft-header">
     <div class="draft-meta-top">
       <span class="draft-number">Draft #3</span>
-      <span class="draft-date">Scheduled: Thursday 30 July</span>
+      <span class="draft-date">Scheduled: Friday 31 July</span>
       
     </div>
     <h2 class="draft-title" id="draft-title-3">Early Referral or Watchful Waiting: What Changes the Decision in Adolescent Lumbar Spondylolysis</h2>
