@@ -11,5 +11,10 @@
   {
     "action": "SKIP",
     "number": 7
+  },
+  {
+    "action": "EDIT",
+    "number": 1,
+    "new_title": "Achilles Tendinopathy: Calf Capacity Benchmarks and Pain-Monitoring Thresholds"
   }
 ]
