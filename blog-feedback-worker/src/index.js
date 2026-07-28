@@ -121,7 +121,7 @@ export default {
     // savedraft: JSON API called via fetch() from the review page (edit full body/title).
     if (a === "savedraft") {
       if (request.method !== "POST") return json({ error: "POST required" }, 405);
-      if (token !== env.FEEDBACK_TOKEN) return json({ error: "invalid token" }, 403);
+      if (token.trim() !== (env.FEEDBACK_TOKEN || "").trim()) return json({ error: "invalid token" }, 403);
       const file = q.get("file") || "";
       if (!/^[\w.\-]+\.json$/.test(file)) return json({ error: "invalid draft file" }, 400);
       let payload;
@@ -130,7 +130,7 @@ export default {
       catch (e) { return json({ error: String(e) }, 500); }
     }
 
-    if (token !== env.FEEDBACK_TOKEN)
+    if (token.trim() !== (env.FEEDBACK_TOKEN || "").trim())
       return page("Invalid link", `<h1>Link expired or invalid</h1><p>Please use the buttons from the latest preview email.</p>`, 403);
     if (!n || !["approve", "skip", "edit"].includes(a))
       return page("Bad request", `<h1>Something's off</h1><p>Missing post number or action.</p>`, 400);

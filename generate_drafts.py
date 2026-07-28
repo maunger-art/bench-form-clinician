@@ -316,7 +316,7 @@ def main():
                 article["slug"] = slug
 
             # Add metadata
-            article["date"] = (date.today() + timedelta(days=i+1)).isoformat()
+            article["date"] = (date.today() + timedelta(weeks=i+1)).isoformat()  # weekly cadence
             article["draft"] = True
             article["queue_position"] = i + 1
             article["original_topic"] = topic

@@ -445,6 +445,7 @@ function toggleContentEditor(draftNum, btn) {{
     editor.style.display = 'block';
     btn.textContent = '&#10007; Close editor';
     body.style.opacity = '0.4';
+    editor.oninput = function() {{ autosaveDraft(draftNum); }};   // autosave every keystroke
   }} else {{
     editor.style.display = 'none';
     btn.innerHTML = '&#9998; Edit content';
@@ -525,13 +526,14 @@ async function saveContent(draftNum) {{
     body.innerHTML = newHtml;
     body.style.opacity = '1';
     if (newTitle) {{ document.getElementById('draft-title-' + draftNum).textContent = newTitle; }}
+    localStorage.removeItem(draftKey(draftNum));   // saved to the review — clear local copy
 
     statusEl.className = 'save-status success';
     statusEl.textContent = '&#10003; Saved. Changes apply when the preview page next regenerates.';
 
   }} catch(err) {{
     statusEl.className = 'save-status error';
-    statusEl.textContent = 'Error: ' + err.message;
+    statusEl.textContent = 'Save failed: ' + err.message + ' — but your edits are safe on this device. Click Save changes to retry.';
   }}
 }}
 
@@ -545,6 +547,51 @@ window.addEventListener('DOMContentLoaded', function() {{
   article.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
   var btn = article.querySelector('.btn-edit-content');
   if (btn) toggleContentEditor(parseInt(n, 10), btn);
+}});
+
+// ── Local autosave — edits are kept in this browser continuously, so a failed save,
+//    a timeout, or an accidental refresh can never lose your work. ──
+function draftKey(draftNum) {{
+  var a = document.getElementById('draft-' + draftNum);
+  return 'bpsdraft:' + (a ? a.dataset.draftFile : draftNum);
+}}
+function autosaveDraft(draftNum) {{
+  try {{
+    var t = document.getElementById('edit-title-' + draftNum);
+    localStorage.setItem(draftKey(draftNum), JSON.stringify({{
+      html: getReconstructedHtml(draftNum), title: t ? t.value : '', ts: Date.now()
+    }}));
+    var s = document.getElementById('save-status-' + draftNum);
+    if (s) {{ s.className = 'save-status'; s.textContent = 'Kept on this device — click Save changes to send it to the review.'; }}
+  }} catch(e) {{}}
+}}
+function removeBanner(draftNum) {{ var b = document.getElementById('restore-' + draftNum); if (b) b.remove(); }}
+function restoreDraft(draftNum) {{
+  var saved; try {{ saved = JSON.parse(localStorage.getItem(draftKey(draftNum))); }} catch(e) {{ return; }}
+  if (!saved) return;
+  document.getElementById('article-body-' + draftNum).innerHTML = saved.html;
+  var btn = document.getElementById('draft-' + draftNum).querySelector('.btn-edit-content');
+  if (document.getElementById('content-editor-' + draftNum).style.display === 'none') toggleContentEditor(draftNum, btn);
+  var t = document.getElementById('edit-title-' + draftNum);
+  if (t && saved.title) t.value = saved.title;
+  removeBanner(draftNum);
+}}
+function discardDraft(draftNum) {{ localStorage.removeItem(draftKey(draftNum)); removeBanner(draftNum); }}
+window.addEventListener('DOMContentLoaded', function() {{
+  document.querySelectorAll('.draft-article').forEach(function(a) {{
+    var num = a.id.replace('draft-', '');
+    var saved = null;
+    try {{ saved = JSON.parse(localStorage.getItem('bpsdraft:' + a.dataset.draftFile) || 'null'); }} catch(e) {{}}
+    if (!saved) return;
+    var when = new Date(saved.ts).toLocaleString();
+    var div = document.createElement('div');
+    div.id = 'restore-' + num;
+    div.style.cssText = 'margin:10px 0;padding:10px 14px;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;font-size:13px;';
+    div.innerHTML = 'You have <b>unsaved edits</b> on this device from ' + when + '. ' +
+      '<button style="margin-left:8px;padding:4px 12px;border:0;border-radius:6px;background:#0369a1;color:#fff;font-weight:700;cursor:pointer" onclick="restoreDraft(' + num + ')">Restore</button> ' +
+      '<button style="padding:4px 12px;border:1px solid #cbd5e1;border-radius:6px;background:#fff;cursor:pointer" onclick="discardDraft(' + num + ')">Discard</button>';
+    var header = a.querySelector('.draft-header'); if (header) header.appendChild(div);
+  }});
 }});
 </script>
 </head>

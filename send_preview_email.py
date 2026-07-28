@@ -36,12 +36,14 @@ def load_json(path):
 
 
 def get_upcoming_dates(count: int = 7) -> list[str]:
-    """Get the next N weekdays starting from tomorrow."""
+    """One publish date per week — posts publish weekly on Thursday."""
     dates = []
-    current = date.today() + timedelta(days=1)
-    while len(dates) < count:
-        dates.append(current.strftime("%A %d %B"))
-        current += timedelta(days=1)
+    d = date.today() + timedelta(days=1)
+    while d.weekday() != 3:          # 3 = Thursday (posts publish weekly on Thursday)
+        d += timedelta(days=1)
+    for _ in range(count):
+        dates.append(d.strftime("%A %d %B"))
+        d += timedelta(weeks=1)      # one per week, not one per day
     return dates
 
 
@@ -128,14 +130,14 @@ def build_email_html(topics: list[str], summaries: list[dict], dates: list[str])
         Weekly Content Preview
       </h1>
       <p style="margin: 8px 0 0; font-size: 14px; color: rgba(255,255,255,0.65);">
-        {week_start.strftime("%d %B")} — {week_end.strftime("%d %B %Y")} &middot; {len(topics)} posts scheduled
+        {len(topics)} upcoming posts &middot; one published each week
       </p>
     </div>
 
     <!-- Intro -->
     <div style="padding: 28px 40px 20px; border-bottom: 1px solid #e8edf2;">
       <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.7;">
-        Here are the topics scheduled to publish this week. To read each article <strong>in full</strong> — title, body and references (with PubMed verification) — and Approve, Skip or Edit it, open the draft review page:
+        Here are the upcoming posts — one publishes each week. To read each article <strong>in full</strong> — title, body and references (with PubMed verification) — and Approve, Skip or Edit it, open the draft review page:
       </p>
       <div style="margin: 18px 0 4px; text-align: center;">
         <a href="https://www.benchmarkps.org/blog/preview/" style="display:inline-block; background: hsl(199, 68%, 51%); color: white; text-decoration: none; font-size: 14px; font-weight: 700; padding: 12px 26px; border-radius: 8px;">&#128196; Review the full drafts &rarr;</a>
@@ -284,7 +286,7 @@ def main():
 
     # Build email
     week_start = date.today() + timedelta(days=1)
-    subject = f"Benchmark PS Blog — {len(upcoming)} posts scheduled w/c {week_start.strftime('%d %b')}"
+    subject = f"Benchmark PS Blog — {len(upcoming)} upcoming posts (one per week)"
     html = build_email_html(upcoming, summaries, dates)
     text = build_email_text(upcoming, summaries, dates)
 
