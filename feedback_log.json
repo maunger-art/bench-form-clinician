@@ -1,0 +1,34 @@
+[
+  {
+    "date": "2026-07-29",
+    "action": "SKIP",
+    "number": 7,
+    "topic": "Early Referral or Watchful Waiting: What Changes the Decision in Adolescent Lumbar Spondylolysis"
+  },
+  {
+    "date": "2026-07-29",
+    "action": "SKIP",
+    "number": 3,
+    "topic": "Apophyseal Injuries in Academy Football: What 16,000 Player-Seasons Reveal About Return-to-Play Risk"
+  },
+  {
+    "date": "2026-07-29",
+    "action": "SKIP",
+    "number": 3,
+    "topic": "Weight-Bearing Lunge Test: Reliability, Measurement Error, and What It Actually Tells You"
+  },
+  {
+    "date": "2026-07-29",
+    "action": "EDIT",
+    "number": 1,
+    "old_topic": "Achilles Tendinopathy: Calf Capacity Benchmarks and Pain-Monitoring Thresholds",
+    "new_topic": "Achilles Tendinopathy: Calf Capacity Benchmarks and Pain-Monitoring Thresholds"
+  },
+  {
+    "date": "2026-07-29",
+    "action": "EDIT",
+    "number": 1,
+    "old_topic": "Achilles Tendinopathy: Calf Capacity Benchmarks and Pain-Monitoring Thresholds",
+    "new_topic": "Achilles Tendinopathy: Calf Capacity Benchmarks and Pain-Monitoring Thresholds"
+  }
+]
