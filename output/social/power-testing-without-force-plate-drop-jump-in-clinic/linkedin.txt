@@ -1,0 +1,13 @@
+Power is the one physical quality most rehab pathways still don't measure.
+
+Strength gets tracked with a dynamometer. Range of movement gets tracked with a goniometer. Power usually gets a judgement call: the patient squats well, says they feel strong, and the clinician decides they're ready to jump or cut. Reviews of post-surgical rehab protocols confirm the pattern, strength and range of movement dominate the outcome measures used, power barely features.
+
+That's a problem because power isn't strength done quickly. It reflects how fast the neuromuscular system produces force and how well it absorbs repeated loading, exactly what change of direction and landing demand.
+
+A drop jump closes that gap without lab equipment. Ground contact time from a smartphone app plus jump height from a tape measure gives you a usable reactive strength index, precise enough to track change in an individual patient over time.
+
+Use it as a later-stage progression tool once basic strength and loading tolerance are cleared, not a day-one screen.
+
+Read the full protocol: https://benchmarkps.com/blog/posts/power-testing-without-force-plate-drop-jump-in-clinic/
+
+#Physiotherapy #ReturnToSport #ObjectiveAssessment #Rehabilitation #SportsMedicine

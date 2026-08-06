@@ -8,6 +8,13 @@
   <atom:link href="https://benchmarkps.org/blog/feed.xml" rel="self" type="application/rss+xml"/>
   
   <item>
+    <title><![CDATA[Power Testing Without a Force Plate: What the Drop Jump Can Tell You in Clinic]]></title>
+    <link>https://benchmarkps.org/blog/posts/power-testing-without-force-plate-drop-jump-in-clinic/</link>
+    <guid isPermaLink="true">https://benchmarkps.org/blog/posts/power-testing-without-force-plate-drop-jump-in-clinic/</guid>
+    <description><![CDATA[Force plates aren't the only way to test power in rehab. Here's how to use the drop jump with basic tools to guide return-to-sport decisions.]]></description>
+    <pubDate>2026-08-06</pubDate>
+  </item>
+  <item>
     <title><![CDATA[Rotator Cuff Repair: Return-to-Sport Criteria and Prognostic Factors for Overhead Athletes]]></title>
     <link>https://benchmarkps.org/blog/posts/rotator-cuff-repair-return-to-sport-overhead-athletes/</link>
     <guid isPermaLink="true">https://benchmarkps.org/blog/posts/rotator-cuff-repair-return-to-sport-overhead-athletes/</guid>
@@ -138,13 +145,6 @@
     <link>https://benchmarkps.org/blog/posts/acl-return-to-sport-criteria-evidence/</link>
     <guid isPermaLink="true">https://benchmarkps.org/blog/posts/acl-return-to-sport-criteria-evidence/</guid>
     <description><![CDATA[Evidence-based analysis of ACL return-to-sport testing criteria that actually predict re-injury risk. Which tests matter most for safe athletic return decisions?]]></description>
-    <pubDate>2025-04-08</pubDate>
-  </item>
-  <item>
-    <title><![CDATA[The State of Technology in Physiotherapy: What Works, What Doesn't, and What's Coming]]></title>
-    <link>https://benchmarkps.org/blog/posts/state-of-physiotherapy-technology/</link>
-    <guid isPermaLink="true">https://benchmarkps.org/blog/posts/state-of-physiotherapy-technology/</guid>
-    <description><![CDATA[Evidence-based analysis of physiotherapy technology: what works in clinical practice, common implementation failures, and emerging tools that improve outcomes.]]></description>
     <pubDate>2025-04-08</pubDate>
   </item>
 </channel>
