@@ -1,0 +1,17 @@
+[1/5] Ask ten physios which shoulder questionnaire they use and you'll get ten different answers, several using more than one without a clear reason why. Here's what the evidence actually says about shoulder PROMs in athletes.
+
+---
+
+[2/5] A systematic review of self-reported rotator cuff tools found responsiveness and minimal clinically important difference data missing or poorly reported for many in routine use (St-Pierre et al., 2016). Without that, you can't justify a discharge decision from the score alone.
+
+---
+
+[3/5] Condition-specific scales are built around combing your hair and reaching a high shelf, not throwing, serving or overhead lifting. Most were never validated in athletic populations, and it shows.
+
+---
+
+[4/5] Special tests for shoulder pathology also show inconsistent inter-rater reliability between clinicians (Lange et al., 2017). A patient-specific measure like the PSFS, where the athlete names their own limiting activity, holds up better.
+
+---
+
+[5/5] Full breakdown of what the measurement properties evidence supports, and what to use instead: https://benchmarkps.com/blog/posts/shoulder-proms-athletes-which-outcome-measures-hold-up/
