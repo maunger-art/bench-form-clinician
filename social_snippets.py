@@ -88,6 +88,38 @@ def strip_html(html):
     return re.sub(r"<[^>]+>", " ", html).strip()
 
 
+def _extract_json(raw):
+    """Parse a JSON object out of an LLM completion.
+
+    Tolerates markdown fences and conversational preamble/epilogue by falling
+    back to the outermost {...} span. Returns None if nothing parseable is found
+    (e.g. an empty completion), so the caller can retry rather than crash.
+    """
+    raw = (raw or "").strip()
+    if not raw:
+        return None
+
+    if raw.startswith("```"):
+        raw = raw.split("```")[1]
+        if raw.startswith("json"):
+            raw = raw[4:]
+        raw = raw.strip()
+
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        pass
+
+    # Fall back to the outermost object span (handles preamble like "Here is...").
+    start, end = raw.find("{"), raw.rfind("}")
+    if start != -1 and end > start:
+        try:
+            return json.loads(raw[start : end + 1])
+        except json.JSONDecodeError:
+            return None
+    return None
+
+
 def generate_social(post):
     client = anthropic.Anthropic()
 
@@ -114,21 +146,24 @@ ARTICLE BODY (excerpt):
 
 Return the JSON object as described. Replace any placeholder URLs with: {post_url}"""
 
-    message = client.messages.create(
-        model="claude-sonnet-4-20250514",
-        max_tokens=2000,
-        system=SOCIAL_SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_message}],
+    last_raw = ""
+    for attempt in range(1, 4):
+        message = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=2000,
+            system=SOCIAL_SYSTEM_PROMPT,
+            messages=[{"role": "user", "content": user_message}],
+        )
+        last_raw = message.content[0].text if message.content else ""
+        snippets = _extract_json(last_raw)
+        if snippets is not None:
+            return snippets
+        print(f"  Attempt {attempt}/3: no parseable JSON in completion, retrying...")
+
+    raise ValueError(
+        f"LLM did not return parseable JSON after 3 attempts. "
+        f"Last completion (first 300 chars): {last_raw.strip()[:300]!r}"
     )
-
-    raw = message.content[0].text.strip()
-    if raw.startswith("```"):
-        raw = raw.split("```")[1]
-        if raw.startswith("json"):
-            raw = raw[4:]
-        raw = raw.strip()
-
-    return json.loads(raw)
 
 
 def save_snippets(slug, snippets):

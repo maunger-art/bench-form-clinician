@@ -41,6 +41,9 @@ jobs:
         run: python generate_post.py
 
       - name: Generate social snippets
+        # Non-fatal: social assets are a downstream nice-to-have. A flake here must
+        # never block committing the post that "Generate post" already published.
+        continue-on-error: true
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: python social_snippets.py
