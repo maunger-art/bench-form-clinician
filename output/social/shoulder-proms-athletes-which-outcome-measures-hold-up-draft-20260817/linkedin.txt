@@ -1,0 +1,11 @@
+Ten physiotherapists, ten different shoulder outcome measures, and a caveat attached to every answer.
+
+That caveat matters. Most shoulder PROMs were validated in general orthopaedic or occupational pain populations, not competitive athletes. An overhead thrower or club cricketer can sit near the ceiling on a generic questionnaire while still lacking the capacity to return to sport.
+
+Reliability is the bigger problem, and it shows up before validity does. Review evidence on shoulder physical examination tests finds wide variation in diagnostic agreement depending on the rater and protocol used. If two clinicians in the same clinic can't reproduce each other's findings, the score attached to that assessment inherits the same instability, however well the underlying tool was validated.
+
+Standardise positioning, instruction and scoring criteria before trusting any shoulder measure across sessions, and pair self-report data with performance-based testing rather than relying on either alone.
+
+Read the full breakdown of what holds up and what doesn't: https://benchmarkps.com/blog/posts/shoulder-proms-athletes-which-outcome-measures-hold-up-draft-20260817/
+
+#Physiotherapy #SportsMedicine #ShoulderRehab #OutcomeMeasures #ReturnToSport
