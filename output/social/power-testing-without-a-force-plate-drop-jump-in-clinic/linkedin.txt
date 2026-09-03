@@ -1,0 +1,13 @@
+Most clinics can measure knee extension strength in thirty seconds. Ask the same clinician to measure lower limb power and the answer is usually "we don't have a force plate."
+
+Power gets left out of the assessment entirely, or reduced to a subjective impression of how a patient looks when they jump. That's a gap with consequences: reactive strength, the ability to absorb load and redirect it through the stretch-shortening cycle, is exactly what's being tested the moment a patient returns to running, cutting, or jumping.
+
+The drop jump closes that gap without lab equipment. Step off a 20-40cm box, land, and rebound into a maximal jump. Contact time and jump height, captured on a smartphone app such as MyJump2, give you a reactive strength index accurate enough to track change over time.
+
+Precision instrumentation isn't the constraint, consistency is. Run the same protocol on the same equipment every time and this month's number becomes genuinely comparable to last month's, particularly useful in ankle instability and Achilles rehab, where readiness is a loading question rather than a calendar one.
+
+Don't let "strength tested, power assumed" stand in for a full return-to-sport assessment.
+
+Full protocol and normative framework: https://benchmarkps.com/blog/posts/power-testing-without-a-force-plate-drop-jump-in-clinic/
+
+#Physiotherapy #SportsRehab #ObjectiveAssessment #ReturnToSport #MSK

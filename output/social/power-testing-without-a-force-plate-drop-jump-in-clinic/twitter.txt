@@ -1,0 +1,17 @@
+[1/5] You don't need a force plate to test power. The drop jump gives you objective reactive strength data using a box and a smartphone. Here's how it works.
+
+---
+
+[2/5] Reactive strength is the ability to absorb landing force and redirect it into propulsion quickly, the stretch-shortening cycle. Strength testing alone won't catch a deficit here. It needs its own test.
+
+---
+
+[3/5] Protocol: step off a 20-40cm box, land, and rebound immediately into a maximal vertical jump. Jump height divided by ground contact time gives you a reactive strength index.
+
+---
+
+[4/5] No force plate required. Slow-motion video through an app such as MyJump2 gives contact time and flight time accurate enough to track clinical change over time, or use a tape measure for a simpler vertical jump variant.
+
+---
+
+[5/5] Where this changes management in ankle instability and Achilles rehab, and how to build a normative framework around it: https://benchmarkps.com/blog/posts/power-testing-without-a-force-plate-drop-jump-in-clinic/
