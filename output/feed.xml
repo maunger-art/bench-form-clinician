@@ -8,6 +8,13 @@
   <atom:link href="https://benchmarkps.org/blog/feed.xml" rel="self" type="application/rss+xml"/>
   
   <item>
+    <title><![CDATA[Simple Strength Tests That Predict Long-Term Health, Not Just Recovery]]></title>
+    <link>https://benchmarkps.org/blog/posts/simple-strength-tests-predict-long-term-health/</link>
+    <guid isPermaLink="true">https://benchmarkps.org/blog/posts/simple-strength-tests-predict-long-term-health/</guid>
+    <description><![CDATA[Strength tests used for rehab milestones also flag long-term musculoskeletal health risk. Why physios should track them past discharge, not just to it.]]></description>
+    <pubDate>2026-09-17</pubDate>
+  </item>
+  <item>
     <title><![CDATA[Rotator Cuff Repair: Return-to-Sport Criteria and Prognostic Factors for Overhead Athletes]]></title>
     <link>https://benchmarkps.org/blog/posts/rotator-cuff-repair-return-to-sport-overhead-athletes-draft-20260907/</link>
     <guid isPermaLink="true">https://benchmarkps.org/blog/posts/rotator-cuff-repair-return-to-sport-overhead-athletes-draft-20260907/</guid>
@@ -138,13 +145,6 @@
     <link>https://benchmarkps.org/blog/posts/single-leg-calf-raise-test-achilles-calf-capacity/</link>
     <guid isPermaLink="true">https://benchmarkps.org/blog/posts/single-leg-calf-raise-test-achilles-calf-capacity/</guid>
     <description><![CDATA[Single-leg calf raise testing provides objective data on Achilles tendon and calf capacity. Learn clinical parameters, normative values, and testing protocols.]]></description>
-    <pubDate>2025-04-08</pubDate>
-  </item>
-  <item>
-    <title><![CDATA[How to Implement Objective Physiotherapy Assessment Without Expensive Equipment]]></title>
-    <link>https://benchmarkps.org/blog/posts/objective-physiotherapy-assessment-without-expensive-equipment/</link>
-    <guid isPermaLink="true">https://benchmarkps.org/blog/posts/objective-physiotherapy-assessment-without-expensive-equipment/</guid>
-    <description><![CDATA[Learn to implement objective physiotherapy assessment using standardised protocols and software-enabled tools without expensive equipment purchases.]]></description>
     <pubDate>2025-04-08</pubDate>
   </item>
 </channel>
