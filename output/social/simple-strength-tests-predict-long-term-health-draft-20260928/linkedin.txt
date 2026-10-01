@@ -1,0 +1,13 @@
+A normal strength score at discharge tells you the joint has recovered. It does not tell you where the patient is heading.
+
+Most MSK testing is episodic. A patient is tested, treated, retested against the same benchmark and discharged once the number clears. That answers the referral question well. It says nothing about what happens to their wider functional capacity afterwards.
+
+The evidence from chronic disease populations is clear on this. In COPD, Parkinson's disease and stroke, functional capacity is tracked because it predicts independence, healthcare use and quality of life over years, not weeks. Strength and function after hip replacement follow the same logic: gait speed and strength gains are markers of how someone moves through the rest of their life, not just how the hip feels at twelve weeks.
+
+A patient can be discharged as a success on the metric that mattered for the referral while their broader capacity declines unmeasured.
+
+Practical takeaway: set a fixed review point after discharge, repeat the same simple tests, and compare against normative data matched to age, sex and weight. Handheld dynamometry and an inclinometer are enough.
+
+Full article: https://benchmarkps.com/blog/posts/simple-strength-tests-predict-long-term-health-draft-20260928/
+
+#Physiotherapy #StrengthTesting #OutcomeMeasures #PracticeManagement #HealthTech
