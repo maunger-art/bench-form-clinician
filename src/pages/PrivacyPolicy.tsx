@@ -38,7 +38,7 @@ const PrivacyPolicy = () => {
           Benchmark RPS Ltd (CN 13817021)
         </p>
         <p>
-          This Privacy Policy applies to Benchmark RPS Ltd and relates to its operations. It explains how we handle personal information and comply with the requirements of applicable privacy laws and other related laws regulating the handling of personal information, including without limitation the UK General Data Protection Regulation and Data Protection Act 2018 ("UK GDPR"), the EU General Data Protection Regulation (EU) 2016/679 ("GDPR") and applicable EU Member State laws (together, "Privacy Laws"). References in this policy to the GDPR include the UK GDPR where the context requires. If you have further questions relating to this policy please contact Charles Woolhouse at{" "}
+          This Privacy Policy applies to Benchmark RPS Ltd and relates to its operations. It explains how we handle personal information and comply with the requirements of applicable privacy laws and other related laws regulating the handling of personal information, including without limitation the UK General Data Protection Regulation and Data Protection Act 2018 ("UK GDPR"), the EU General Data Protection Regulation (EU) 2016/679 ("GDPR") and applicable EU Member State laws (together, "Privacy Laws"). References in this policy to the GDPR include the UK GDPR where the context requires. If you have further questions relating to this policy please contact our Information Governance &amp; Data Protection Lead, Charles Woolhouse, at{" "}
           <a href="mailto:DPO@benchmarkps.org">DPO@benchmarkps.org</a>. This Privacy Policy also serves as notification to individuals of the matters required to be notified on collection of their personal information. We recognise the importance of your privacy, and that you have a right to control how your personal information is collected and used.
         </p>
 
@@ -246,7 +246,7 @@ const PrivacyPolicy = () => {
         </ul>
 
         <h3>9.2</h3>
-        <p>You can make any of these requests in relation to your personal data by sending the request to our Data Protection Officer by email at <a href="mailto:DPO@benchmarkps.org">DPO@benchmarkps.org</a>.</p>
+        <p>You can make any of these requests in relation to your personal data by sending the request to our Information Governance &amp; Data Protection Lead by email at <a href="mailto:DPO@benchmarkps.org">DPO@benchmarkps.org</a>.</p>
 
         <h2>10. Storage and security of your personal information</h2>
 
@@ -285,7 +285,7 @@ const PrivacyPolicy = () => {
         <h3>12.1</h3>
         <p>If you have any concerns or complaints about how we handle your personal information, or if you have any questions about this policy, please contact us at <a href="mailto:DPO@benchmarkps.org">DPO@benchmarkps.org</a> or at the address below:</p>
         <p>
-          Data Protection Officer<br />
+          Information Governance &amp; Data Protection Lead<br />
           Benchmark RPS Ltd<br />
           82 Wandsworth Bridge Road<br />
           London SW6 2TF
