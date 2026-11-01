@@ -1,86 +1,66 @@
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import { ClipboardCheck, BarChart, Target, TrendingUp } from "lucide-react";
-
-const steps = [
-  {
-    icon: ClipboardCheck,
-    num: "01",
-    title: "Assess",
-    desc: "Collect objective patient data including range of motion, strength, endurance and power.",
-  },
-  {
-    icon: BarChart,
-    num: "02",
-    title: "Benchmark",
-    desc: "Compare results against normative datasets matched for age, sex and sport.",
-  },
-  {
-    icon: Target,
-    num: "03",
-    title: "Plan",
-    desc: "Generate data-driven rehabilitation plans directly from the patient's test results.",
-  },
-  {
-    icon: TrendingUp,
-    num: "04",
-    title: "Progress",
-    desc: "Track patient improvement objectively across every stage of recovery.",
-  },
-];
-
 const HowItWorks = () => {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
-    <section id="how-it-works" className="bg-card py-16 sm:py-24 md:py-32" ref={ref}>
-      <div className="max-w-[1180px] mx-auto px-5 sm:px-6 md:px-12">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-[720px] mx-auto mb-12 sm:mb-16"
-        >
-          <div className="flex items-center gap-2 justify-center mb-5">
-            <div className="w-5 h-[2px] bg-brand-blue rounded" />
-            <span className="text-brand-blue text-xs font-bold tracking-[0.14em] uppercase">
-              How It Works
-            </span>
+    <section className="how" id="how">
+      <div className="wrap">
+        <div className="section-head reveal">
+          <div className="eyebrow eyebrow--center">
+            <span className="eyebrow__dash"></span>How It Works
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-[44px] leading-[1.18] font-bold text-foreground">
-            Four steps to measurable outcomes
+          <h2 className="section-title">
+            Four steps to <span className="ser">measurable outcomes</span>
           </h2>
-        </motion.div>
+        </div>
+        <div className="steps">
+          <div className="steps__line" aria-hidden="true"></div>
 
-        <div className="relative grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-          {/* Connecting line */}
-          <div className="hidden md:block absolute top-[60px] left-[12.5%] right-[12.5%] h-[2px] border-t-2 border-dashed border-sand" />
+          <div className="step reveal" data-delay="0">
+            <div className="step__num">01</div>
+            <div className="step__ic">
+              <svg viewBox="0 0 24 24">
+                <path d="M9 11l2 2 4-4" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
+                <rect x="4" y="4" width="16" height="17" rx="2" fill="none" stroke="currentColor" strokeWidth="1.7" />
+                <path d="M8 4V2.5M16 4V2.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+              </svg>
+            </div>
+            <h3>Assess</h3>
+            <p>Collect objective patient data — range of movement, strength, endurance and power.</p>
+          </div>
 
-          {steps.map((s, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.15 * i, duration: 0.5 }}
-              className="relative text-center md:[&]:mt-[var(--stagger)]"
-              style={{ "--stagger": `${i * 12}px` } as React.CSSProperties}
-            >
-              <div className="w-20 h-20 sm:w-[100px] sm:h-[100px] md:w-[120px] md:h-[120px] rounded-2xl bg-warm border border-sand/50 flex flex-col items-center justify-center mx-auto mb-4 sm:mb-6 relative z-10">
-                <span className="text-xs font-bold text-brand-blue tracking-wider mb-1">{s.num}</span>
-                <s.icon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-foreground" />
-              </div>
-              {/* Teal pulse dot */}
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={inView ? { scale: 1 } : {}}
-                transition={{ delay: 0.3 + i * 0.2, duration: 0.3 }}
-                className="hidden md:block absolute top-[59px] left-1/2 -translate-x-1/2 w-3 h-3 bg-teal rounded-full z-20 shadow-md shadow-teal/40"
-              />
-              <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">{s.title}</h3>
-              <p className="text-xs sm:text-sm text-mid font-light leading-relaxed max-w-[220px] mx-auto">{s.desc}</p>
-            </motion.div>
-          ))}
+          <div className="step reveal" data-delay="120">
+            <div className="step__num">02</div>
+            <div className="step__ic">
+              <svg viewBox="0 0 24 24">
+                <path d="M5 20V10M12 20V4M19 20v-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </div>
+            <h3>Benchmark</h3>
+            <p>Compare results against normative datasets matched for age, sex and sport.</p>
+          </div>
+
+          <div className="step reveal" data-delay="240">
+            <div className="step__num">03</div>
+            <div className="step__ic">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="1.7" />
+                <circle cx="12" cy="12" r="3.3" fill="none" stroke="currentColor" strokeWidth="1.7" />
+                <circle cx="12" cy="12" r="0.6" fill="currentColor" stroke="currentColor" strokeWidth="1.4" />
+              </svg>
+            </div>
+            <h3>Plan</h3>
+            <p>Generate data-driven rehabilitation plans directly from the patient's results.</p>
+          </div>
+
+          <div className="step reveal" data-delay="360">
+            <div className="step__num">04</div>
+            <div className="step__ic">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 16l5-5 3 3 7-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M15 7h5v5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <h3>Progress</h3>
+            <p>Track patient improvement objectively across every stage of recovery.</p>
+          </div>
         </div>
       </div>
     </section>

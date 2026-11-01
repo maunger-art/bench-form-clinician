@@ -1,37 +1,38 @@
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-
-const FinalCTA = ({ onRequestAccess }: { onRequestAccess?: () => void }) => {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
-
+const FinalCTA = () => {
   return (
-    <section id="cta" className="bg-warm py-16 sm:py-24 md:py-32" ref={ref}>
-      <div className="max-w-[1180px] mx-auto px-5 sm:px-6 md:px-12">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="bg-navy rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-20 text-center"
-        >
-          <h2 className="text-2xl sm:text-3xl md:text-[44px] leading-[1.18] font-bold text-primary-foreground mb-5">
-            Bring measurable outcomes to your clinic
-          </h2>
-          <p className="text-base sm:text-[17px] font-light text-primary-foreground/60 leading-relaxed max-w-[600px] mx-auto mb-8 sm:mb-10">
-            Join the growing number of MSK clinicians using objective data to improve patient care
-            and demonstrate results.
-          </p>
-          <div className="flex gap-3 sm:gap-4 justify-center flex-col sm:flex-row items-center">
-            <Button
-              onClick={onRequestAccess}
-              className="w-full sm:w-auto bg-brand-blue hover:bg-brand-blue-mid text-primary-foreground px-8 py-6 text-[15px] font-semibold rounded-lg shadow-lg shadow-brand-blue/30 transition-all hover:-translate-y-0.5"
-            >
-              Request Access <ArrowRight className="ml-2 w-4 h-4" />
-            </Button>
+    <section className="cta" id="cta">
+      <div className="wrap">
+        <div className="cta__box reveal">
+          <div className="cta__mesh" aria-hidden="true"></div>
+          <div className="eyebrow eyebrow--center eyebrow--on-dark">
+            <span className="eyebrow__dash"></span>Get Started
           </div>
-        </motion.div>
+          <h2 className="cta__title">
+            Bring <span className="ser">measurable outcomes</span> to your clinic
+          </h2>
+          <p className="cta__sub">
+            Join the growing number of MSK clinicians using objective data to improve patient care
+            and demonstrate results. Free to get started in early access.
+          </p>
+          <div className="cta__btns">
+            <a className="btn btn--primary" href="https://platform.benchmarkps.org/login?signup=true">
+              Create Account
+              <svg viewBox="0 0 24 24" className="ic">
+                <path
+                  d="M5 12h14M13 6l6 6-6 6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </a>
+            <a className="btn btn--ghost-light" href="https://calendly.com/benchmarkps-info/30min">
+              Request a Demo
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   );
