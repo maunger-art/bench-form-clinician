@@ -9,4 +9,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://www.benchmarkps.org/sitemap.xml
+Sitemap: https://benchmarkps.org/sitemap.xml

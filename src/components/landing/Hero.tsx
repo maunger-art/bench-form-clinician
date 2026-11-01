@@ -1,136 +1,184 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Play, CalendarDays } from "lucide-react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useEffect, useRef, useState } from "react";
 import screenshotAnalyticsFull from "@/assets/screenshot-analytics-full.png";
 
-const LOOM_EMBED_URL = "https://www.loom.com/embed/64574912fc9f43ff9521d3819ca9cf0b";
-const LOOM_SHARE_URL = "https://www.loom.com/share/64574912fc9f43ff9521d3819ca9cf0b";
+const TOUR_VIDEO_SRC = "/media/bps-platform-tour.mp4";
+
+// Hero waveform chip — heights/delays mirror the approved concept (app.js).
+const HERO_WAVE = [6, 12, 20, 14, 22, 9, 16, 11, 7];
 
 const Hero = () => {
   const [videoOpen, setVideoOpen] = useState(false);
-  const benefits = [
-    "Objective strength and performance benchmarking",
-    "Measurable patient progress tracking",
-    "Structured rehabilitation planning",
-    "AI-assisted clinical documentation",
-  ];
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Autoplay on open, pause (and reset) on close.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (videoOpen) {
+      v.play().catch(() => {});
+    } else {
+      v.pause();
+    }
+  }, [videoOpen]);
+
+  // Escape closes the modal.
+  useEffect(() => {
+    if (!videoOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setVideoOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [videoOpen]);
 
   return (
-    <section className="relative bg-warm overflow-hidden">
-      {/* Dot texture */}
-      <div
-        className="absolute inset-0 opacity-30 pointer-events-none"
-        style={{
-          backgroundImage: "radial-gradient(circle at 1px 1px, hsl(var(--sand)) 1px, transparent 0)",
-          backgroundSize: "32px 32px",
-        }}
-      />
+    <section className="hero">
+      <div className="hero__mesh" aria-hidden="true"></div>
+      <div className="hero__grid-tex" aria-hidden="true"></div>
+      <div className="wrap hero__inner">
+        <div className="hero__copy reveal">
+          <div className="eyebrow">
+            <span className="eyebrow__dash"></span>Clinical Performance Platform
+          </div>
+          <h1 className="hero__title">
+            Progress You Can <span className="ser">Measure.</span>
+            <br />
+            Care You Can <span className="ser">Prove.</span>
+          </h1>
+          <p className="hero__lede">
+            Benchmark is a clinical performance platform that lets physiotherapists objectively
+            measure patient progress, benchmark results against normative data, and generate
+            data-driven rehabilitation plans — with the evidence to prove every outcome.
+          </p>
+          <ul className="hero__ticks">
+            <li>Objective strength &amp; performance benchmarking</li>
+            <li>AI clinical reports with secure share links</li>
+            <li>Structured, measurable progress tracking</li>
+          </ul>
+          <div className="hero__cta">
+            <button
+              type="button"
+              className="btn btn--ghost"
+              id="watchDemo"
+              onClick={() => setVideoOpen(true)}
+            >
+              <svg viewBox="0 0 24 24" className="ic">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+              Watch Demo
+            </button>
+            <a className="btn btn--primary" href="#cta">
+              <svg viewBox="0 0 24 24" className="ic">
+                <path
+                  d="M7 11h10M7 15h6M5 3h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H9l-4 4V5a2 2 0 0 1 2-2z"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              Request Demo
+            </a>
+          </div>
+        </div>
 
-      <div className="max-w-[1180px] mx-auto px-5 sm:px-6 md:px-12 py-12 sm:py-20 lg:py-32">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-          {/* Left */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="relative z-10"
-          >
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-5 h-[2px] bg-brand-blue rounded" />
-              <span className="text-brand-blue text-xs font-bold tracking-[0.14em] uppercase">
-                Clinical Performance Platform
-              </span>
+        <div className="hero__stage reveal" data-delay="150">
+          <div className="browser hero__browser tilt">
+            <div className="browser__bar">
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="browser__url">platform.benchmarkps.org</span>
             </div>
+            <div className="browser__body">
+              <div className="shot shot--analytics">
+                <img
+                  src={screenshotAnalyticsFull}
+                  alt="Benchmark performance analytics dashboard: left vs right strength and range-of-movement benchmarked against expected scores"
+                />
+              </div>
+            </div>
+          </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-[52px] leading-[1.1] font-bold text-foreground mb-3">
-              Progress You Can{" "}
-              <span className="font-editorial italic font-normal text-brand-blue">Measure.</span>
-            </h1>
-            <p className="text-lg sm:text-xl lg:text-2xl font-editorial italic font-normal text-mid mb-7 leading-relaxed">
-              Care You Can Prove.
-            </p>
+          {/* floating chips */}
+          <div className="chip chip--stat float-a">
+            <div className="chip__label">Knee flexion · Right</div>
+            <div className="chip__big">
+              130°<span className="chip__delta up">+44%</span>
+            </div>
+            <div className="chip__spark">
+              <svg viewBox="0 0 80 28" preserveAspectRatio="none">
+                <polyline
+                  points="0,24 16,20 32,18 48,10 64,8 80,3"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
 
-            <p className="text-base sm:text-[17px] font-light text-mid leading-relaxed mb-8 max-w-[500px]">
-              Benchmark is a clinical performance platform that allows physiotherapists to objectively
-              measure patient progress, benchmark results, and generate data-driven rehabilitation plans.
-            </p>
+          <div className="chip chip--toast float-b">
+            <span className="chip__check">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M5 13l4 4L19 7"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+            <div>
+              <div className="chip__toast-title">Report shared with GP</div>
+              <div className="chip__toast-sub">Secure link · expires in 7 days</div>
+            </div>
+          </div>
 
-            <ul className="space-y-3 mb-10">
-              {benefits.map((b, i) => (
-                <motion.li
+          <div className="chip chip--wave float-c">
+            <span className="rec-dot"></span>
+            <div className="wave" id="heroWave" aria-hidden="true">
+              {HERO_WAVE.map((h, i) => (
+                <span
                   key={i}
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + i * 0.08, duration: 0.4 }}
-                  className="text-[15px] font-medium text-foreground"
-                >
-                  {b}
-                </motion.li>
+                  style={{ height: `${h}px`, animationDelay: `${(i * 0.07).toFixed(2)}s` }}
+                />
               ))}
-            </ul>
-
-            <div className="flex gap-3 flex-col sm:flex-row">
-              <Button
-                variant="outline"
-                className="w-full sm:w-auto border-foreground/20 text-foreground hover:border-brand-blue hover:text-brand-blue px-7 py-6 text-[15px] font-semibold rounded-lg bg-transparent"
-                onClick={() => setVideoOpen(true)}
-              >
-                <Play className="mr-2 w-4 h-4" /> Watch Site Tour
-              </Button>
-              <Button
-                onClick={() => window.open("https://calendly.com/benchmarkps-info/30min", "_blank", "noopener,noreferrer")}
-                className="w-full sm:w-auto bg-brand-blue hover:bg-brand-blue-mid text-primary-foreground px-7 py-6 text-[15px] font-semibold rounded-lg shadow-lg shadow-brand-blue/25 transition-all hover:-translate-y-0.5"
-              >
-                <CalendarDays className="mr-2 w-4 h-4" /> Request Demo
-              </Button>
             </div>
-          </motion.div>
-
-          {/* Right - Real Product Screenshot */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3, duration: 0.7 }}
-            className="relative z-10"
-          >
-            <div className="rounded-xl overflow-hidden shadow-2xl shadow-navy/30 border border-sand/30 bg-white">
-              <img
-                src={screenshotAnalyticsFull}
-                alt="Benchmark PS patient analytics dashboard showing performance benchmarking against expected scores with left vs right comparison"
-                className="w-full h-auto"
-                loading="eager"
-              />
-            </div>
-          </motion.div>
+            <span className="chip__time">01:48</span>
+          </div>
         </div>
       </div>
 
-      {/* Blue diagonal background accent */}
-      <div
-        className="absolute top-0 right-0 bottom-0 w-1/2 pointer-events-none hidden lg:block"
-        style={{
-          background: "linear-gradient(135deg, hsl(213 66% 16%) 0%, hsl(211 53% 23%) 100%)",
-          clipPath: "polygon(30% 0, 100% 0, 100% 100%, 0% 100%)",
-        }}
-      />
-
-      <Dialog open={videoOpen} onOpenChange={setVideoOpen}>
-        <DialogContent className="max-w-[900px] p-0 border-none bg-transparent shadow-none">
-          <div className="aspect-video w-full">
-            <iframe
-              src={videoOpen ? LOOM_EMBED_URL : undefined}
-              className="w-full h-full rounded-lg"
-              allowFullScreen
-              onError={() => {
-                setVideoOpen(false);
-                window.open(LOOM_SHARE_URL, "_blank", "noopener,noreferrer");
-              }}
-            />
+      {/* demo video modal — native <video>, autoplay on open, pause on close */}
+      <div className={`modal${videoOpen ? " open" : ""}`} id="demoModal" aria-hidden={!videoOpen}>
+        <div className="modal__backdrop" onClick={() => setVideoOpen(false)}></div>
+        <div className="modal__box" role="dialog" aria-label="Demo video">
+          <button
+            className="modal__close"
+            aria-label="Close"
+            onClick={() => setVideoOpen(false)}
+          >
+            ×
+          </button>
+          <div className="modal__inner">
+            <video
+              ref={videoRef}
+              controls
+              playsInline
+              preload="metadata"
+              style={{ width: "100%", height: "100%", display: "block", background: "#0A2C4F" }}
+            >
+              <source src={TOUR_VIDEO_SRC} type="video/mp4" />
+            </video>
           </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+      </div>
     </section>
   );
 };
