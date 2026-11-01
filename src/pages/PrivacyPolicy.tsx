@@ -20,7 +20,7 @@ const PrivacyPolicy = () => {
       <section className="bg-navy py-12 sm:py-16 border-b border-primary-foreground/10">
         <div className="max-w-[900px] mx-auto px-5 sm:px-6 md:px-12">
           <h1 className="text-primary-foreground text-3xl sm:text-4xl font-bold tracking-tight">Privacy Policy</h1>
-          <p className="text-primary-foreground/50 mt-3 text-sm">Last updated: 11th March 2026</p>
+          <p className="text-primary-foreground/50 mt-3 text-sm">Last updated: 1st November 2026</p>
         </div>
       </section>
 
@@ -38,7 +38,7 @@ const PrivacyPolicy = () => {
           Benchmark RPS Ltd (CN 13817021)
         </p>
         <p>
-          This Privacy Policy applies to Benchmark RPS Ltd and relates to its operations. It explains how we handle personal information and comply with the requirements of applicable privacy laws and other related laws regulating the handling of personal information, including without limitation the General Data Protection Regulation EU 2016/269 ("GDPR") and applicable EU Member State laws (Privacy Laws). If you have further questions relating to this policy please contact Charles Woolhouse at{" "}
+          This Privacy Policy applies to Benchmark RPS Ltd and relates to its operations. It explains how we handle personal information and comply with the requirements of applicable privacy laws and other related laws regulating the handling of personal information, including without limitation the UK General Data Protection Regulation and Data Protection Act 2018 ("UK GDPR"), the EU General Data Protection Regulation (EU) 2016/679 ("GDPR") and applicable EU Member State laws (together, "Privacy Laws"). References in this policy to the GDPR include the UK GDPR where the context requires. If you have further questions relating to this policy please contact Charles Woolhouse at{" "}
           <a href="mailto:DPO@benchmarkps.org">DPO@benchmarkps.org</a>. This Privacy Policy also serves as notification to individuals of the matters required to be notified on collection of their personal information. We recognise the importance of your privacy, and that you have a right to control how your personal information is collected and used.
         </p>
 
@@ -75,8 +75,9 @@ const PrivacyPolicy = () => {
         <h3>1.4</h3>
         <p>If you are a patient, we may collect additional personal information including:</p>
         <ul>
-          <li>(a) details of your healthcare professional; and</li>
-          <li>(b) information about your health, including medical conditions.</li>
+          <li>(a) details of your healthcare professional;</li>
+          <li>(b) information about your health, including medical conditions; and</li>
+          <li>(c) where your healthcare professional uses the Platform's AI-assisted documentation feature, audio recordings of your consultations and the transcripts and draft clinical notes generated from them (see section 3.2 below).</li>
         </ul>
 
         <h3>1.5</h3>
@@ -153,6 +154,25 @@ const PrivacyPolicy = () => {
         <h3>3.1</h3>
         <p>Like most organisations, we use a range of service providers to help us maximise the quality and efficiency of our products and services and our business operations. This means that individuals and organisations outside of Benchmark PS, such as cloud and web hosting service providers, software as a service providers, providers of IT support services, providers of analytics and marketing support services and online payment system providers, will sometimes have access to or be disclosed personal information held by us and may only use it on behalf of us to facilitate our services, provide services on our behalf, perform service-related services or assist us in analysing how our service is used. We require our service providers to adhere to strict privacy guidelines which require the service providers not to keep this information, nor to use it or disclose it for any unauthorised purposes.</p>
 
+        <h3>3.2 AI-assisted clinical documentation (consultation recording and transcription)</h3>
+        <p>
+          The Benchmark PS webapp includes an optional AI-assisted documentation feature. Where a healthcare professional chooses to use it, consultation audio is recorded, securely uploaded, automatically transcribed by a specialist speech-to-text provider, and used to generate draft clinical notes which the healthcare professional reviews and approves before they form part of the patient record. Recording is always initiated and controlled by the healthcare professional. Audio recordings are retained only for as long as needed to produce and quality-assure the transcript, and are automatically deleted no later than 90 days after the recording; transcripts and approved notes are retained as part of the clinical record. Our transcription providers are contractually prohibited from using audio or transcripts to train their models, and we enable the strongest available data-retention controls with those providers (including zero-data-retention settings where offered).
+        </p>
+
+        <h3>3.3 Sub-processors</h3>
+        <p>We currently use the following categories of service providers (sub-processors where we act as a processor) in delivering the Benchmark PS platform:</p>
+        <ul>
+          <li>Amazon Web Services — cloud storage, hosted in the EU (London/Ireland regions);</li>
+          <li>Render — application hosting;</li>
+          <li>OpenAI (United States) — speech-to-text transcription and AI-assisted drafting of clinical documentation;</li>
+          <li>Groq (United States) — speech-to-text transcription, operated with zero-data-retention controls enabled;</li>
+          <li>Stripe — payment processing; and</li>
+          <li>Cloudflare — content delivery and security.</li>
+        </ul>
+        <p>
+          We will update this list before adding or replacing a sub-processor that processes patient data, and subscribing organisations may object to such a change on reasonable data-protection grounds by contacting <a href="mailto:DPO@benchmarkps.org">DPO@benchmarkps.org</a>. Transfers to providers outside the UK/EEA are protected by the safeguards described in section 4.
+        </p>
+
         <h2>4. Disclosure of personal information outside the jurisdiction of collection</h2>
 
         <h3>General disclosure</h3>
@@ -162,6 +182,10 @@ const PrivacyPolicy = () => {
         <h3>Data transfers from the European Economic Area ("EEA")</h3>
         <h3>4.2</h3>
         <p>We will take all reasonable and necessary steps to ensure your personal information is treated securely and in accordance with this Privacy Policy and applicable Privacy Laws (including the GDPR, where applicable), and will not transfer personal information outside the EEA unless an appropriate safeguard is implemented (other than to a jurisdiction whose Privacy Laws have been deemed adequate by the European Commission), such as entering into the EU Standard Contractual Clauses (or equivalent measures) with the party outside the EEA receiving the personal information. You may obtain a copy of the appropriate safeguards implemented by us in relation to your personal information by contacting <a href="mailto:DPO@benchmarkps.org">DPO@benchmarkps.org</a>.</p>
+
+        <h3>Data transfers from the United Kingdom</h3>
+        <h3>4.3</h3>
+        <p>Where personal information collected in the UK is transferred to a country not covered by UK adequacy regulations (for example, to our transcription providers in the United States), we implement the safeguards required by the UK GDPR — the International Data Transfer Agreement or the UK International Data Transfer Addendum to the EU Standard Contractual Clauses — together with supplementary technical measures such as encryption in transit and provider data-retention controls. A copy of the relevant safeguards is available on request from <a href="mailto:DPO@benchmarkps.org">DPO@benchmarkps.org</a>.</p>
 
         <h2>5. Direct marketing</h2>
 
@@ -253,6 +277,9 @@ const PrivacyPolicy = () => {
         <h3>11.2</h3>
         <p>When we no longer need to use your personal information or retain it pursuant to legal obligations in order to exercise our legal rights, we will remove it from our systems and records or take steps to anonymise it so that you can no longer be identified from it in accordance with relevant Privacy Laws.</p>
 
+        <h3>11.3</h3>
+        <p>Consultation audio recordings made through the AI-assisted documentation feature are retained only for as long as needed to produce and quality-assure the transcript, and are automatically deleted no later than 90 days after recording (see section 3.2). The resulting transcripts and clinician-approved notes are retained as part of the clinical record in accordance with the retention obligations that apply to your healthcare professional.</p>
+
         <h2>12. Contacting Us</h2>
 
         <h3>12.1</h3>
@@ -268,8 +295,7 @@ const PrivacyPolicy = () => {
         <p>In most cases we will ask that you put your request in writing to us. We will investigate your complaint and will use reasonable endeavours to respond to you in writing within 30 days of receiving the written complaint. If we fail to respond to your complaint or if you are dissatisfied with the response that you receive from us, you should be aware that you might also have the right to make a complaint to the applicable privacy authorities.</p>
 
         <h3>12.3</h3>
-        <p>In Australia, this is the Office of the Australian Information Commissioner (<a href="https://www.oaic.gov.au" target="_blank" rel="noopener noreferrer">www.oaic.gov.au</a>) or, potentially in some instances, your applicable State or Territory privacy commissioner with regard to handling of health information.</p>
-        <p>In the UK, this is The Information Commissioner's Office (<a href="https://www.ico.org.uk" target="_blank" rel="noopener noreferrer">www.ico.org.uk</a>), with regard to handling of health information.</p>
+        <p>In the UK, this is The Information Commissioner's Office (<a href="https://www.ico.org.uk" target="_blank" rel="noopener noreferrer">www.ico.org.uk</a>), including with regard to the handling of health information.</p>
 
         <h3>12.4</h3>
         <p>If you are located in the EU and the GDPR applies to the processing of your personal data, you also have the right to lodge a complaint with a supervisory authority. A list of supervisory authorities for all EU Member States is available <a href="https://edpb.europa.eu/about-edpb/board/members_en" target="_blank" rel="noopener noreferrer">here</a>.</p>

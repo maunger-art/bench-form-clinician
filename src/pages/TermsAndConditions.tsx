@@ -39,7 +39,7 @@ const TermsAndConditions = () => {
         prose-strong:text-foreground
       ">
         <p>
-          These Terms and Conditions ("Terms") govern access to and use of the Benchmark Performance Systems platform ("the Platform") operated by Benchmark Performance Systems Ltd ("Benchmark", "we", "us", or "our").
+          These Terms and Conditions ("Terms") govern access to and use of the Benchmark Performance Systems platform ("the Platform") operated by Benchmark RPS Ltd (Company No. 13817021), trading as Benchmark Performance Systems ("Benchmark", "we", "us", or "our").
         </p>
         <p>
           By accessing or using the Platform you agree to be bound by these Terms.
@@ -113,7 +113,7 @@ const TermsAndConditions = () => {
           <li>reproduce proprietary algorithms or benchmarking systems</li>
           <li>resell the Platform without written permission</li>
         </ul>
-        <p>All intellectual property rights remain the property of Benchmark Performance Systems Ltd.</p>
+        <p>All intellectual property rights remain the property of Benchmark RPS Ltd.</p>
 
         <h2>6. Clinical Use Disclaimer</h2>
         <p>The Platform is intended to support clinical decision-making, not replace professional judgment.</p>
@@ -148,15 +148,25 @@ const TermsAndConditions = () => {
         </ul>
         <p>No personally identifiable patient information will be used for research without appropriate legal basis.</p>
 
-        <h2>8. Patient Data and GDPR Compliance</h2>
+        <h2>8. Patient Data, Data Processing and GDPR Compliance</h2>
         <p>Users are responsible for ensuring that:</p>
         <ul>
           <li>patient data is collected lawfully</li>
-          <li>appropriate patient consent has been obtained where required</li>
-          <li>data is processed in accordance with GDPR and relevant healthcare regulations</li>
+          <li>appropriate patient consent has been obtained where required, including for the audio recording of consultations</li>
+          <li>data is processed in accordance with the UK GDPR and relevant healthcare regulations</li>
         </ul>
-        <p>Benchmark processes data in accordance with its Privacy Policy.</p>
-        <p>Where applicable, Benchmark may act as a data processor and the healthcare organisation as the data controller.</p>
+        <p>Benchmark processes data in accordance with its <Link to="/privacy-policy">Privacy Policy</Link>.</p>
+        <p>
+          Where the Platform is used by an Organisation to process patient data, the Organisation is the data controller and Benchmark acts as a data processor on the Organisation's documented instructions. Benchmark will: process patient data only as needed to provide the Platform; keep it confidential; apply appropriate technical and organisational security measures; assist the Organisation, so far as reasonably practicable, with data subject requests and its other controller obligations; and delete or return patient data on termination in accordance with its retention policies.
+        </p>
+        <h3>8.1 AI-assisted documentation</h3>
+        <p>
+          The Platform includes optional AI-assisted clinical documentation: a clinician may record consultation audio, which is transcribed and used to generate draft clinical notes. Recording is initiated and controlled by the clinician. AI-generated output is a draft only and must be reviewed and approved by the responsible clinician before it forms part of the patient record. Users must inform patients that consultations are recorded and processed in this way and must obtain any consent required.
+        </p>
+        <h3>8.2 Sub-processors</h3>
+        <p>
+          The Organisation provides general written authorisation for Benchmark to engage sub-processors in delivering the Platform (for example cloud hosting, storage, payment and AI transcription providers). The current list of sub-processors is published in our <Link to="/privacy-policy">Privacy Policy</Link> and kept up to date. Benchmark imposes data protection obligations on each sub-processor consistent with this section, and will give notice of the addition or replacement of sub-processors that process patient data by updating that list in advance (or, for material changes, by email to subscribing Organisations). An Organisation may object to such a change on reasonable data protection grounds by contacting <a href="mailto:DPO@benchmarkps.org">DPO@benchmarkps.org</a>, in which case the parties will discuss a reasonable resolution.
+        </p>
 
         <h2>9. Acceptable Use</h2>
         <p>Users agree not to:</p>
@@ -198,7 +208,7 @@ const TermsAndConditions = () => {
           <li>visualisations</li>
           <li>documentation</li>
         </ul>
-        <p>remain the property of Benchmark Performance Systems Ltd.</p>
+        <p>remain the property of Benchmark RPS Ltd.</p>
         <p>Users may not reproduce or commercialise these materials without written consent.</p>
 
         <h2>13. Limitation of Liability</h2>
@@ -247,7 +257,7 @@ const TermsAndConditions = () => {
 
         <h2>17. Contact Information</h2>
         <p>If you have any questions regarding these Terms, please contact:</p>
-        <p><strong>Benchmark Performance Systems Ltd</strong></p>
+        <p><strong>Benchmark RPS Ltd (trading as Benchmark Performance Systems)</strong></p>
         <p>Email: <a href="mailto:info@benchmarkps.org">info@benchmarkps.org</a></p>
 
         <h2>18. Entire Agreement</h2>
