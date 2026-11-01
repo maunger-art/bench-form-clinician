@@ -44,10 +44,12 @@ html{scroll-behavior:smooth;scroll-padding-top:120px;-webkit-text-size-adjust:10
   -webkit-font-smoothing:antialiased;
 }
 body{margin:0;overflow-x:hidden}
-.facelift img{max-width:100%;display:block}
-.facelift a{color:inherit;text-decoration:none}
-.facelift h1,.facelift h2,.facelift h3,.facelift h4,.facelift h5{margin:0;font-weight:700;letter-spacing:-.01em;line-height:1.14}
-.facelift p{margin:0}
+/* :where() keeps these resets at element-level specificity so the concept's
+   component rules (.eab__btn, .btn--primary, .nav__links a, …) still win. */
+.facelift :where(img){max-width:100%;display:block}
+.facelift :where(a){color:inherit;text-decoration:none}
+.facelift :where(h1,h2,h3,h4,h5){margin:0;font-weight:700;letter-spacing:-.01em;line-height:1.14}
+.facelift :where(p){margin:0}
 .ser{font-family:"Lora",Georgia,serif;font-style:italic;font-weight:500;color:var(--bps-blue-mid)}
 .wrap{max-width:var(--bps-maxw);margin:0 auto;padding:0 24px}
 .ic{width:18px;height:18px;fill:currentColor;flex:0 0 auto}
