@@ -525,3 +525,16 @@ body{margin:0;overflow-x:hidden}
   .reveal{opacity:1;transform:none}
   html{scroll-behavior:auto}
 }
+
+/* ============================================================
+   PATIENT APP — real portal screenshot variant
+   ============================================================ */
+/* Wider frame for a real screenshot; no notch (web portal, not a native app). */
+.phone--shot{width:340px}
+.phone--shot .phone__screen{padding:0;background:#fff}
+/* patient-portal-overview.png 673x779 -> crop top 72px of app chrome */
+.shot--patient{position:relative;overflow:hidden;width:100%;aspect-ratio:673/707}
+.shot--patient img{position:absolute;max-width:none;width:100%;left:0;top:-10.18%}
+@media (max-width:640px){
+  .phone--shot{width:min(340px,86vw)}
+}
