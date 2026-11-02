@@ -46,7 +46,9 @@ jobs:
         run: |
           git config user.name "Benchmark PS Bot"
           git config user.email "bot@benchmarkps.org"
-          git add -A
+          # Scoped add: only the paths this pipeline generates. A blanket
+          # `git add -A` once swept node_modules/ and dist/ into main.
+          git add drafts/ queue.json evidence_usage.json
           git commit -m "Weekly drafts: $(date +%Y-%m-%d)" || echo "Nothing to commit"
           git pull --rebase --autostash origin "${GITHUB_REF_NAME:-main}"
           git push
