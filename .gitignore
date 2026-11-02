@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Build output (Render builds dist/ at deploy; scripts/copy-blog.mjs fills dist/blog)
+/dist/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# OS cruft
+.DS_Store
+
+# Supabase CLI temp
+supabase/.temp/
+
+# Local env files
+# NOTE: .env is currently *tracked*, so this pattern does not untrack it —
+# it only prevents new .env.* variants from being committed. Untracking the
+# existing .env is a separate decision (Render/CI may rely on it at build time).
+.env
+.env.*
+
+# Logs / editor
+*.log
+.idea/
+.vscode/
