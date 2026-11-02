@@ -38,8 +38,8 @@ const TIERS: Tier[] = [
   },
   {
     name: "Essentials",
-    monthly: "£10",
-    annual: "£100",
+    monthly: "£15",
+    annual: "£150",
     monthlyUnit: "/practitioner/mo",
     annualUnit: "/practitioner/yr",
     period: "per practitioner · billed monthly",
