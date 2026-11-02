@@ -5,6 +5,7 @@ import Security from "@/components/landing/Security";
 import PatientApp from "@/components/landing/PatientApp";
 import HowItWorks from "@/components/landing/HowItWorks";
 import WhoItsFor from "@/components/landing/WhoItsFor";
+import Pricing from "@/components/landing/Pricing";
 import OutcomesSection from "@/components/landing/OutcomesSection";
 import FinalCTA from "@/components/landing/FinalCTA";
 import Footer from "@/components/landing/Footer";
@@ -23,6 +24,7 @@ const Index = () => {
         <PatientApp />
         <HowItWorks />
         <WhoItsFor />
+        <Pricing />
         <OutcomesSection />
         <FinalCTA />
       </main>
