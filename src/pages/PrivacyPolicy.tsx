@@ -20,7 +20,7 @@ const PrivacyPolicy = () => {
       <section className="bg-navy py-12 sm:py-16 border-b border-primary-foreground/10">
         <div className="max-w-[900px] mx-auto px-5 sm:px-6 md:px-12">
           <h1 className="text-primary-foreground text-3xl sm:text-4xl font-bold tracking-tight">Privacy Policy</h1>
-          <p className="text-primary-foreground/50 mt-3 text-sm">Last updated: 1st November 2026</p>
+          <p className="text-primary-foreground/50 mt-3 text-sm">Last updated: 18th November 2026</p>
         </div>
       </section>
 
@@ -35,11 +35,14 @@ const PrivacyPolicy = () => {
         prose-strong:text-foreground
       ">
         <p className="text-foreground font-medium text-lg leading-relaxed">
-          Benchmark RPS Ltd (CN 13817021)
+          Benchmark MSK Ltd (CN 17216373), trading as Benchmark Performance Systems
         </p>
         <p>
-          This Privacy Policy applies to Benchmark RPS Ltd and relates to its operations. It explains how we handle personal information and comply with the requirements of applicable privacy laws and other related laws regulating the handling of personal information, including without limitation the UK General Data Protection Regulation and Data Protection Act 2018 ("UK GDPR"), the EU General Data Protection Regulation (EU) 2016/679 ("GDPR") and applicable EU Member State laws (together, "Privacy Laws"). References in this policy to the GDPR include the UK GDPR where the context requires. If you have further questions relating to this policy please contact our Information Governance &amp; Data Protection Lead, Charles Woolhouse, at{" "}
+          This Privacy Policy applies to Benchmark MSK Ltd and relates to its operations. It explains how we handle personal information and comply with the requirements of applicable privacy laws and other related laws regulating the handling of personal information, including without limitation the UK General Data Protection Regulation and Data Protection Act 2018 ("UK GDPR"), the EU General Data Protection Regulation (EU) 2016/679 ("GDPR") and applicable EU Member State laws (together, "Privacy Laws"). References in this policy to the GDPR include the UK GDPR where the context requires. If you have further questions relating to this policy please contact our Information Governance &amp; Data Protection Lead, Charles Woolhouse, at{" "}
           <a href="mailto:DPO@benchmarkps.org">DPO@benchmarkps.org</a>. This Privacy Policy also serves as notification to individuals of the matters required to be notified on collection of their personal information. We recognise the importance of your privacy, and that you have a right to control how your personal information is collected and used.
+        </p>
+        <p>
+          On 18th November 2026 the Benchmark PS website and webapp transferred from Benchmark RPS Ltd (CN 13817021) to Benchmark MSK Ltd. References in this policy to "Benchmark PS", "we" or "us" mean Benchmark MSK Ltd from that date. The way we handle your personal information has not changed as a result of the transfer.
         </p>
 
         <h2>1. Collection of personal information</h2>
@@ -162,12 +165,13 @@ const PrivacyPolicy = () => {
         <h3>3.3 Sub-processors</h3>
         <p>We currently use the following categories of service providers (sub-processors where we act as a processor) in delivering the Benchmark PS platform:</p>
         <ul>
-          <li>Amazon Web Services — cloud storage, hosted in the EU (London/Ireland regions);</li>
+          <li>Amazon Web Services — cloud storage, hosted in the UK and EU (London and Ireland regions);</li>
           <li>Render — application hosting;</li>
-          <li>OpenAI (United States) — speech-to-text transcription and AI-assisted drafting of clinical documentation;</li>
-          <li>Groq (United States) — speech-to-text transcription, operated with zero-data-retention controls enabled;</li>
-          <li>Stripe — payment processing; and</li>
-          <li>Cloudflare — content delivery and security.</li>
+          <li>Groq (United States) — speech-to-text transcription (our primary transcription provider), operated with zero-data-retention controls enabled;</li>
+          <li>OpenAI (United States) — AI-assisted drafting of clinical documentation and speech-to-text transcription;</li>
+          <li>Stripe — payment processing;</li>
+          <li>Cloudflare — content delivery and security; and</li>
+          <li>Sentry (Functional Software, Inc.; data hosted in the EU) — application error monitoring, configured to minimise personal data in error reports.</li>
         </ul>
         <p>
           We will update this list before adding or replacing a sub-processor that processes patient data, and subscribing organisations may object to such a change on reasonable data-protection grounds by contacting <a href="mailto:DPO@benchmarkps.org">DPO@benchmarkps.org</a>. Transfers to providers outside the UK/EEA are protected by the safeguards described in section 4.
@@ -280,15 +284,19 @@ const PrivacyPolicy = () => {
         <h3>11.3</h3>
         <p>Consultation audio recordings made through the AI-assisted documentation feature are retained only for as long as needed to produce and quality-assure the transcript, and are automatically deleted no later than 90 days after recording (see section 3.2). The resulting transcripts and clinician-approved notes are retained as part of the clinical record in accordance with the retention obligations that apply to your healthcare professional.</p>
 
+        <h3>11.4</h3>
+        <p>When you accept our Terms and Conditions and acknowledge this Privacy Policy in the webapp, we keep a record of the document versions, the date and time, your IP address and your browser details. We keep this record for as long as your account is active and for six years afterwards, as evidence of the agreement.</p>
+
         <h2>12. Contacting Us</h2>
 
         <h3>12.1</h3>
         <p>If you have any concerns or complaints about how we handle your personal information, or if you have any questions about this policy, please contact us at <a href="mailto:DPO@benchmarkps.org">DPO@benchmarkps.org</a> or at the address below:</p>
         <p>
           Information Governance &amp; Data Protection Lead<br />
-          Benchmark RPS Ltd<br />
-          82 Wandsworth Bridge Road<br />
-          London SW6 2TF
+          Benchmark MSK Ltd<br />
+          71-75 Shelton Street<br />
+          Covent Garden<br />
+          London WC2H 9JQ
         </p>
 
         <h3>12.2</h3>
