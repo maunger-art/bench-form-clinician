@@ -22,7 +22,7 @@ const TermsAndConditions = () => {
           <p className="text-primary-foreground/70 text-sm font-medium mb-2">Benchmark Performance Systems</p>
           <h1 className="text-primary-foreground text-3xl sm:text-4xl font-bold tracking-tight">Terms and Conditions of Platform Use</h1>
           <div className="mt-4 space-y-1">
-            <p className="text-primary-foreground/50 text-sm">Last Updated: 18th November 2026</p>
+            <p className="text-primary-foreground/50 text-sm">Last Updated: 23rd November 2026</p>
             <p className="text-primary-foreground/50 text-sm">Email: <a href="mailto:info@benchmarkps.org" className="text-primary-foreground/70 hover:text-primary-foreground transition-colors">info@benchmarkps.org</a></p>
           </div>
         </div>
@@ -42,7 +42,7 @@ const TermsAndConditions = () => {
           These Terms and Conditions ("Terms") govern access to and use of the Benchmark Performance Systems platform ("the Platform") operated by Benchmark MSK Ltd (Company No. 17216373), registered office 71-75 Shelton Street, Covent Garden, London WC2H 9JQ, trading as Benchmark Performance Systems ("Benchmark", "we", "us", or "our").
         </p>
         <p>
-          With effect from 18th November 2026, Benchmark MSK Ltd has taken over the operation of the Platform from Benchmark RPS Ltd (Company No. 13817021). Existing subscriptions and accounts continue on these Terms, with Benchmark MSK Ltd as the provider.
+          With effect from 23rd November 2026, Benchmark MSK Ltd takes over the operation of the Platform from Benchmark RPS Ltd (Company No. 13817021). Existing subscriptions and accounts continue on these Terms, with Benchmark MSK Ltd as the provider.
         </p>
         <p>
           By accessing or using the Platform you agree to be bound by these Terms. You will be asked to accept these Terms when you first sign in and again whenever we change them materially.

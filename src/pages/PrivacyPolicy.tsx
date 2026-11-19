@@ -20,7 +20,7 @@ const PrivacyPolicy = () => {
       <section className="bg-navy py-12 sm:py-16 border-b border-primary-foreground/10">
         <div className="max-w-[900px] mx-auto px-5 sm:px-6 md:px-12">
           <h1 className="text-primary-foreground text-3xl sm:text-4xl font-bold tracking-tight">Privacy Policy</h1>
-          <p className="text-primary-foreground/50 mt-3 text-sm">Last updated: 18th November 2026</p>
+          <p className="text-primary-foreground/50 mt-3 text-sm">Last updated: 23rd November 2026</p>
         </div>
       </section>
 
@@ -42,7 +42,7 @@ const PrivacyPolicy = () => {
           <a href="mailto:DPO@benchmarkps.org">DPO@benchmarkps.org</a>. This Privacy Policy also serves as notification to individuals of the matters required to be notified on collection of their personal information. We recognise the importance of your privacy, and that you have a right to control how your personal information is collected and used.
         </p>
         <p>
-          On 18th November 2026 the Benchmark PS website and webapp transferred from Benchmark RPS Ltd (CN 13817021) to Benchmark MSK Ltd. References in this policy to "Benchmark PS", "we" or "us" mean Benchmark MSK Ltd from that date. The way we handle your personal information has not changed as a result of the transfer.
+          On 23rd November 2026 the Benchmark PS website and webapp transfer from Benchmark RPS Ltd (CN 13817021) to Benchmark MSK Ltd. References in this policy to "Benchmark PS", "we" or "us" mean Benchmark MSK Ltd from that date. The way we handle your personal information does not change as a result of the transfer.
         </p>
 
         <h2>1. Collection of personal information</h2>
