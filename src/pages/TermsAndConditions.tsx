@@ -22,7 +22,7 @@ const TermsAndConditions = () => {
           <p className="text-primary-foreground/70 text-sm font-medium mb-2">Benchmark Performance Systems</p>
           <h1 className="text-primary-foreground text-3xl sm:text-4xl font-bold tracking-tight">Terms and Conditions of Platform Use</h1>
           <div className="mt-4 space-y-1">
-            <p className="text-primary-foreground/50 text-sm">Last Updated: 11th March 2026</p>
+            <p className="text-primary-foreground/50 text-sm">Last Updated: 23rd November 2026</p>
             <p className="text-primary-foreground/50 text-sm">Email: <a href="mailto:info@benchmarkps.org" className="text-primary-foreground/70 hover:text-primary-foreground transition-colors">info@benchmarkps.org</a></p>
           </div>
         </div>
@@ -39,10 +39,13 @@ const TermsAndConditions = () => {
         prose-strong:text-foreground
       ">
         <p>
-          These Terms and Conditions ("Terms") govern access to and use of the Benchmark Performance Systems platform ("the Platform") operated by Benchmark RPS Ltd (Company No. 13817021), trading as Benchmark Performance Systems ("Benchmark", "we", "us", or "our").
+          These Terms and Conditions ("Terms") govern access to and use of the Benchmark Performance Systems platform ("the Platform") operated by Benchmark MSK Ltd (Company No. 17216373), registered office 71-75 Shelton Street, Covent Garden, London WC2H 9JQ, trading as Benchmark Performance Systems ("Benchmark", "we", "us", or "our").
         </p>
         <p>
-          By accessing or using the Platform you agree to be bound by these Terms.
+          With effect from 23rd November 2026, Benchmark MSK Ltd takes over the operation of the Platform from Benchmark RPS Ltd (Company No. 13817021). Existing subscriptions and accounts continue on these Terms, with Benchmark MSK Ltd as the provider.
+        </p>
+        <p>
+          By accessing or using the Platform you agree to be bound by these Terms. You will be asked to accept these Terms when you first sign in and again whenever we change them materially.
         </p>
         <p>
           If you do not agree to these Terms, you must not access or use the Platform.
@@ -113,7 +116,7 @@ const TermsAndConditions = () => {
           <li>reproduce proprietary algorithms or benchmarking systems</li>
           <li>resell the Platform without written permission</li>
         </ul>
-        <p>All intellectual property rights remain the property of Benchmark RPS Ltd.</p>
+        <p>All intellectual property rights remain the property of Benchmark MSK Ltd.</p>
 
         <h2>6. Clinical Use Disclaimer</h2>
         <p>The Platform is intended to support clinical decision-making, not replace professional judgment.</p>
@@ -208,7 +211,7 @@ const TermsAndConditions = () => {
           <li>visualisations</li>
           <li>documentation</li>
         </ul>
-        <p>remain the property of Benchmark RPS Ltd.</p>
+        <p>remain the property of Benchmark MSK Ltd.</p>
         <p>Users may not reproduce or commercialise these materials without written consent.</p>
 
         <h2>13. Limitation of Liability</h2>
@@ -257,11 +260,15 @@ const TermsAndConditions = () => {
 
         <h2>17. Contact Information</h2>
         <p>If you have any questions regarding these Terms, please contact:</p>
-        <p><strong>Benchmark RPS Ltd (trading as Benchmark Performance Systems)</strong></p>
+        <p><strong>Benchmark MSK Ltd (trading as Benchmark Performance Systems)</strong></p>
+        <p>71-75 Shelton Street, Covent Garden, London WC2H 9JQ</p>
         <p>Email: <a href="mailto:info@benchmarkps.org">info@benchmarkps.org</a></p>
 
         <h2>18. Entire Agreement</h2>
         <p>These Terms, together with the Privacy Policy, constitute the entire agreement governing the use of the Platform.</p>
+
+        <h2>19. Changes to these Terms</h2>
+        <p>We may update these Terms from time to time. We will tell subscribing Organisations about material changes by email at least 14 days before they take effect, unless a change is required sooner by law. Users will be asked to accept the updated Terms when they next sign in.</p>
       </article>
 
       {/* Footer */}
