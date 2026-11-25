@@ -22,7 +22,7 @@ const TermsAndConditions = () => {
           <p className="text-primary-foreground/70 text-sm font-medium mb-2">Benchmark Performance Systems</p>
           <h1 className="text-primary-foreground text-3xl sm:text-4xl font-bold tracking-tight">Terms and Conditions of Platform Use</h1>
           <div className="mt-4 space-y-1">
-            <p className="text-primary-foreground/50 text-sm">Last Updated: 23rd November 2026</p>
+            <p className="text-primary-foreground/50 text-sm">Last Updated: 25th November 2026</p>
             <p className="text-primary-foreground/50 text-sm">Email: <a href="mailto:info@benchmarkps.org" className="text-primary-foreground/70 hover:text-primary-foreground transition-colors">info@benchmarkps.org</a></p>
           </div>
         </div>
@@ -63,7 +63,7 @@ const TermsAndConditions = () => {
           <li>managing musculoskeletal performance assessments</li>
         </ul>
         <p>
-          The Platform is intended for use by qualified healthcare professionals and authorised clinical staff.
+          The Platform is intended for use by qualified healthcare professionals, strength and conditioning professionals, and authorised clinical staff.
         </p>
         <p>
           Benchmark does not provide medical advice or clinical treatment.
@@ -85,6 +85,7 @@ const TermsAndConditions = () => {
           <li>osteopaths</li>
           <li>chiropractors</li>
           <li>sports medicine practitioners</li>
+          <li>strength and conditioning professionals</li>
           <li>rehabilitation professionals</li>
           <li>authorised clinical staff</li>
         </ul>
